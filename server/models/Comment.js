@@ -12,7 +12,7 @@ const CommentSchema = new Schema(
     postId: { type: Schema.Types.ObjectId, ref: 'Post', require: true },
     content: { type: String, require: true, minLength: 1, maxLength: 250 },
     likedBy: [{ type: Schema.Types.ObjectId, ref: 'Pet' }],
-    comments: [CommentSchema],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   { timestamps: true }
 );
@@ -23,7 +23,5 @@ const CommentSchema = new Schema(
 CommentSchema.virtual('likes').get(function () {
   return this.likedBy.length;
 });
-
-module.exports = model('Post', PostSchema);
 
 module.exports = model('Comment', CommentSchema);
