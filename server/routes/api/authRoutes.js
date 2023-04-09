@@ -35,10 +35,10 @@ router.post('/signup', async (req, res) => {
 router.post('/signin', async (req, res) => {
   try {
     const pet = await Pet.findOne({ email: req.body.email });
-    !pet && res.status(404).json('pet not found');
+    if(!pet) return res.status(404).json('Wrong email!');
 
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    !validPassword && res.status(400).json('wrong password');
+    const validPassword = await bcrypt.compare(req.body.password, pet.password);
+    if(!validPassword) return res.status(400).json('Wrong password!');
 
     res.status(200).json(pet);
   } catch (err) {
