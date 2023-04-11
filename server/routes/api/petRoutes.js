@@ -8,8 +8,10 @@ const bcrypt = require('bcrypt');
 ////////////////////////////////////////////////////////////////////////////////
 //  Update pet
 ////////////////////////////////////////////////////////////////////////////////
-router.put('/:id', async (req, res) => {
-  if (req.body.petId === req.params.id) {
+router.put('/', async (req, res) => {
+  const petId = req.query.petId;
+
+  if (req.body.petId === petId) {
     if (req.body.password) {
       try {
         const salt = await bcrypt.genSalt(10);
@@ -19,10 +21,14 @@ router.put('/:id', async (req, res) => {
       }
     }
     try {
-      const pet = await Pet.findByIdAndUpdate(req.params.id, {
-        $set: req.body,
-      });
-      res.status(200).json('Account has been updated');
+      const pet = await Pet.findByIdAndUpdate(
+        petId,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+      res.status(200).json(pet);
     } catch (err) {
       return res.status(500).json(err);
     }
@@ -34,11 +40,13 @@ router.put('/:id', async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Delete pet
 ////////////////////////////////////////////////////////////////////////////////
-router.delete('/:id', async (req, res) => {
-  if (req.body.petId === req.params.id) {
+router.delete('/', async (req, res) => {
+  const petId = req.query.petId;
+
+  if (req.body.petId === petId) {
     try {
-      await Pet.findByIdAndDelete(req.params.id);
-      res.status(200).json('Account has been deleted');
+      const pet = await Pet.findByIdAndDelete(petId);
+      res.status(200).json(pet);
     } catch (err) {
       return res.status(500).json(err);
     }
@@ -48,13 +56,13 @@ router.delete('/:id', async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get pet
+//  Get one pet
 ////////////////////////////////////////////////////////////////////////////////
 router.get('/', async (req, res) => {
   const petId = req.query.petId;
-  const name = req.query.name;
+
   try {
-    const pet = petId ? await Pet.findById(petId) : await Pet.findOne({ name: name });
+    const pet = await Pet.findById(petId);
     const { password, updatedAt, ...other } = pet._doc;
     res.status(200).json(other);
   } catch (err) {
@@ -62,12 +70,16 @@ router.get('/', async (req, res) => {
   }
 });
 
-//get friends
-router.get('/friends/:petId', async (req, res) => {
+////////////////////////////////////////////////////////////////////////////////
+//  Get friends
+////////////////////////////////////////////////////////////////////////////////
+router.get('/friends/', async (req, res) => {
+  const petId = req.query.petId;
+
   try {
-    const pet = await Pet.findById(req.params.petId);
+    const pet = await Pet.findById(petId);
     const friends = await Promise.all(
-      pet.followings.map((friendId) => {
+      pet.followers.map((friendId) => {
         return Pet.findById(friendId);
       })
     );
@@ -82,9 +94,12 @@ router.get('/friends/:petId', async (req, res) => {
   }
 });
 
-//follow a pet
-
+////////////////////////////////////////////////////////////////////////////////
+//  Follow a pet
+////////////////////////////////////////////////////////////////////////////////
 router.put('/:id/follow', async (req, res) => {
+  const petId = req.query.petId;
+  
   if (req.body.petId !== req.params.id) {
     try {
       const pet = await Pet.findById(req.params.id);
@@ -104,8 +119,9 @@ router.put('/:id/follow', async (req, res) => {
   }
 });
 
-//unfollow a pet
-
+////////////////////////////////////////////////////////////////////////////////
+// Unfollow a pet
+////////////////////////////////////////////////////////////////////////////////
 router.put('/:id/unfollow', async (req, res) => {
   if (req.body.petId !== req.params.id) {
     try {
