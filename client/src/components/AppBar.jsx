@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,15 +13,26 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { useAuth } from '../utils/authProvider';
 
 const pages = ['Posts', 'Following', 'Followers'];
-const signInSettings = ['Sign Out'];
-const signOutSettings = ['Sign In', 'Sign Up'];
+const signInSettings = [{ text: 'Sign Out', link: '/signout' },];
+const signOutSettings = [
+  { text: 'Sign In', link: '/signin' },
+  { text: 'Sign Up', link: '/signup' },
+];
 
 function ResponsiveAppBar() {
+  const auth = useAuth();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [settings, setSettings] = useState(signOutSettings);
+
+  useEffect(() => {
+    if (auth?.user) {
+      setSettings(signInSettings);
+    }
+  }, [auth]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -150,8 +162,13 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem
+                  key={setting.text}
+                  component={Link}
+                  to={setting.link}
+                  onClick={handleCloseUserMenu}
+                >
+                  <Typography textAlign="center">{setting.text}</Typography>
                 </MenuItem>
               ))}
             </Menu>
