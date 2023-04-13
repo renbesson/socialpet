@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3001;
+const cookieParser = require("cookie-parser");
 const path = require('path');
 const db = require('./config/dbConnection');
 const routes = require('./routes');
@@ -16,6 +18,7 @@ app.get('/', (req, res) => {
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(routes);
 
 db.once('open', () => {
