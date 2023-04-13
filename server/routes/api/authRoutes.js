@@ -4,24 +4,26 @@
 const router = require('express').Router();
 const Pet = require('../../models/Pet');
 const bcrypt = require('bcrypt');
+const { signToken } = require('../../utils/auth');
+const { checkToken } = require('../../utils/checkToken');
 
 ////////////////////////////////////////////////////////////////////////////////
 // Sign up route
 ////////////////////////////////////////////////////////////////////////////////
 router.post('/signup', async (req, res) => {
   try {
-    //generate new password
+    // Generate new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    //Create new pet
+    // Create new pet
     const newPet = new Pet({
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
     });
 
-    //save pet and send response
+    // Save pet and send response
     const pet = await newPet.save();
     res.status(200).json(pet);
   } catch (err) {
@@ -35,14 +37,16 @@ router.post('/signup', async (req, res) => {
 router.post('/signin', async (req, res) => {
   try {
     const pet = await Pet.findOne({ email: req.body.email });
-    if(!pet) return res.status(404).json('Wrong email!');
+    if (!pet) return res.status(404).json('Wrong email!');
 
     const validPassword = await bcrypt.compare(req.body.password, pet.password);
-    if(!validPassword) return res.status(400).json('Wrong password!');
+    if (!validPassword) return res.status(400).json('Wrong password!');
 
-    res.status(200).json(pet);
+    const token = signToken(pet);
+    res.status(200).json({ token });
   } catch (err) {
     res.status(500).json(err);
+    console.log(err);
   }
 });
 
