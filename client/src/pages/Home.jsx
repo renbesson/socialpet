@@ -1,12 +1,18 @@
-import React from 'react';
+import * as React from "react";
+import ProductCategories from "../components/modules/ProductCatergories";
+import ProductHero from "../components/modules/ProductHero";
+// import ProductValues from "../components/modules/ProductValues";
+import ProductSmokingHero from "../components/modules/ProductSmokingHero";
 
-
-function LandingPage() {
+function Home() {
   return (
-    <div>
-      <h1>Landing Page</h1>
-    </div>
-    );
+    <React.Fragment>
+      <ProductHero />
+      {/* <ProductValues /> */}
+      <ProductSmokingHero />
+      <ProductCategories />
+    </React.Fragment>
+  );
 }
 
-export default LandingPage;
+export default Home;
