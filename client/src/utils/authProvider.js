@@ -51,17 +51,12 @@ function AuthProvider({ children }) {
 
   let signout = async (token) => {
     try {
-      const res = await fetch('/api/auth/signout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
-      });
-
       // Removes token as browser cookie
-      if (res.ok) cookies.remove('token');
+      cookies.remove('token');
 
       // Clears user state
       setUser(null);
+      window.location.href = '/';
     } catch (err) {
       console.error(err);
     }

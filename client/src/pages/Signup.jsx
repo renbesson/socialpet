@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth } from '../utils/authProvider';
 
 function Copyright(props) {
   return (
@@ -29,6 +30,8 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+  let auth = useAuth();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -38,7 +41,7 @@ export default function SignUp() {
     });
   };
 
-  return (
+  return !auth.user ? (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
@@ -73,7 +76,7 @@ export default function SignUp() {
               Sign in
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
+              <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -81,14 +84,14 @@ export default function SignUp() {
                 label="name"
                 type="name"
                 id="name"
-            />
+              />
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"                                
+                name="email"
                 autoFocus
               />
               <TextField
@@ -98,7 +101,7 @@ export default function SignUp() {
                 name="password"
                 label="Password"
                 type="password"
-                id="password"                
+                id="password"
               />
               <TextField
                 margin="normal"
@@ -107,7 +110,7 @@ export default function SignUp() {
                 name="type"
                 label="type"
                 type="type"
-                id="type"                
+                id="type"
               />
               <TextField
                 margin="normal"
@@ -116,7 +119,7 @@ export default function SignUp() {
                 name="species"
                 label="species"
                 type="species"
-                id="species"                
+                id="species"
               />
               <TextField
                 margin="normal"
@@ -125,19 +128,14 @@ export default function SignUp() {
                 name="age"
                 label="age"
                 type="age"
-                id="age"                
+                id="age"
               />
-              {/* Name, emailadd, pw, type, species, Age,  */}             
+              {/* Name, emailadd, pw, type, species, Age,  */}
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Sign In
               </Button>
               <Grid container>
@@ -158,5 +156,7 @@ export default function SignUp() {
         </Grid>
       </Grid>
     </ThemeProvider>
+  ) : (
+    <h1>Already signed in!</h1>
   );
 }
