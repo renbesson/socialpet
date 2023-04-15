@@ -12,7 +12,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import { useAuth } from '../utils/authProvider';
 
 const pages = [
@@ -30,16 +29,16 @@ const signOutSettings = [
 ];
 
 function ResponsiveAppBar() {
-  const auth = useAuth();
+  const { user } = useAuth();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [settings, setSettings] = useState(signOutSettings);
 
   useEffect(() => {
-    if (auth?.user) {
+    if (user) {
       setSettings(signInSettings);
     }
-  }, [auth]);
+  }, [user]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -77,7 +76,6 @@ function ResponsiveAppBar() {
           >
             Social Pet
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -130,7 +128,6 @@ function ResponsiveAppBar() {
               flexGrow: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
@@ -151,6 +148,9 @@ function ResponsiveAppBar() {
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
+            <Typography variant="p" noWrap sx={{ mr: 2 }}>
+              {user?.name}
+            </Typography>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

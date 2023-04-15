@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -8,27 +7,33 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { useAuth } from '../utils/authProvider';
 import { toast } from 'react-toastify';
 
 export default function SignUp() {
   let auth = useAuth();
+  let location = useLocation();
+  let navigate = useNavigate();
+
+  let origin = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const newUser = {
       name: form.get('name'),
-      email: form.get('email'),
-      password: form.get('password'),
+      email: form.get('newEmail'),
+      password: form.get('newPassword'),
       type: form.get('type'),
-      especies: form.get('epecies'),
+      species: form.get('species'),
     };
     try {
       const res = await auth.signup(newUser);
       toast(res.message);
+
+      // Sends the user back to original page they were
+      if (res.code === 200) navigate(origin, { replace: true });
     } catch (err) {
       toast(err.message);
     }
@@ -78,19 +83,18 @@ export default function SignUp() {
               margin="normal"
               required
               fullWidth
-              id="email"
+              id="newEmail"
               label="Email Address"
-              name="email"
-              autoFocus
+              name="newEmail"
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
+              name="newPassword"
               label="Password"
               type="password"
-              id="password"
+              id="newPassword"
             />
             <TextField
               margin="normal"

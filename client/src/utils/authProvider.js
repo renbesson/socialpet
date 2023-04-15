@@ -44,13 +44,13 @@ function AuthProvider({ children }) {
       if (!res.ok) return await res.json();
 
       // Saves token as browser cookie
-      const { token } = await res.json();
+      const { token, message, code } = await res.json();
       const { data: user } = decode(token);
       cookies.set('token', token, { maxAge: process.env.MAX_AGE });
 
       // Saves user state
       setUser(user);
-      return user;
+      return { user, message, code };
     } catch (err) {
       return err;
     }
@@ -70,13 +70,13 @@ function AuthProvider({ children }) {
       if (!res.ok) return await res.json();
 
       // Saves token as browser cookie
-      const { token } = await res.json();
+      const { token, message, code } = await res.json();
       const { data: user } = decode(token);
       cookies.set('token', token, { maxAge: process.env.MAX_AGE });
 
       // Saves user state
       setUser(user);
-      return user;
+      return { user, message, code };
     } catch (err) {
       return err;
     }
@@ -102,7 +102,6 @@ function AuthProvider({ children }) {
   // Function for updating profile
   ////////////////////////////////////////////////////////////////////////////////
   let updateProfile = async (data) => {
-    console.log(data);
     try {
       const res = await fetch(`/api/auth/update`, {
         method: 'PUT',
@@ -112,15 +111,15 @@ function AuthProvider({ children }) {
       if (!res.ok) return await res.json();
 
       // Saves token as browser cookie
-      const { token } = await res.json();
-      const { data: user } = decode(token);
+      const { token, message, code } = await res.json();
+      // const { data: user } = decode(token);
       cookies.set('token', token, { maxAge: process.env.MAX_AGE });
 
       // Saves user state
       setUser(user);
-      return user;
+      return { user, message, code };
     } catch (err) {
-      console.log(err)
+      console.log(err.message);
       return err;
     }
   };
@@ -134,7 +133,6 @@ function useAuth() {
   return useContext(AuthContext);
 }
 
-
 function RequireAuth({ children }) {
   let auth = useAuth();
   let location = useLocation();
@@ -144,7 +142,7 @@ function RequireAuth({ children }) {
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
     // than dropping them off on the home page.
-    return <Navigate to="/signin" state={{ from: location }} replace />;
+    setTimeout(() => <Navigate to="/signin" state={{ from: location }} replace />, 1000);
   }
 
   return children;

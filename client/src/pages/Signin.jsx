@@ -25,7 +25,7 @@ export default function Login() {
       toast(res.message);
 
       // Sends the user back to original page they were
-      navigate(origin, { replace: true });
+      if (res.code === 200) navigate(origin, { replace: true });
     } catch (err) {
       toast(err.message);
     }
