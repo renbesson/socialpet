@@ -31,7 +31,7 @@ import "./feed.css";
 
 export default function Feed() {
   return (
-    <div className="feedbar">
+    <div className="feed">
       <div className="feedWrapper">
         <Share />
         <Post />
