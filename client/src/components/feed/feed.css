@@ -1,3 +1,7 @@
-.feedbar {
-  flex: 5.5;
+.feed {
+  flex: 50%;
+}
+
+.feedWrapper {
+  padding: 20px;
 }

@@ -28,6 +28,22 @@ export default function Sidebar() {
               />
               <span className="sidebarListItemText">Rob Doe</span>
             </li>
+            <li className="sidebarFriend">
+              <img
+                className="sidebarFriendImg"
+                src="/assets/images/jamie-street-Zqy-x7K5Qcg-unsplash.jpg"
+                alt="friendpic"
+              />
+              <span className="sidebarListItemText">Dog Smarts</span>
+            </li>
+            <li className="sidebarFriend">
+              <img
+                className="sidebarFriendImg"
+                src="/assets/images/kanashi-BLW_KQ0Rkn0-unsplash.jpg"
+                alt="friendpic"
+              />
+              <span className="sidebarListItemText">Unfazed Cat</span>
+            </li>
           </ul>
         </ul>
       </div>
