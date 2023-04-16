@@ -66,7 +66,7 @@ router.post("/signin", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 router.put("/update", checkToken, async (req, res) => {
   const petId = req.body.petId;
-  const password = req.body.data.password.trim();
+  const password = req.body.data?.password?.trim();
 
   // Encrypts the new password and updates it first to avoid
   if (password?.length >= 8) {
@@ -81,10 +81,11 @@ router.put("/update", checkToken, async (req, res) => {
         { new: true }
       );
     } catch (err) {
-      return res.status(500).json({ message: err });
+      return res.status(500).json(err);
     }
   } else if (password?.length > 0 && password.length < 8) {
-    return res.status(500).json({ message: "Password must be at least 8 characters!" });
+    // Code 406 - Not Acceptable
+    return res.status(406).json({});
   }
   try {
     const { name, email, type, species, location } = req.body.data;
@@ -99,9 +100,10 @@ router.put("/update", checkToken, async (req, res) => {
     // Creates a new token
     const token = signToken(pet);
 
-    res.status(200).json({ token, pet, message: "Profile updated successfuly!" });
+    // Code 201 - Created
+    res.status(201).json({ token });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return res.status(500).json(err);
   }
 });
 
