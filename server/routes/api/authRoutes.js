@@ -41,15 +41,23 @@ router.post("/signup", async (req, res) => {
 router.post("/signin", async (req, res) => {
   try {
     const pet = await Pet.findOne({ email: req.body.email });
-    if (!pet) return res.status(404).json({ message: "Wrong email!" });
 
+    // Code 404 - Not Found
+    if (!pet) return res.status(404).json({});
+
+    // Check if password is correct
     const validPassword = await bcrypt.compare(req.body.password, pet.password);
-    if (!validPassword) return res.status(400).json({ message: "Wrong password!" });
 
+    // Code 401 - Unauthorized
+    if (!validPassword) return res.status(401).json({});
+
+    // Calls function that tokenizes the user data
     const token = signToken(pet);
-    res.status(200).json({ token, message: "Signed In!" });
+
+    // Code 200 - Ok
+    res.status(200).json({ token });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json(err);
   }
 });
 

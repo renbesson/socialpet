@@ -32,58 +32,6 @@ function AuthProvider({ children }) {
   }, [cookies]);
 
   ////////////////////////////////////////////////////////////////////////////////
-  // Function for signing up
-  ////////////////////////////////////////////////////////////////////////////////
-  let signup = async (data) => {
-    try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) return await res.json();
-
-      // Saves token as browser cookie
-      const { token, message, code } = await res.json();
-      const { data: user } = decode(token);
-      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
-
-      // Saves user state
-      setUser(user);
-      return { user, message, code };
-    } catch (err) {
-      return err;
-    }
-  };
-
-  ////////////////////////////////////////////////////////////////////////////////
-  // Function for signing in
-  ////////////////////////////////////////////////////////////////////////////////
-  let signin = async (email, password) => {
-    try {
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) return await res.json();
-      console.log("signin: ", res);
-      // Saves token as browser cookie
-      const { token, message, code } = await res.json();
-      const { data: user } = decode(token);
-      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
-
-      // Saves user state
-      setUser(user);
-      return { user, message, code };
-    } catch (err) {
-      return err;
-    }
-  };
-
-  ////////////////////////////////////////////////////////////////////////////////
   // Function for signing out
   ////////////////////////////////////////////////////////////////////////////////
   let signout = async (token) => {
@@ -125,7 +73,7 @@ function AuthProvider({ children }) {
     }
   };
 
-  let value = { user, setUser, signup, signin, signout, updateProfile };
+  let value = { user, setUser, signout, updateProfile };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
