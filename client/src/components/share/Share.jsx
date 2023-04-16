@@ -1,4 +1,4 @@
-import { PermMedia } from "@mui/icons-material";
+// import { PermMedia } from "@mui/icons-material";
 import "./share.css";
 import FileUpload from "../FileUploader";
 import { useState } from "react";
@@ -20,7 +20,7 @@ export default function Share() {
         <div className="shareBottom">
           <div className="shareOptions">
             <div className="shareOption">
-              <PermMedia className="shareIcon" />
+              {/* <PermMedia className="shareIcon" /> */}
               <FileUpload value={files} onChange={setfiles} />
               <button className="shareButton">Share</button>
               {/* <span className="shareOptionText">Upload Picture</span> */}

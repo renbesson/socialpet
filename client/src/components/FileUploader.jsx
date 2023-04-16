@@ -78,21 +78,21 @@ const FileUpload = ({
   return (
     <Box
       {...getRootProps()}
-      sx={{
-        border: 1,
-        borderRadius: 1,
-        borderColor: "rgba(0, 0, 0, 0.23)",
-        paddingY: 3,
-        paddingX: 1,
-        "&:hover": {
-          borderColor: disabled ? undefined : "text.primary",
-        },
-        "&:focus-within": {
-          borderColor: "primary.main",
-          borderWidth: 2,
-        },
-        ...sx,
-      }}
+      // sx={{
+      //   border: 1,
+      //   borderRadius: 1,
+      //   borderColor: "rgba(0, 0, 0, 0.23)",
+      //   paddingY: 3,
+      //   paddingX: 1,
+      //   "&:hover": {
+      //     borderColor: disabled ? undefined : "text.primary",
+      //   },
+      //   "&:focus-within": {
+      //     borderColor: "primary.main",
+      //     borderWidth: 2,
+      //   },
+      //   ...sx,
+      // }}
     >
       <FormControl
         error={isFileTooLarge}
@@ -104,10 +104,10 @@ const FileUpload = ({
         }}
       >
         <input {...getInputProps()} />
-        {/* <CloudUploadIcon
+        <CloudUploadIcon
           sx={{ fontSize: 40 }}
           color={disabled ? "disabled" : "primary"}
-        /> */}
+        />
         <Typography
           variant="caption"
           textAlign="center"
@@ -150,7 +150,7 @@ const FileUpload = ({
 
 FileUpload.defaultProps = {
   // title: "Drag 'n' drop some files here, or click to select files",
-  buttonText: "Upload/ Drag and drop",
+  buttonText: "Upload Image",
 };
 
 export default FileUpload;
