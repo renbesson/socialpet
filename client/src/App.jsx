@@ -7,6 +7,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import Signout from "./pages/Signout";
 import FeedCard from "./components/feedCard";
 import HomePage from "./pages/HomePage";
 // import ProfilePage from './components/profilePage'
