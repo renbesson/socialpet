@@ -24,6 +24,7 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    toast('res.message');
     const form = new FormData(event.currentTarget);
     const newUser = {
       name: form.get("name"),
@@ -38,12 +39,17 @@ export default function SignUp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
       });
+      const { token } = await res.json();
+      console.log(res);
 
-      if (!res.ok)
-        return toast(`Failed to fetch user: Code: ${res.status}\nMessage: ${res.message}`);
+      if (!res.ok) {
+        console.log("not ok");
+        toast("Failed to fetch user: Code:");
+        return;
+      }
 
       // Saves token as browser cookie
-      const { token, message, code } = await res.json();
+
       const { data: user } = decode(token);
       cookies.set("token", token, { maxAge: process.env.MAX_AGE });
 
