@@ -23,7 +23,7 @@ export default function SignUp() {
   ////////////////////////////////////////////////////////////////////////////////
   // Function for signing up
   ////////////////////////////////////////////////////////////////////////////////
-  const handleSignin = async (event) => {
+  const handleSignup = async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const newUser = {
@@ -97,7 +97,7 @@ export default function SignUp() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleSignup}
             sx={{ mt: 1 }}
           >
             <TextField
