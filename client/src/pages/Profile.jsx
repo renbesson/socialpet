@@ -35,10 +35,11 @@ export default function Profile() {
       }
     }
   };
-
+  /* eslint-disable */
   useEffect(() => {
     fetchData();
   }, [user]);
+  /* eslint-enable */
 
   ////////////////////////////////////////////////////////////////////////////////
   // Function for updating profile
@@ -50,11 +51,16 @@ export default function Profile() {
       const res = await fetch(`/api/auth/update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ petId: user?._id, data: userData, token: cookies.get("token") }),
+        body: JSON.stringify({
+          petId: user?._id,
+          data: userData,
+          token: cookies.get("token"),
+        }),
       });
       const { token, message, code } = await res.json();
 
-      if (res.status === 406) return toast("Password must be at least 8 characters!");
+      if (res.status === 406)
+        return toast("Password must be at least 8 characters!");
       if (!res.ok) return toast(`Message: ${message}\nCode: ${res.status}`);
       if (res.status === 201) {
         // Saves token as browser cookie
@@ -86,7 +92,9 @@ export default function Profile() {
             backgroundImage: "url(https://source.unsplash.com/random)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
-              t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -119,7 +127,10 @@ export default function Profile() {
                 id="name"
                 value={userData?.name}
                 onChange={(event) => {
-                  setUserData((prev) => ({ ...prev, name: event.target.value }));
+                  setUserData((prev) => ({
+                    ...prev,
+                    name: event.target.value,
+                  }));
                 }}
               />
               <TextField
@@ -130,7 +141,10 @@ export default function Profile() {
                 name="email"
                 value={userData?.email}
                 onChange={(event) => {
-                  setUserData((prev) => ({ ...prev, email: event.target.value }));
+                  setUserData((prev) => ({
+                    ...prev,
+                    email: event.target.value,
+                  }));
                 }}
               />
               <TextField
@@ -141,7 +155,10 @@ export default function Profile() {
                 type="password"
                 id="password"
                 onChange={(event) => {
-                  setUserData((prev) => ({ ...prev, password: event.target.value }));
+                  setUserData((prev) => ({
+                    ...prev,
+                    password: event.target.value,
+                  }));
                 }}
               />
               <TextField
@@ -152,7 +169,10 @@ export default function Profile() {
                 id="type"
                 value={userData?.type}
                 onChange={(event) => {
-                  setUserData((prev) => ({ ...prev, type: event.target.value }));
+                  setUserData((prev) => ({
+                    ...prev,
+                    type: event.target.value,
+                  }));
                 }}
               />
               <TextField
@@ -163,7 +183,10 @@ export default function Profile() {
                 id="species"
                 value={userData?.species}
                 onChange={(event) => {
-                  setUserData((prev) => ({ ...prev, species: event.target.value }));
+                  setUserData((prev) => ({
+                    ...prev,
+                    species: event.target.value,
+                  }));
                 }}
               />
               <TextField
@@ -174,11 +197,19 @@ export default function Profile() {
                 id="location"
                 value={userData?.location}
                 onChange={(event) => {
-                  setUserData((prev) => ({ ...prev, location: event.target.value }));
+                  setUserData((prev) => ({
+                    ...prev,
+                    location: event.target.value,
+                  }));
                 }}
               />
               {/* Name, emailadd, pw, type, species, Age,  */}
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 Sumbit
               </Button>
             </Box>
