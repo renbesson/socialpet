@@ -1,24 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { RequireAuth, useAuth } from '../utils/authProvider';
-import { toast } from 'react-toastify';
+import { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import { RequireAuth, useAuth } from "../utils/authProvider";
+import { toast } from "react-toastify";
+import Cookies from "universal-cookie";
+import decode from "jwt-decode";
 
 export default function Profile() {
-  const { user, updateProfile } = useAuth();
+  const { user, setUser } = useAuth();
+  const cookies = new Cookies();
   const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    type: '',
-    species: '',
-    location: '',
+    name: "",
+    email: "",
+    type: "",
+    species: "",
+    location: "",
   });
 
   const fetchData = async () => {
@@ -39,12 +40,34 @@ export default function Profile() {
     fetchData();
   }, [user]);
 
-  const handleSubmit = async (event) => {
+  ////////////////////////////////////////////////////////////////////////////////
+  // Function for updating profile
+  ////////////////////////////////////////////////////////////////////////////////
+  const handleUpdateProfile = async (event) => {
     event.preventDefault();
+
     try {
-      const res = await updateProfile(userData);
-      window.location.reload();
-      toast(res.message);
+      const res = await fetch(`/api/auth/update`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ petId: user?._id, data: userData, token: cookies.get("token") }),
+      });
+      const { token, message, code } = await res.json();
+
+      if (res.status === 406) return toast("Password must be at least 8 characters!");
+      if (!res.ok) return toast(`Message: ${message}\nCode: ${res.status}`);
+      if (res.status === 201) {
+        // Saves token as browser cookie
+        const { data: user } = decode(token);
+        cookies.set("token", token, { maxAge: process.env.MAX_AGE });
+
+        // Saves user state
+        setUser(user);
+
+        toast("Profile Updated!");
+      }
+
+      return { user, message, code };
     } catch (err) {
       toast(err.message);
     }
@@ -52,7 +75,7 @@ export default function Profile() {
 
   return (
     <RequireAuth>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
           item
@@ -60,12 +83,12 @@ export default function Profile() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
-            backgroundRepeat: 'no-repeat',
+            backgroundImage: "url(https://source.unsplash.com/random)",
+            backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+              t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -73,9 +96,9 @@ export default function Profile() {
             sx={{
               my: 8,
               mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
             <Typography component="h1" variant="h5">
@@ -84,7 +107,7 @@ export default function Profile() {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
+              onSubmit={handleUpdateProfile}
               sx={{ mt: 1 }}
               autoComplete="off"
             >

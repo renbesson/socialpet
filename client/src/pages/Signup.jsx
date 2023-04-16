@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,15 +9,21 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
+import Cookies from "universal-cookie";
+import decode from "jwt-decode";
 
 export default function SignUp() {
-  let auth = useAuth();
+  let { user, setUser } = useAuth();
   let location = useLocation();
   let navigate = useNavigate();
+  const cookies = new Cookies();
 
   let origin = location.state?.from?.pathname || "/";
 
-  const handleSubmit = async (event) => {
+  ////////////////////////////////////////////////////////////////////////////////
+  // Function for signing up
+  ////////////////////////////////////////////////////////////////////////////////
+  const handleSignin = async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const newUser = {
@@ -29,11 +34,27 @@ export default function SignUp() {
       species: form.get("species"),
     };
     try {
-      const res = await auth.signup(newUser);
-      toast(res.message);
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+      const { token, message } = await res.json();
 
-      // Sends the user back to original page they were
-      if (res.code === 200) navigate(origin, { replace: true });
+      if (!res.ok) return toast(`Message: ${message}\nCode: ${res.status}`);
+      if (res.status === 201) {
+        // Saves token as browser cookie
+        const { data: user } = decode(token);
+        cookies.set("token", token, { maxAge: process.env.MAX_AGE });
+
+        // Saves user state
+        setUser(user);
+
+        toast("Pet Created Successfully!");
+
+        // Sends the user back to original page they were
+        navigate(origin, { replace: true });
+      }
     } catch (err) {
       toast(err.message);
     }
@@ -149,6 +170,6 @@ export default function SignUp() {
       </Grid>
     </Grid>
   ) : (
-    <h1>Already signed in!</h1>
+    <h1>Already signed up/in!</h1>
   );
 }
