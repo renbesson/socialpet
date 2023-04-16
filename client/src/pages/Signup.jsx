@@ -10,11 +10,15 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
+import Cookies from "universal-cookie";
+import decode from "jwt-decode";
+import { useEffect } from "react";
 
 export default function SignUp() {
-  let auth = useAuth();
+  let { user, setUser } = useAuth();
   let location = useLocation();
   let navigate = useNavigate();
+  const cookies = new Cookies();
 
   let origin = location.state?.from?.pathname || "/";
 
@@ -29,7 +33,23 @@ export default function SignUp() {
       species: form.get("species"),
     };
     try {
-      const res = await auth.signup(newUser);
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+
+      if (!res.ok)
+        return toast(`Failed to fetch user: Code: ${res.status}\nMessage: ${res.message}`);
+
+      // Saves token as browser cookie
+      const { token, message, code } = await res.json();
+      const { data: user } = decode(token);
+      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
+
+      // Saves user state
+      setUser(user);
+
       toast(res.message);
 
       // Sends the user back to original page they were
@@ -39,7 +59,7 @@ export default function SignUp() {
     }
   };
 
-  return !auth.user ? (
+  return !user ? (
     <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
       <Grid
@@ -137,6 +157,6 @@ export default function SignUp() {
       </Grid>
     </Grid>
   ) : (
-    <h1>Already signed in!</h1>
+    <h1>Already signed up/in!</h1>
   );
 }

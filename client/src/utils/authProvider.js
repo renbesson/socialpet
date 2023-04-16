@@ -126,7 +126,7 @@ function AuthProvider({ children }) {
     }
   };
 
-  let value = { user, signup, signin, signout, updateProfile };
+  let value = { user, setUser, signup, signin, signout, updateProfile };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
