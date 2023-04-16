@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useMemo } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import decode from "jwt-decode";
@@ -7,8 +7,7 @@ let AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const cookies = new Cookies();
-
+  const cookies = useMemo(() => new Cookies(), []);
   ////////////////////////////////////////////////////////////////////////////////
   // Checks if client already has a valid token
   ////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +29,7 @@ function AuthProvider({ children }) {
         }
       }
     })();
-  }, []);
+  }, [cookies]);
 
   ////////////////////////////////////////////////////////////////////////////////
   // Function for signing up

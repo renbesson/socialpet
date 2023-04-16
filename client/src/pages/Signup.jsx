@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,7 +11,6 @@ import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
 import Cookies from "universal-cookie";
 import decode from "jwt-decode";
-import { useEffect } from "react";
 
 export default function SignUp() {
   let { user, setUser } = useAuth();
@@ -22,9 +20,11 @@ export default function SignUp() {
 
   let origin = location.state?.from?.pathname || "/";
 
-  const handleSubmit = async (event) => {
+  ////////////////////////////////////////////////////////////////////////////////
+  // Function for signing up
+  ////////////////////////////////////////////////////////////////////////////////
+  const handleSignin = async (event) => {
     event.preventDefault();
-    toast('res.message');
     const form = new FormData(event.currentTarget);
     const newUser = {
       name: form.get("name"),
@@ -39,27 +39,22 @@ export default function SignUp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
       });
-      const { token } = await res.json();
-      console.log(res);
+      const { token, message } = await res.json();
 
-      if (!res.ok) {
-        console.log("not ok");
-        toast("Failed to fetch user: Code:");
-        return;
+      if (!res.ok) return toast(`Message: ${message}\nCode: ${res.status}`);
+      if (res.status === 201) {
+        // Saves token as browser cookie
+        const { data: user } = decode(token);
+        cookies.set("token", token, { maxAge: process.env.MAX_AGE });
+
+        // Saves user state
+        setUser(user);
+
+        toast("Pet Created Successfully!");
+
+        // Sends the user back to original page they were
+        navigate(origin, { replace: true });
       }
-
-      // Saves token as browser cookie
-
-      const { data: user } = decode(token);
-      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
-
-      // Saves user state
-      setUser(user);
-
-      toast(res.message);
-
-      // Sends the user back to original page they were
-      if (res.code === 200) navigate(origin, { replace: true });
     } catch (err) {
       toast(err.message);
     }
@@ -97,7 +92,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" noValidate onSubmit={handleSignin} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
