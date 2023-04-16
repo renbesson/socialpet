@@ -40,7 +40,7 @@ export default function SignUp() {
   };
 
   return !auth.user ? (
-    <Grid container component="main" sx={{ height: "100vh" }}>
+    <Grid container component="main" sx={{ height: "80vh" }}>
       <CssBaseline />
       <Grid
         item
@@ -51,9 +51,11 @@ export default function SignUp() {
           backgroundImage:
             "url(https://images.unsplash.com/photo-1580649969708-0f2c74c81797?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzUwfHxwZXRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60)",
           backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
+          // backgroundAttachment: "fixed",
           backgroundColor: (t) =>
-            t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
+            t.palette.mode === "light"
+              ? t.palette.grey[50]
+              : t.palette.grey[900],
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -71,7 +73,12 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -117,7 +124,12 @@ export default function SignUp() {
               id="species"
             />
             {/* Name, emailadd, pw, type, species, Age,  */}
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Sign Up
             </Button>
             <Grid container>

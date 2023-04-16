@@ -1,5 +1,5 @@
 .sidebar {
-  flex: 3;
+  flex: 3px;
   height: calc(100vh - 50px);
   /* overflow-y: scroll; */
   position: sticky;
@@ -22,8 +22,13 @@
 
 .sidebarList {
   padding: 0;
-  margin: 0;
+  /* margin: 0; */
   list-style: none;
+  margin-left: 15px;
+}
+
+h4 {
+  margin-left: 15px;
 }
 
 .sidebarListItem {
