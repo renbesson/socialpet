@@ -1,14 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Requires
 ////////////////////////////////////////////////////////////////////////////////
-const Pet = require('../../models/Pet');
-const router = require('express').Router();
-const bcrypt = require('bcrypt');
+const Pet = require("../../models/Pet");
+const router = require("express").Router();
+const bcrypt = require("bcrypt");
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get one pet
 ////////////////////////////////////////////////////////////////////////////////
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   const petId = req.query.petId;
 
   try {
@@ -21,24 +21,16 @@ router.get('/', async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get friends
+//  Get a follow
 ////////////////////////////////////////////////////////////////////////////////
-router.get('/friends/', async (req, res) => {
+router.get("/follow", async (req, res) => {
   const petId = req.query.petId;
+  const followId = req.query.followId;
 
   try {
-    const pet = await Pet.findById(petId);
-    const friends = await Promise.all(
-      pet.followers.map((friendId) => {
-        return Pet.findById(friendId);
-      })
-    );
-    let friendList = [];
-    friends.map((friend) => {
-      const { _id, name, profilePicture } = friend;
-      friendList.push({ _id, name, profilePicture });
-    });
-    res.status(200).json(friendList);
+    const followingPet = await Pet.findById(followId).populate("posts");
+    const { password, updatedAt, ...other } = followingPet._doc;
+    res.status(200).json(other);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -47,7 +39,7 @@ router.get('/friends/', async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Follow a pet
 ////////////////////////////////////////////////////////////////////////////////
-router.put('/:id/follow', async (req, res) => {
+router.put("/:id/follow", async (req, res) => {
   const petId = req.query.petId;
 
   if (req.body.petId !== req.params.id) {
@@ -57,22 +49,22 @@ router.put('/:id/follow', async (req, res) => {
       if (!pet.followers.includes(req.body.petId)) {
         await pet.updateOne({ $push: { followers: req.body.petId } });
         await currentPet.updateOne({ $push: { followings: req.params.id } });
-        res.status(200).json('pet has been followed');
+        res.status(200).json("pet has been followed");
       } else {
-        res.status(403).json('you allready follow this pet');
+        res.status(403).json("you allready follow this pet");
       }
     } catch (err) {
       res.status(500).json(err);
     }
   } else {
-    res.status(403).json('you cant follow yourself');
+    res.status(403).json("you cant follow yourself");
   }
 });
 
 ////////////////////////////////////////////////////////////////////////////////
 // Unfollow a pet
 ////////////////////////////////////////////////////////////////////////////////
-router.put('/:id/unfollow', async (req, res) => {
+router.put("/:id/unfollow", async (req, res) => {
   if (req.body.petId !== req.params.id) {
     try {
       const pet = await Pet.findById(req.params.id);
@@ -80,15 +72,15 @@ router.put('/:id/unfollow', async (req, res) => {
       if (pet.followers.includes(req.body.petId)) {
         await pet.updateOne({ $pull: { followers: req.body.petId } });
         await currentPet.updateOne({ $pull: { followings: req.params.id } });
-        res.status(200).json('pet has been unfollowed');
+        res.status(200).json("pet has been unfollowed");
       } else {
-        res.status(403).json('you dont follow this pet');
+        res.status(403).json("you dont follow this pet");
       }
     } catch (err) {
       res.status(500).json(err);
     }
   } else {
-    res.status(403).json('you cant unfollow yourself');
+    res.status(403).json("you cant unfollow yourself");
   }
 });
 

@@ -1,7 +1,7 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import { useLocation, Navigate } from 'react-router-dom';
-import Cookies from 'universal-cookie';
-import decode from 'jwt-decode';
+import { createContext, useState, useContext, useEffect } from "react";
+import { useLocation, Navigate } from "react-router-dom";
+import Cookies from "universal-cookie";
+import decode from "jwt-decode";
 
 let AuthContext = createContext(null);
 
@@ -14,7 +14,7 @@ function AuthProvider({ children }) {
   ////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     (async () => {
-      const token = cookies.get('token');
+      const token = cookies.get("token");
 
       // Checks if a token exists as cookie
       if (token) {
@@ -26,7 +26,7 @@ function AuthProvider({ children }) {
           setUser(user);
         } else {
           // Removes expired cookie
-          cookies.remove('token');
+          cookies.remove("token");
         }
       }
     })();
@@ -37,9 +37,9 @@ function AuthProvider({ children }) {
   ////////////////////////////////////////////////////////////////////////////////
   let signup = async (data) => {
     try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
@@ -48,7 +48,7 @@ function AuthProvider({ children }) {
       // Saves token as browser cookie
       const { token, message, code } = await res.json();
       const { data: user } = decode(token);
-      cookies.set('token', token, { maxAge: process.env.MAX_AGE });
+      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
 
       // Saves user state
       setUser(user);
@@ -63,18 +63,18 @@ function AuthProvider({ children }) {
   ////////////////////////////////////////////////////////////////////////////////
   let signin = async (email, password) => {
     try {
-      const res = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) return await res.json();
-
+      console.log("signin: ", res);
       // Saves token as browser cookie
       const { token, message, code } = await res.json();
       const { data: user } = decode(token);
-      cookies.set('token', token, { maxAge: process.env.MAX_AGE });
+      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
 
       // Saves user state
       setUser(user);
@@ -90,11 +90,11 @@ function AuthProvider({ children }) {
   let signout = async (token) => {
     try {
       // Removes token as browser cookie
-      cookies.remove('token');
+      cookies.remove("token");
 
       // Clears user state
       setUser(null);
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (err) {
       return err;
     }
@@ -106,16 +106,16 @@ function AuthProvider({ children }) {
   let updateProfile = async (data) => {
     try {
       const res = await fetch(`/api/auth/update`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ petId: user?._id, data, token: cookies.get('token') }),
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ petId: user?._id, data, token: cookies.get("token") }),
       });
       if (!res.ok) return await res.json();
 
       // Saves token as browser cookie
       const { token, message, code } = await res.json();
       // const { data: user } = decode(token);
-      cookies.set('token', token, { maxAge: process.env.MAX_AGE });
+      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
 
       // Saves user state
       setUser(user);
@@ -138,7 +138,7 @@ function useAuth() {
 function RequireAuth({ children }) {
   const cookies = new Cookies();
   let location = useLocation();
-  const token = cookies.get('token');
+  const token = cookies.get("token");
 
   if (!token) {
     // Redirect them to the /login page, but save the current location they were
