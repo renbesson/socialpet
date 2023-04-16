@@ -13,21 +13,23 @@ function AuthProvider({ children }) {
   // Checks if client already has a valid token
   ////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
-    const token = cookies.get('token');
+    (async () => {
+      const token = cookies.get('token');
 
-    // Checks if a token exists as cookie
-    if (token) {
-      const { data: user, exp } = decode(token);
+      // Checks if a token exists as cookie
+      if (token) {
+        const { data: user, exp } = decode(token);
 
-      // Checks if token is not expired
-      if (Date.now() <= exp * 1000) {
-        //Sets user state
-        setUser(user);
-      } else {
-        // Removes expired cookie
-        cookies.remove('token');
+        // Checks if token is not expired
+        if (Date.now() <= exp * 1000) {
+          //Sets user state
+          setUser(user);
+        } else {
+          // Removes expired cookie
+          cookies.remove('token');
+        }
       }
-    }
+    })();
   }, []);
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -134,15 +136,16 @@ function useAuth() {
 }
 
 function RequireAuth({ children }) {
-  let auth = useAuth();
+  const cookies = new Cookies();
   let location = useLocation();
+  const token = cookies.get('token');
 
-  if (!auth.user) {
+  if (!token) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
     // than dropping them off on the home page.
-    setTimeout(() => <Navigate to="/signin" state={{ from: location }} replace />, 1000);
+    return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
   return children;
