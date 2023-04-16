@@ -28,9 +28,10 @@ router.post("/signup", async (req, res) => {
     // Save pet and send response
     const pet = await newPet.save();
     const token = signToken(pet);
-    res.status(200).json({ token, message: "Pet created!" });
+    // Code 201 - Created
+    res.status(201).json({ token });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json(err);
   }
 });
 
