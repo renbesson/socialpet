@@ -6,56 +6,6 @@ const router = require('express').Router();
 const bcrypt = require('bcrypt');
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Update pet
-////////////////////////////////////////////////////////////////////////////////
-router.put('/', async (req, res) => {
-  const petId = req.query.petId;
-
-  if (req.body.petId === petId) {
-    if (req.body.password) {
-      try {
-        const salt = await bcrypt.genSalt(10);
-        req.body.password = await bcrypt.hash(req.body.password, salt);
-      } catch (err) {
-        return res.status(500).json(err);
-      }
-    }
-    try {
-      const pet = await Pet.findByIdAndUpdate(
-        petId,
-        {
-          $set: req.body,
-        },
-        { new: true }
-      );
-      res.status(200).json(pet);
-    } catch (err) {
-      return res.status(500).json(err);
-    }
-  } else {
-    return res.status(403).json('You can update only your account!');
-  }
-});
-
-////////////////////////////////////////////////////////////////////////////////
-//  Delete pet
-////////////////////////////////////////////////////////////////////////////////
-router.delete('/', async (req, res) => {
-  const petId = req.query.petId;
-
-  if (req.body.petId === petId) {
-    try {
-      const pet = await Pet.findByIdAndDelete(petId);
-      res.status(200).json(pet);
-    } catch (err) {
-      return res.status(500).json(err);
-    }
-  } else {
-    return res.status(403).json('You can delete only your account!');
-  }
-});
-
-////////////////////////////////////////////////////////////////////////////////
 //  Get one pet
 ////////////////////////////////////////////////////////////////////////////////
 router.get('/', async (req, res) => {
@@ -99,7 +49,7 @@ router.get('/friends/', async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 router.put('/:id/follow', async (req, res) => {
   const petId = req.query.petId;
-  
+
   if (req.body.petId !== req.params.id) {
     try {
       const pet = await Pet.findById(req.params.id);
