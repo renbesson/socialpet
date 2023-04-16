@@ -47,8 +47,6 @@ function AuthProvider({ children }) {
     }
   };
 
-
-
   let value = { user, setUser, signout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
