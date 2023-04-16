@@ -1,140 +1,175 @@
-import * as React from 'react';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { useAuth } from '../utils/authProvider';
-import { toast } from 'react-toastify';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+function Copyright(props) {
+  return (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
+      <Link color="inherit" href="https://mui.com/">
+        SocialPet
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
+
+const theme = createTheme();
 
 export default function SignUp() {
-  let auth = useAuth();
-  let location = useLocation();
-  let navigate = useNavigate();
-
-  let origin = location.state?.from?.pathname || '/';
-
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const newUser = {
-      name: form.get('name'),
-      email: form.get('newEmail'),
-      password: form.get('newPassword'),
-      type: form.get('type'),
-      species: form.get('species'),
-    };
-    try {
-      const res = await auth.signup(newUser);
-      toast(res.message);
-
-      // Sends the user back to original page they were
-      if (res.code === 200) navigate(origin, { replace: true });
-    } catch (err) {
-      toast(err.message);
-    }
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get("email"),
+      password: data.get("password"),
+    });
   };
 
-  return !auth.user ? (
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      <CssBaseline />
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundImage: 'url(https://source.unsplash.com/random)',
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: (t) =>
-            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box
+  return (
+    <ThemeProvider theme={theme}>
+      <Grid container component="main" sx={{ height: "100vh" }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
           sx={{
-            my: 8,
-            mx: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1580649969708-0f2c74c81797?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzUwfHxwZXRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60)",
+            backgroundRepeat: "no-repeat",
+            backgroundColor: (t) =>
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
-        >
-          <Typography component="h1" variant="h5">
-            Sign Up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="name"
-              label="name"
-              type="name"
-              id="name"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="newEmail"
-              label="Email Address"
-              name="newEmail"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="newPassword"
-              label="Password"
-              type="password"
-              id="newPassword"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="type"
-              label="type"
-              type="type"
-              id="type"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="species"
-              label="species"
-              type="species"
-              id="species"
-            />
-            {/* Name, emailadd, pw, type, species, Age,  */}
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign Up
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="name"
+                label="name"
+                type="name"
+                id="name"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="type"
+                label="type"
+                type="type"
+                id="type"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="species"
+                label="species"
+                type="species"
+                id="species"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="age"
+                label="age"
+                type="age"
+                id="age"
+              />
+              {/* Name, emailadd, pw, type, species, Age,  */}
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link component={RouterLink} to="/signin" variant="body2">
-                  {'Already have an account? Sign In'}
-                </Link>
-              </Grid>
-            </Grid>
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
           </Box>
-        </Box>
+        </Grid>
       </Grid>
-    </Grid>
-  ) : (
-    <h1>Already signed in!</h1>
+    </ThemeProvider>
   );
 }
