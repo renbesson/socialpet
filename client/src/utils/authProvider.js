@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useMemo } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import decode from "jwt-decode";
@@ -7,8 +7,7 @@ let AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const cookies = new Cookies();
-
+  const cookies = useMemo(() => new Cookies(), []);
   ////////////////////////////////////////////////////////////////////////////////
   // Checks if client already has a valid token
   ////////////////////////////////////////////////////////////////////////////////
@@ -30,59 +29,7 @@ function AuthProvider({ children }) {
         }
       }
     })();
-  }, []);
-
-  ////////////////////////////////////////////////////////////////////////////////
-  // Function for signing up
-  ////////////////////////////////////////////////////////////////////////////////
-  let signup = async (data) => {
-    try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) return await res.json();
-
-      // Saves token as browser cookie
-      const { token, message, code } = await res.json();
-      const { data: user } = decode(token);
-      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
-
-      // Saves user state
-      setUser(user);
-      return { user, message, code };
-    } catch (err) {
-      return err;
-    }
-  };
-
-  ////////////////////////////////////////////////////////////////////////////////
-  // Function for signing in
-  ////////////////////////////////////////////////////////////////////////////////
-  let signin = async (email, password) => {
-    try {
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) return await res.json();
-      console.log("signin: ", res);
-      // Saves token as browser cookie
-      const { token, message, code } = await res.json();
-      const { data: user } = decode(token);
-      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
-
-      // Saves user state
-      setUser(user);
-      return { user, message, code };
-    } catch (err) {
-      return err;
-    }
-  };
+  }, [cookies]);
 
   ////////////////////////////////////////////////////////////////////////////////
   // Function for signing out
@@ -100,33 +47,9 @@ function AuthProvider({ children }) {
     }
   };
 
-  ////////////////////////////////////////////////////////////////////////////////
-  // Function for updating profile
-  ////////////////////////////////////////////////////////////////////////////////
-  let updateProfile = async (data) => {
-    try {
-      const res = await fetch(`/api/auth/update`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ petId: user?._id, data, token: cookies.get("token") }),
-      });
-      if (!res.ok) return await res.json();
 
-      // Saves token as browser cookie
-      const { token, message, code } = await res.json();
-      // const { data: user } = decode(token);
-      cookies.set("token", token, { maxAge: process.env.MAX_AGE });
 
-      // Saves user state
-      setUser(user);
-      return { user, message, code };
-    } catch (err) {
-      console.log(err.message);
-      return err;
-    }
-  };
-
-  let value = { user, signup, signin, signout, updateProfile };
+  let value = { user, setUser, signout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
