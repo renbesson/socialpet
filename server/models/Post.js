@@ -1,19 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Define Mongoose
 ////////////////////////////////////////////////////////////////////////////////
-const { model, Schema } = require('mongoose');
-const CommentSchema = require('./Comment');
+const { model, Schema } = require("mongoose");
+const CommentSchema = require("./Comment");
 
 ////////////////////////////////////////////////////////////////////////////////
 // Creates the Post schema
 ////////////////////////////////////////////////////////////////////////////////
 const PostSchema = new Schema(
   {
-    ownerId: { type: Schema.Types.ObjectId, ref: 'Pet', require: true },
-    mediaUrl: { type: String, default: '' },
+    ownerId: { type: Schema.Types.ObjectId, ref: "Pet", require: true },
+    mediaUrl: { type: String, default: "" },
     content: { type: String, require: true, minLength: 1, maxLength: 1000 },
-    likedBy: [{ type: Schema.Types.ObjectId, ref: 'Pet' }],
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    likedBy: [{ type: Schema.Types.ObjectId, ref: "Pet" }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );
@@ -21,8 +21,10 @@ const PostSchema = new Schema(
 ////////////////////////////////////////////////////////////////////////////////
 // Creates a virtual that returns the total of reactions
 ////////////////////////////////////////////////////////////////////////////////
-PostSchema.virtual('likes').get(function () {
+PostSchema.virtual("likes").get(function () {
   return this.likedBy.length;
 });
 
-module.exports = model('Post', PostSchema);
+const Post = model("Post", PostSchema);
+
+module.exports = Post;
