@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Requires
 ////////////////////////////////////////////////////////////////////////////////
-const { model, models, Schema } = require('mongoose');
-const Post = require('./Post');
+const { model, models, Schema } = require("mongoose");
+const Post = require("./Post");
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Creates the Pet schema
@@ -15,12 +15,12 @@ const PetSchema = new Schema(
     type: { type: String, required: true },
     species: { type: String, required: true },
     age: { type: Number, default: null },
-    location: { type: String, default: '' },
-    avatar: { type: String, default: '' },
-    coverImage: { type: String, default: '' },
-    following: [{ type: Schema.Types.ObjectId, ref: 'Pet' }],
-    followers: [{ type: Schema.Types.ObjectId, ref: 'Pet' }],
-    posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+    location: { type: String, default: "" },
+    avatar: { type: String, default: "" },
+    coverImage: { type: String, default: "" },
+    following: [{ type: Schema.Types.ObjectId, ref: "Pet" }],
+    followers: [{ type: Schema.Types.ObjectId, ref: "Pet" }],
+    posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   },
   { timestamps: true }
 );
@@ -28,9 +28,12 @@ const PetSchema = new Schema(
 ////////////////////////////////////////////////////////////////////////////////
 //  Ensures the email is unique upon creation
 ////////////////////////////////////////////////////////////////////////////////
-PetSchema.path('email').validate(async (email) => {
+PetSchema.path("email").validate(async (email) => {
   const emailFind = await models.Pet.findOne({ email });
   return emailFind ? false : true;
-}, 'Email is already being used.');
+}, "Email is already being used.");
 
-module.exports = model('Pet', PetSchema);
+//Updated to allow export of Pet ********By Tinashe
+const Pet = model("Pet", PetSchema);
+
+module.exports = Pet;
