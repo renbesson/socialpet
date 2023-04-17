@@ -6,7 +6,5 @@ import NotSignedHome from "./NotSignedHome";
 export default function Home() {
   const { user } = useAuth();
 
-  console.log(JSON.stringify(user));
-
   return user ? <SignedHome /> : <NotSignedHome />;
 }

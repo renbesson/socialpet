@@ -1,38 +1,54 @@
 // import { PermMedia } from "@mui/icons-material";
-import "./share.css";
-import FileUpload from "../FileUploader";
 import { useState } from "react";
 import { RequireAuth, useAuth } from "../../utils/authProvider";
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Button, Card, CardActions } from "@mui/material";
+import { CardContent, CardHeader, CardMedia, TextField } from "@mui/material";
+import { Typography } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
 import Cookies from "universal-cookie";
-import decode from "jwt-decode";
+import moment from "moment";
 
 export default function Share() {
-  const [files, setfiles] = useState([""]);
   const { user } = useAuth();
   const cookies = new Cookies();
+  const [image, setImage] = useState(null);
 
+  ////////////////////////////////////////////////////////////////////////////////
+  // Stores the uploaded image as state
+  ////////////////////////////////////////////////////////////////////////////////
+
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const addImage = async (event) => {
+    setImage(event.target.files[0]);
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////
+  //  Creates the post
+  ////////////////////////////////////////////////////////////////////////////////
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("test");
-    const form = new FormData(event.currentTarget);
-    const newPost = { content: form.get("content") };
+    const formData = new FormData(event.currentTarget);
+
     try {
+      // Converts the file to base64
+      const fileAsString = await toBase64(formData.get("image"));
+
       const res = await fetch("/api/post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: cookies.get("token"), ...newPost }),
+        body: JSON.stringify({
+          token: cookies.get("token"),
+          content: formData.get("content"),
+          fileAsString,
+        }),
       });
       const { post, message } = await res.json();
 
@@ -46,16 +62,14 @@ export default function Share() {
         );
       if (res.status === 201) {
         // Clear the content textfield
-        form.set("content", "");
+        formData.set("content", "");
 
-        toast(
-          <div>
-            <b>Post Created!</b>
-          </div>
-        );
+        toast("Post Created!");
 
         // Reloads the page to get the new post
         setTimeout(() => window.location.reload(), 1000);
+
+        toast(message);
       }
     } catch (err) {
       toast(err.message);
@@ -64,7 +78,7 @@ export default function Share() {
 
   return (
     <RequireAuth>
-      <Card sx={{ boxShadow: 5 }}>
+      <Card sx={{ boxShadow: 5, maxWidth: 800 }}>
         <CardHeader
           avatar={
             <Avatar
@@ -74,7 +88,12 @@ export default function Share() {
             ></Avatar>
           }
           title={<Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>}
-          subheader="September 14, 2016"
+          subheader={moment().format("MMMM DD, YYYY")}
+        />
+        <CardMedia
+          component="img"
+          sx={{ objectFit: "fill", maxHeight: 400 }}
+          image={image ? URL.createObjectURL(image) : ""}
         />
         <CardContent>
           <Box
@@ -83,6 +102,20 @@ export default function Share() {
             onSubmit={handleSubmit}
             sx={{ mt: 1 }}
           >
+            <Button
+              variant="contained"
+              component="label"
+              endIcon={<CloudUploadIcon />}
+            >
+              Upload Image
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                name="image"
+                onChange={addImage}
+              />
+            </Button>
             <TextField
               margin="normal"
               required

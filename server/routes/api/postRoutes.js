@@ -5,6 +5,10 @@ const Pet = require("../../models/Pet");
 const Post = require("../../models/Post");
 const { checkToken } = require("../../utils/checkToken");
 const router = require("express").Router();
+const { bucket } = require("../../config/firebase");
+const multer = require("multer");
+
+const upload = multer({ dest: "images/" });
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get one post **TODO**
@@ -22,10 +26,69 @@ router.get("/", async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
+//  Get following posts
+////////////////////////////////////////////////////////////////////////////////
+router.get("/following", async (req, res) => {
+  const petId = req.query.petId;
+
+  try {
+    const posts = await Post.find({}).populate("ownerId");
+    res.status(200).json({ posts });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////
 //  Post a post
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/", checkToken, async (req, res) => {
+  // Uploads the image to firebase storage and saves its URL on 'req.body.mediaUrl'
   try {
+    // Raw base64 File
+    const fileBase64 = req.body.fileAsString;
+
+    // Just the bytes without the metadata (needed to upload to firebase storage)
+    const fileBytes = fileBase64.split(",")[1];
+
+    // Creates a buffer with the fileBytes
+    const fileBuffer = Buffer.from(fileBytes, "base64");
+
+    // Gets only the file extension
+    const fileExtension = fileBase64.split(";")[0].split("/")[1];
+
+    // Sets the path for the file on the remote server
+    const remotePath = `avatars/${req.user._id}_avatar.${fileExtension}`;
+
+    const file = bucket.file(remotePath);
+
+    const sendFile = () =>
+      new Promise((resolve, reject) => {
+        file
+          .createWriteStream()
+          .on("error", (err) => {
+            reject(err);
+          })
+          .on("finish", async () => {
+            const url = await file.getSignedUrl({
+              version: "v2",
+              action: "read",
+              expires: Date.now() + 60 * 60 * 100000000,
+            });
+            resolve(url[0]);
+          })
+          .end(fileBuffer);
+      });
+    const url = await sendFile();
+    req.body.mediaUrl = url;
+  } catch (err) {
+    res.status(500).json(err);
+  }
+
+  // Saves the post to the database
+  try {
+    console.log("2try: " + req.body.mediaUrl);
     const newPost = new Post({
       ownerId: req.user._id,
       mediaUrl: req.body.mediaUrl,
@@ -41,7 +104,8 @@ router.post("/", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Update a post
 ////////////////////////////////////////////////////////////////////////////////
-router.put("/", checkToken, async (req, res) => {
+
+router.put("/", [checkToken, upload.single("image")], async (req, res) => {
   const postId = req.query.postId;
 
   // Gets the post and checks if the requester is the owner
@@ -114,3 +178,46 @@ router.put("/:id/unfollow", async (req, res) => {
 });
 
 module.exports = router;
+
+////////////////////////////////////////////////////////////////////////////////
+// Upload an image
+////////////////////////////////////////////////////////////////////////////////
+router.post("/image", checkToken, async (req, res) => {
+  try {
+    // Raw base64 File
+    const fileBase64 = req.body.fileAsString;
+
+    // Just the bytes without the metadata (needed to upload to firebase storage)
+    const fileBytes = fileBase64.split(",")[1];
+
+    // Creates a buffer with the fileBytes
+    const fileBuffer = Buffer.from(fileBytes, "base64");
+
+    // Gets only the file extension
+    const fileExtension = fileBase64.split(";")[0].split("/")[1];
+
+    // Sets the path for the file on the remote server
+    const remotePath = `avatars/${req.user._id}_avatar.${fileExtension}`;
+
+    const file = bucket.file(remotePath);
+
+    file
+      .createWriteStream()
+      .on("error", (err) => {
+        console.error("Error uploading file:", err);
+      })
+      .on("finish", () => {
+        console.log(`File ${remotePath} uploaded successfully.`);
+      })
+      .end(fileBuffer);
+
+    const url = await file.getSignedUrl({
+      version: "v2",
+      action: "read",
+      expires: Date.now() + 60 * 60 * 100000000,
+    });
+    res.status(201).json({ url });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});

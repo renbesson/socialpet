@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -19,10 +19,12 @@ const pages = [
   { text: "Following", link: "/following" },
   { text: "Followers", link: "/following" },
 ];
+
 const signInSettings = [
   { text: "Profile", link: "/profile" },
   { text: "Sign Out", link: "/signout" },
 ];
+
 const signOutSettings = [
   { text: "Sign In", link: "/signin" },
   { text: "Sign Up", link: "/signup" },
@@ -62,7 +64,7 @@ function ResponsiveAppBar() {
           <Typography
             variant="h6"
             noWrap
-            component={Link}
+            component={RouterLink}
             to="/"
             sx={{
               mr: 2,
@@ -108,7 +110,7 @@ function ResponsiveAppBar() {
               {pages.map((page) => (
                 <MenuItem
                   key={page.text}
-                  component={Link}
+                  component={RouterLink}
                   to={page.link}
                   onClick={handleCloseNavMenu}
                 >
@@ -120,7 +122,7 @@ function ResponsiveAppBar() {
           <Typography
             variant="h5"
             noWrap
-            component={Link}
+            component={RouterLink}
             to="/"
             sx={{
               mr: 2,
@@ -134,19 +136,7 @@ function ResponsiveAppBar() {
           >
             Social Pet
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.text}
-                component={Link}
-                to={page.link}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page.text}
-              </Button>
-            ))}
-          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
           <Box sx={{ flexGrow: 0 }}>
             <Typography variant="p" noWrap sx={{ mr: 2 }}>
               {user?.name}
@@ -175,7 +165,7 @@ function ResponsiveAppBar() {
               {settings.map((setting) => (
                 <MenuItem
                   key={setting.text}
-                  component={Link}
+                  component={RouterLink}
                   to={setting.link}
                   onClick={handleCloseUserMenu}
                 >
