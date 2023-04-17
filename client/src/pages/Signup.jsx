@@ -40,7 +40,7 @@ export default function SignUp() {
   };
 
   return !auth.user ? (
-    <Grid container component="main" sx={{ height: "80vh" }}>
+    <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
       <Grid
         item

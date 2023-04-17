@@ -32,7 +32,7 @@ export default function Login() {
   };
 
   return !auth.user ? (
-    <Grid container component="main" sx={{ height: "100vh" }}>
+    <Grid container component="main" sx={{ height: "90.2vh" }}>
       <CssBaseline />
       <Grid
         item

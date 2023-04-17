@@ -14,6 +14,9 @@ export default function Post({ post }) {
     setLike(isliked ? like - 1 : like + 1);
     setIsLiked(!isliked);
   };
+
+  console.log("***" + Users.filter((u) => u._id === post.ownerId));
+
   return (
     <div className="post">
       <div className="postWrapper">
@@ -21,11 +24,11 @@ export default function Post({ post }) {
           <div className="postTopLeft">
             <img
               className="postProfileImg"
-              src={Users.filter((u) => u.id === post.userId)[0].avatar}
+              src={Users.filter((u) => u._id === post.ownerId[0].avatar)}
               alt="img"
             />
             <span className="postUsername">
-              {Users.filter((u) => u.id === post.userId)[0].name}
+              {Users.filter((u) => u._id === post.ownerId[0].name)}
             </span>
             <span className="postDate"> Yesterday(To be updated)</span>
           </div>
