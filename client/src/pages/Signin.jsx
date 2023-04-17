@@ -9,29 +9,58 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
+import Cookies from "universal-cookie";
+import decode from "jwt-decode";
 
 export default function Login() {
-  let auth = useAuth();
+  let { user, setUser } = useAuth();
+  const cookies = new Cookies();
   let location = useLocation();
   let navigate = useNavigate();
 
   let origin = location.state?.from?.pathname || "/";
 
-  const handleSubmit = async (event) => {
+  ////////////////////////////////////////////////////////////////////////////////
+  // Function for signing in
+  ////////////////////////////////////////////////////////////////////////////////
+  const handleSignin = async (event) => {
     event.preventDefault();
-    try {
-      const data = new FormData(event.currentTarget);
-      const res = await auth.signin(data.get("email"), data.get("password"));
-      toast(res.message);
 
-      // Sends the user back to original page they were
-      if (res.code === 200) navigate(origin, { replace: true });
+    try {
+      const form = new FormData(event.currentTarget);
+
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.get("email"),
+          password: form.get("password"),
+        }),
+      });
+      const { token, message } = await res.json();
+
+      if (res.status === 404) return toast("Wrong Email!");
+      if (res.status === 401) return toast("Wrong Password!");
+      if (!res.ok) return toast(`Message: ${message}\nCode: ${res.status}`);
+      if (res.status === 200) {
+        // Saves token as browser cookie
+        const { data: user } = decode(token);
+        cookies.set("token", token, { maxAge: process.env.MAX_AGE });
+
+        // Saves user state
+        setUser(user);
+
+        toast(`Welcome back, ${user.name}!`);
+
+        // Sends the user back to original page they were
+        navigate(origin, { replace: true });
+      }
     } catch (err) {
       toast(err.message);
     }
   };
 
-  return !auth.user ? (
+  return !user ? (
     <Grid container component="main" sx={{ height: "90.2vh" }}>
       <CssBaseline />
       <Grid
@@ -68,7 +97,7 @@ export default function Login() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleSignin}
             sx={{ mt: 1 }}
           >
             <TextField

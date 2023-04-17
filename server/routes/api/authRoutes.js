@@ -28,9 +28,10 @@ router.post("/signup", async (req, res) => {
     // Save pet and send response
     const pet = await newPet.save();
     const token = signToken(pet);
-    res.status(200).json({ token, message: "Pet created!" });
+    // Code 201 - Created
+    res.status(201).json({ token });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json(err);
   }
 });
 
@@ -40,15 +41,23 @@ router.post("/signup", async (req, res) => {
 router.post("/signin", async (req, res) => {
   try {
     const pet = await Pet.findOne({ email: req.body.email });
-    if (!pet) return res.status(404).json({ message: "Wrong email!" });
 
+    // Code 404 - Not Found
+    if (!pet) return res.status(404).json({});
+
+    // Check if password is correct
     const validPassword = await bcrypt.compare(req.body.password, pet.password);
-    if (!validPassword) return res.status(400).json({ message: "Wrong password!" });
 
+    // Code 401 - Unauthorized
+    if (!validPassword) return res.status(401).json({});
+
+    // Calls function that tokenizes the user data
     const token = signToken(pet);
-    res.status(200).json({ token, message: "Signed In!" });
+
+    // Code 200 - Ok
+    res.status(200).json({ token });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json(err);
   }
 });
 
@@ -57,7 +66,7 @@ router.post("/signin", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 router.put("/update", checkToken, async (req, res) => {
   const petId = req.body.petId;
-  const password = req.body.data.password.trim();
+  const password = req.body.data?.password?.trim();
 
   // Encrypts the new password and updates it first to avoid
   if (password?.length >= 8) {
@@ -72,10 +81,11 @@ router.put("/update", checkToken, async (req, res) => {
         { new: true }
       );
     } catch (err) {
-      return res.status(500).json({ message: err });
+      return res.status(500).json(err);
     }
   } else if (password?.length > 0 && password.length < 8) {
-    return res.status(500).json({ message: "Password must be at least 8 characters!" });
+    // Code 406 - Not Acceptable
+    return res.status(406).json({});
   }
   try {
     const { name, email, type, species, location } = req.body.data;
@@ -90,9 +100,10 @@ router.put("/update", checkToken, async (req, res) => {
     // Creates a new token
     const token = signToken(pet);
 
-    res.status(200).json({ token, pet, message: "Profile updated successfuly!" });
+    // Code 201 - Created
+    res.status(201).json({ token });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return res.status(500).json(err);
   }
 });
 

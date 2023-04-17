@@ -2,10 +2,11 @@
 //  Requires
 ////////////////////////////////////////////////////////////////////////////////
 const Pet = require("../../models/Pet");
+const Post = require("../../models/Post");
 const router = require("express").Router();
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get one pet
+//  Get one post **TODO**
 ////////////////////////////////////////////////////////////////////////////////
 router.get("/", async (req, res) => {
   const petId = req.query.petId;
@@ -20,16 +21,17 @@ router.get("/", async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get a follow
+//  Post a post
 ////////////////////////////////////////////////////////////////////////////////
-router.get("/follow", async (req, res) => {
-  const petId = req.query.petId;
+router.post("/", async (req, res) => {
+  const postId = req.query.petId;
 
   try {
-    const followingPet = await Pet.findById(petId).populate("posts");
-    const { password, updatedAt, ...other } = followingPet._doc;
-    res.status(200).json(other);
+    const post = await Post.findById(postId);
+    res.status(200).json(post._doc);
   } catch (err) {
+    console.log("error");
+    console.log(err);
     res.status(500).json(err);
   }
 });

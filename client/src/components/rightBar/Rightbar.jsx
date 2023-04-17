@@ -1,4 +1,7 @@
 import "./rightbar.css";
+import * as React from "react";
+import Button from "@mui/material/Button";
+import UpdateIcon from "@mui/icons-material/Update";
 
 export default function Rightbar() {
   return (
@@ -32,6 +35,18 @@ export default function Rightbar() {
           </li>
         </ul>
         <hr className="sidebarHr" />
+      </div>
+      <div className="updateProfileButton">
+        <Button
+          variant="contained"
+          UpdateIcon={<UpdateIcon />}
+          onClick={() => {
+            alert("clicked");
+          }}
+        >
+          {" "}
+          Update Profile
+        </Button>
       </div>
     </div>
   );
