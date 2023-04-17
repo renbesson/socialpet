@@ -5,6 +5,7 @@ import { useAuth } from "../../utils/authProvider";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Grid } from "@mui/material";
+import { toast } from "react-toastify";
 
 export default function Feed() {
   const { user } = useAuth();
@@ -12,12 +13,16 @@ export default function Feed() {
   const cookies = new Cookies();
 
   const getPosts = async () => {
-    const res = await fetch(`/api/post/following/?petId${user._id}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const { posts, message } = await res.json();
-    setPosts(posts);
+    try {
+      const res = await fetch(`/api/post/following/?petId${user._id}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const { posts, message } = await res.json();
+      setPosts(posts);
+    } catch (err) {
+      toast(err.message);
+    }
   };
 
   useEffect(() => {
@@ -25,7 +30,7 @@ export default function Feed() {
   }, [user]);
 
   return (
-    <Grid sx={{mt: 5}} container spacing={5} justifyContent="center">
+    <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
       <Grid item xs={10}>
         <Share />
       </Grid>

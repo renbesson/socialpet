@@ -35,7 +35,6 @@ router.get("/following", async (req, res) => {
     const posts = await Post.find({}).populate("ownerId");
     res.status(200).json({ posts });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });

@@ -1,7 +1,7 @@
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getStorage } = require("firebase-admin/storage");
 
-var serviceAccount = require(process.env.FIREBASE_KEY);
+var serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 
 initializeApp({
   credential: cert(serviceAccount),
