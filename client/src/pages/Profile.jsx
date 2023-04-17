@@ -61,7 +61,14 @@ export default function Profile() {
 
       if (res.status === 406)
         return toast("Password must be at least 8 characters!");
-      if (!res.ok) return toast(`Message: ${message}\nCode: ${res.status}`);
+      if (!res.ok)
+        return toast(
+          <div>
+            <b>Message:</b> {message}
+            <br />
+            <b>Code:</b> {res.status}
+          </div>
+        );
       if (res.status === 201) {
         // Saves token as browser cookie
         const { data: user } = decode(token);

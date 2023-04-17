@@ -41,7 +41,14 @@ export default function SignUp() {
       });
       const { token, message } = await res.json();
 
-      if (!res.ok) return toast(`Message: ${message}\nCode: ${res.status}`);
+      if (!res.ok)
+        return toast(
+          <div>
+            <b>Message:</b> {message}
+            <br />
+            <b>Code:</b> {res.status}
+          </div>
+        );
       if (res.status === 201) {
         // Saves token as browser cookie
         const { data: user } = decode(token);
