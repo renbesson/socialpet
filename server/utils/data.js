@@ -57,3 +57,5 @@ const Posts = [
     comments: " ",
   },
 ];
+
+module.exports = { Pets };
