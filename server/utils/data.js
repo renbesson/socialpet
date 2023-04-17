@@ -58,4 +58,4 @@ const Posts = [
   },
 ];
 
-module.exports = { Pets };
+module.exports = { Pets, Posts };
