@@ -1,57 +1,42 @@
-import "./sidebar.css";
-import { RssFeed, Group, WorkOutline, PersonSearch } from "@mui/icons-material";
+import * as React from "react";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import { Link as RouterLink } from "react-router-dom";
+import ContentPaste from "@mui/icons-material/ContentPaste";
+import { Box } from "@mui/material";
 
-export default function Sidebar() {
+const pages = [
+  { text: "Posts", link: "/myPosts" },
+  { text: "Following", link: "/following" },
+  { text: "Followers", link: "/following" },
+];
+
+export default function IconMenu() {
   return (
-    <div className="sidebar">
-      <div className="sideWrapper">
-        <h4>Utlilities</h4>
-        <ul className="sidebarList">
-          <li className="sidebarListItem">
-            <RssFeed className="sidebarIcon" />
-            <span className="sidebarListItemText"> Feed</span>
-          </li>
-          <li className="sidebarListItem">
-            <Group className="sidebarIcon" />
-            <span className="sidebarListItemText">Groups</span>
-          </li>
-          <li className="sidebarListItem">
-            <WorkOutline className="sidebarIcon" />
-            <span className="sidebarListItemText">Jobs</span>
-          </li>
-          <li className="sidebarListItem">
-            <PersonSearch className="sidebarIcon" />
-            <span className="sidebarListItemText">Search</span>
-          </li>
-          <hr className="sidebarHr" />
-          <ul className="sidebarFriendList">
-            {/* <li className="sidebarFriend">
-              <img
-                className="sidebarFriendImg"
-                src="/assets/images/andrea-lightfoot-ZePrO18ieX4-unsplash.jpg"
-                alt="friendpic"
-              />
-              <span className="sidebarListItemText">Rob Doe</span>
-            </li>
-            <li className="sidebarFriend">
-              <img
-                className="sidebarFriendImg"
-                src="/assets/images/jamie-street-Zqy-x7K5Qcg-unsplash.jpg"
-                alt="friendpic"
-              />
-              <span className="sidebarListItemText">Dog Smarts</span>
-            </li>
-            <li className="sidebarFriend">
-              <img
-                className="sidebarFriendImg"
-                src="/assets/images/kanashi-BLW_KQ0Rkn0-unsplash.jpg"
-                alt="friendpic"
-              />
-              <span className="sidebarListItemText">Unfazed Cat</span>
-            </li> */}
-          </ul>
-        </ul>
-      </div>
-    </div>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: { md: 200, lg: 300 },
+        display: { xs: "none", md: "block" },
+      }}
+    >
+      <MenuList>
+        {pages.map((page) => (
+          <div key={page.text}>
+            <MenuItem component={RouterLink} to={page.link}>
+              <ListItemIcon>
+                <ContentPaste fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{page.text}</ListItemText>
+            </MenuItem>
+            <Divider />
+          </div>
+        ))}
+      </MenuList>
+    </Box>
   );
 }

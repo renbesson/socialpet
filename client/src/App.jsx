@@ -9,7 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 import Home from "./pages/Home";
-import HomePage from "./pages/HomePage";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Signout from "./pages/Signout";
@@ -52,7 +51,6 @@ function App() {
             <div className="container">
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/homepage" element={<HomePage />} />
                 <Route path="/signin" element={<Signin />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/signout" element={<Signout />} />

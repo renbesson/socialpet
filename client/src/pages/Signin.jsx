@@ -32,13 +32,23 @@ export default function Login() {
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.get("email"), password: form.get("password") }),
+        body: JSON.stringify({
+          email: form.get("email"),
+          password: form.get("password"),
+        }),
       });
       const { token, message } = await res.json();
 
       if (res.status === 404) return toast("Wrong Email!");
       if (res.status === 401) return toast("Wrong Password!");
-      if (!res.ok) return toast(`Message: ${message}\nCode: ${res.status}`);
+      if (!res.ok)
+        return toast(
+          <div>
+            <b>Message:</b> {message}
+            <br />
+            <b>Code:</b> {res.status}
+          </div>
+        );
       if (res.status === 200) {
         // Saves token as browser cookie
         const { data: user } = decode(token);

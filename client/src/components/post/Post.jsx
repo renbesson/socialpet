@@ -1,59 +1,51 @@
-import "./post.css";
-import DynamicFeedSharpIcon from "@mui/icons-material/DynamicFeedSharp";
-// import GradeIcon from "@mui/icons-material/Grade";
-import { Users } from "../dummyData";
-import { useState } from "react";
+import { RequireAuth, useAuth } from "../../utils/authProvider";
+import { Avatar, Card, CardActions, IconButton, Tooltip } from "@mui/material";
+import { CardContent, CardHeader, CardMedia, TextField } from "@mui/material";
+import { Typography } from "@mui/material";
+import moment from "moment";
+import { Fingerprint } from "@mui/icons-material";
 
 export default function Post({ post }) {
-  console.log(post);
+  const { user } = useAuth();
 
-  const [like, setLike] = useState(post.like);
-  const [isliked, setIsLiked] = useState(false);
+  const owner = post.ownerId;
 
-  const likeHandler = () => {
-    setLike(isliked ? like - 1 : like + 1);
-    setIsLiked(!isliked);
-  };
   return (
-    <div className="post">
-      <div className="postWrapper">
-        <div className="postTop">
-          <div className="postTopLeft">
-            <img
-              className="postProfileImg"
-              src={Users.filter((u) => u.id === post.userId)[0].avatar}
-              alt="img"
-            />
-            <span className="postUsername">
-              {Users.filter((u) => u.id === post.userId)[0].name}
-            </span>
-            <span className="postDate"> Yesterday(To be updated)</span>
-          </div>
-
-          <div className="postTopRight">
-            <DynamicFeedSharpIcon />
-          </div>
-        </div>
-        <div className="postCenter">
-          <span className="postText">{post?.content}</span>
-          <hr className="postHr"></hr>
-          <img className="postImg" src={post.mediaUrl} alt="img1" />
-        </div>
-        <div className="postBottom"></div>
-        <div className="postBottomLeft">
-          {/* <GradeIcon /> */}
-          <img
-            className="likeIcon"
-            src="/assets/images/heart.png"
-            onClick={likeHandler}
-            alt="like"
-          />
-          <span className="postLikeCounter"> {post.likedBy.length} likes</span>
-        </div>
-        <div className="postBottomRight">
-          {/* <span className="postComentText">{post.comment} comments</span> */}
-        </div>
-      </div>
-    </div>
+    <RequireAuth>
+      <Card sx={{ boxShadow: 5, maxWidth: 800 }}>
+        <CardHeader
+          avatar={
+            <Avatar
+              sx={{ width: 64, height: 64 }}
+              aria-label="avatar"
+              src={owner.avatar ? owner.avatar : "assets/images/catAvatar.png"}
+            ></Avatar>
+          }
+          title={
+            <Typography sx={{ fontWeight: 500 }}>
+              {post.ownerId.name}
+            </Typography>
+          }
+          subheader={`Last updated: ${moment(post.updatedAt).format(
+            "MMMM DD, YYYY - h:mm:ss a"
+          )}`}
+        />
+        <CardMedia
+          component="img"
+          sx={{ objectFit: "fill", maxHeight: 400 }}
+          image={post.mediaUrl}
+        />
+        <CardContent>
+          <Typography>{post.content}</Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <Tooltip title="Like" placement="right">
+            <IconButton aria-label="fingerprint" color="secondary" size="large">
+              <Fingerprint />
+            </IconButton>
+          </Tooltip>
+        </CardActions>
+      </Card>
+    </RequireAuth>
   );
 }

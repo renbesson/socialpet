@@ -1,101 +1,22 @@
-// Taken from https://github.com/iamchathu/react-material-file-upload/blob/master/src/components/file-list-item.tsx, source code for npm package https://www.npmjs.com/package/react-material-file-upload
+import { Box, Button, FormControl } from "@mui/material";
 
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import {
-  Chip,
-  Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  Typography,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useDropzone } from "react-dropzone";
+import { useState } from "react";
 
-const ListItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.5),
-}));
+export default function FileUploader() {
+  const [image, setImage] = useState(null);
 
-const FileListItem = ({ name, onDelete }) => (
-  <ListItem>
-    <Chip
-      label={name}
-      icon={<UploadFileIcon />}
-      variant="outlined"
-      sx={{ maxWidth: 200 }}
-      onDelete={onDelete}
-    />
-  </ListItem>
-);
-
-// export interface FileUploadProps extends Omit<DropzoneOptions, 'onDrop' | 'onDropAccepted'> {
-//   sx?: SxProps<Theme>;
-//   typographyProps?: TypographyProps;
-//   buttonProps?: Omit<ButtonProps, 'onClick'>;
-//   title?: string;
-//   buttonText?: string;
-//   value: File[];
-//   onChange: (files: File[]) => void;
-// }
-
-const FileUpload = ({
-  value,
-  onChange,
-  sx,
-  title,
-  buttonText,
-  typographyProps,
-  buttonProps,
-  disabled,
-  maxSize,
-  ...options
-}) => {
-  const { fileRejections, getRootProps, getInputProps, open } = useDropzone({
-    ...options,
-    disabled,
-    maxSize,
-    onDropAccepted: onChange,
-    noClick: true,
-    noKeyboard: true,
-  });
-
-  const isFileTooLarge =
-    maxSize !== undefined &&
-    fileRejections.length > 0 &&
-    fileRejections[0].file.size > maxSize;
-
-  const remove = (index) => {
-    const files = [...value];
-    files.splice(index, 1);
-    onChange(files);
+  const addImage = (event) => {
+    setImage(event.target.files[0]);
+    console.log(event.target.files[0]);
   };
 
-  const files = value?.map((file, i) => (
-    <FileListItem key={file.name} name={file.name} onDelete={() => remove(i)} />
-  ));
-
   return (
-    <Box
-      {...getRootProps()}
-      // sx={{
-      //   border: 1,
-      //   borderRadius: 1,
-      //   borderColor: "rgba(0, 0, 0, 0.23)",
-      //   paddingY: 3,
-      //   paddingX: 1,
-      //   "&:hover": {
-      //     borderColor: disabled ? undefined : "text.primary",
-      //   },
-      //   "&:focus-within": {
-      //     borderColor: "primary.main",
-      //     borderWidth: 2,
-      //   },
-      //   ...sx,
-      // }}
-    >
+    <Box>
+      <Box>
+        <img src={image ? URL.createObjectURL(image) : ""} />
+      </Box>
       <FormControl
-        error={isFileTooLarge}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -103,54 +24,15 @@ const FileUpload = ({
           alignItems: "center",
         }}
       >
-        <input {...getInputProps()} />
-        <CloudUploadIcon
-          sx={{ fontSize: 40 }}
-          color={disabled ? "disabled" : "primary"}
-        />
-        <Typography
-          variant="caption"
-          textAlign="center"
-          sx={{ paddingY: 1 }}
-          {...typographyProps}
-        >
-          {title}
-        </Typography>
         <Button
           variant="contained"
-          onClick={open}
-          disabled={disabled}
-          sx={{ marginBottom: 1 }}
-          {...buttonProps}
+          component="label"
+          endIcon={<CloudUploadIcon />}
         >
-          <CloudUploadIcon sx={{ fontSize: 40 }} color="white" />
-          {buttonText}
+          Upload Image
+          <input hidden accept="image/*" type="file" onChange={addImage} />
         </Button>
-        <FormHelperText>
-          {" "}
-          {fileRejections[0]?.errors[0]?.message}{" "}
-        </FormHelperText>
       </FormControl>
-      <Box
-        component="ul"
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          flexWrap: "wrap",
-          listStyle: "none",
-          p: 0.5,
-          m: 0,
-        }}
-      >
-        {files}
-      </Box>
     </Box>
   );
-};
-
-FileUpload.defaultProps = {
-  // title: "Drag 'n' drop some files here, or click to select files",
-  buttonText: "Upload Image",
-};
-
-export default FileUpload;
+}
