@@ -2,8 +2,12 @@ import "./rightbar.css";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import UpdateIcon from "@mui/icons-material/Update";
+import UpdateProfile from "../profileUpdate/ProfileUpdate";
+import { useState } from "react";
 
 export default function Rightbar() {
+  const [openPopup, setOpenPopup] = useState(false);
+
   return (
     <div className="sidebar">
       <div className="sideWrapper">
@@ -41,12 +45,14 @@ export default function Rightbar() {
           variant="contained"
           UpdateIcon={<UpdateIcon />}
           onClick={() => {
-            alert("clicked");
+            // console.log(setOpenPopup);
+            setOpenPopup(true);
           }}
         >
           {" "}
           Update Profile
         </Button>
+        <UpdateProfile openPopup={openPopup} setOpenPopup={setOpenPopup} />
       </div>
     </div>
   );

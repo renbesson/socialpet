@@ -12,7 +12,6 @@ import Home from "./pages/Home";
 import HomePage from "./pages/HomePage";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
-// import ProfilePage from './components/profilePage'
 import Signout from "./pages/Signout";
 import Profile from "./pages/Profile";
 import FeedCard from "./components/feedCard";
