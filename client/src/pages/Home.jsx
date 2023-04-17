@@ -1,18 +1,12 @@
-import * as React from "react";
-import ProductCategories from "../components/modules/ProductCatergories";
-import ProductHero from "../components/modules/ProductHero";
-// import ProductValues from "../components/modules/ProductValues";
-import ProductSmokingHero from "../components/modules/ProductSmokingHero";
+import React from "react";
+import { useAuth } from "../utils/authProvider";
+import SignedHome from "./SignedHome";
+import NotSignedHome from "./NotSignedHome";
 
-function Home() {
-  return (
-    <React.Fragment>
-      <ProductHero />
-      {/* <ProductValues /> */}
-      <ProductSmokingHero />
-      <ProductCategories />
-    </React.Fragment>
-  );
+export default function Home() {
+  const { user } = useAuth();
+
+  console.log(JSON.stringify(user));
+
+  return user ? <SignedHome /> : <NotSignedHome />;
 }
-
-export default Home;

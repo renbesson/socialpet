@@ -32,7 +32,7 @@ router.post("/", checkToken, async (req, res) => {
       content: req.body.content,
     });
     const post = await newPost.save();
-    res.status(200).json(post);
+    res.status(201).json(post);
   } catch (err) {
     res.status(500).json(err);
   }
