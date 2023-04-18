@@ -29,7 +29,7 @@ function AuthProvider({ children }) {
         }
       }
     })();
-  }, [cookies]);
+  }, [cookies, user?.avatar]);
 
   ////////////////////////////////////////////////////////////////////////////////
   // Function for signing out

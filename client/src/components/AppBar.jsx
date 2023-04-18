@@ -9,10 +9,10 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useAuth } from "../utils/authProvider";
+import UpdateAvatar from "./UpdateAvatar";
 
 const pages = [
   { text: "Posts", link: "/myPosts" },
@@ -136,7 +136,9 @@ function ResponsiveAppBar() {
           >
             Social Pet
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <UpdateAvatar />
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Typography variant="p" noWrap sx={{ mr: 2 }}>
               {user?.name}
@@ -145,7 +147,9 @@ function ResponsiveAppBar() {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt="User Avatar"
-                  src="/assets/images/catAvatar.png"
+                  src={
+                    user?.avatar ? user.avatar : "/assets/images/catAvatar.png"
+                  }
                   sx={{ width: 56, height: 56 }}
                 />
               </IconButton>
