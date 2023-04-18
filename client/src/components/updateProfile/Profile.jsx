@@ -44,12 +44,12 @@ export default function UpdateProfile(props) {
             margin="normal"
             required
             fullWidth
-            name="newPassword"
-            label="Password"
-            type="password"
-            id="newPassword"
+            name="newLocation"
+            label="Location"
+            type="location"
+            id="newLocation"
           />
-          <TextField
+          {/* <TextField
             margin="normal"
             required
             fullWidth
@@ -66,7 +66,7 @@ export default function UpdateProfile(props) {
             label="species"
             type="species"
             id="species"
-          />
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Update</Button>
