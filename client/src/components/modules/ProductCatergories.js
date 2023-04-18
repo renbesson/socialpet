@@ -66,12 +66,12 @@ const images = [
   },
   {
     url: "https://images.unsplash.com/photo-1583301286816-f4f05e1e8b25?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8ODB8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=1000&q=60",
-    title: "Hiking",
+    title: "Getting the greens",
     width: "40%",
   },
   {
     url: "https://images.unsplash.com/photo-1517352551702-336dda93455e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzcwfHxwZXRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60",
-    title: "Tour",
+    title: "Alright now",
     width: "38%",
   },
   {
