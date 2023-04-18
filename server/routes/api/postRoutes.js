@@ -7,6 +7,7 @@ const { checkToken } = require("../../utils/checkToken");
 const router = require("express").Router();
 const { bucket } = require("../../config/firebase");
 const multer = require("multer");
+const mongoose = require("mongoose");
 
 const upload = multer({ dest: "images/" });
 
@@ -135,20 +136,22 @@ router.put("/", [checkToken, upload.single("image")], async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Toggle like/unlike a post **TODO**
 ////////////////////////////////////////////////////////////////////////////////
-router.put("/:id/follow", checkToken, async (req, res) => {
+router.post("/like", checkToken, async (req, res) => {
   const postId = req.query.postId;
 
   try {
-    const pet = await Pet.findById(req.params.id);
-    const currentPet = await Pet.findById(req.body.petId);
-    if (!pet.followers.includes(req.body.petId)) {
-      await pet.updateOne({ $push: { followers: req.body.petId } });
-      await currentPet.updateOne({ $push: { followings: req.params.id } });
-      res.status(200).json({ message: "pet has been followed" });
+    const post = await Post.findById(postId);
+    const isLiking = post.likedBy.some((id) => id.equals(req.user._id));
+
+    if (!isLiking) {
+      await post.updateOne({ $push: { likedBy: req.user._id } });
+      res.status(201).json({ message: "Post has been liked" });
     } else {
-      res.status(403).json({ message: "you allready follow this pet" });
+      await post.updateOne({ $pull: { likedBy: req.user._id } });
+      res.status(200).json({ message: "Post has been unliked" });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });

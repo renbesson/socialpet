@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const connection = require("../config/dbConnection");
 const Pet = require("../models/Pet");
 const Post = require("../models/Post");

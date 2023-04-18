@@ -25,6 +25,8 @@ PostSchema.virtual("likes").get(function () {
   return this.likedBy.length;
 });
 
+PostSchema.set("toJSON", { virtuals: true });
+
 const Post = model("Post", PostSchema);
 
 module.exports = Post;

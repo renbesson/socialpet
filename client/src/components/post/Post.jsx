@@ -1,14 +1,48 @@
 import { RequireAuth, useAuth } from "../../utils/authProvider";
 import { Avatar, Card, CardActions, IconButton, Tooltip } from "@mui/material";
-import { CardContent, CardHeader, CardMedia, TextField } from "@mui/material";
+import { CardContent, CardHeader, CardMedia } from "@mui/material";
 import { Typography } from "@mui/material";
 import moment from "moment";
 import { Fingerprint } from "@mui/icons-material";
+import Cookies from "universal-cookie";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 export default function Post({ post }) {
   const { user } = useAuth();
+  const [likeCount, setLikeCount] = useState(post.likes);
+  const cookies = new Cookies();
 
   const owner = post.ownerId;
+
+  const likePost = async (id) => {
+    try {
+      const res = await fetch(`/api/post/like/?postId=${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: cookies.get("token") }),
+      });
+      const { message } = await res.json();
+
+      if (!res.ok)
+        return toast(
+          <div>
+            <b>Message:</b> {message}
+            <br />
+            <b>Code:</b> {res.status}
+          </div>
+        );
+      // Code 201 - Like added
+      if (res.status === 201) setLikeCount((prev) => prev + 1);
+
+      // Code 200 - Like removed
+      if (res.status === 200) setLikeCount((prev) => prev - 1);
+
+      return toast(message);
+    } catch (err) {
+      toast(err.message);
+    }
+  };
 
   return (
     <RequireAuth>
@@ -18,7 +52,9 @@ export default function Post({ post }) {
             <Avatar
               sx={{ width: 64, height: 64 }}
               aria-label="avatar"
-              src={owner.avatar ? owner.avatar : "assets/images/catAvatar.png"}
+              src={
+                owner?.avatar ? owner?.avatar : "assets/images/catAvatar.png"
+              }
             ></Avatar>
           }
           title={
@@ -40,10 +76,18 @@ export default function Post({ post }) {
         </CardContent>
         <CardActions disableSpacing>
           <Tooltip title="Like" placement="right">
-            <IconButton aria-label="fingerprint" color="secondary" size="large">
+            <IconButton
+              aria-label="fingerprint"
+              color="secondary"
+              size="large"
+              onClick={() => likePost(post._id)}
+            >
               <Fingerprint />
             </IconButton>
           </Tooltip>
+          <Typography>
+            {likeCount} {likeCount > 1 ? "Likes" : "Like"}
+          </Typography>
         </CardActions>
       </Card>
     </RequireAuth>

@@ -22,7 +22,7 @@ function AuthProvider({ children }) {
         // Checks if token is not expired
         if (Date.now() <= exp * 1000) {
           //Sets user state
-          setUser(user);
+          setUser((user));
         } else {
           // Removes expired cookie
           cookies.remove("token");
