@@ -33,7 +33,10 @@ router.get("/following", async (req, res) => {
   const petId = req.query.petId;
 
   try {
-    const posts = await Post.find({}).populate("ownerId");
+    // Get posts and sort them as newly updated first
+    const posts = await Post.find({})
+      .populate("ownerId")
+      .sort({ updatedAt: -1 });
     res.status(200).json({ posts });
   } catch (err) {
     res.status(500).json(err);
@@ -44,59 +47,62 @@ router.get("/following", async (req, res) => {
 //  Post a post
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/", checkToken, async (req, res) => {
-  // Uploads the image to firebase storage and saves its URL on 'req.body.mediaUrl'
-  try {
-    // Raw base64 File
-    const fileBase64 = req.body.fileAsString;
-
-    // Just the bytes without the metadata (needed to upload to firebase storage)
-    const fileBytes = fileBase64.split(",")[1];
-
-    // Creates a buffer with the fileBytes
-    const fileBuffer = Buffer.from(fileBytes, "base64");
-
-    // Gets only the file extension
-    const fileExtension = fileBase64.split(";")[0].split("/")[1];
-
-    // Sets the path for the file on the remote server
-    const remotePath = `avatars/${req.user._id}_avatar.${fileExtension}`;
-
-    const file = bucket.file(remotePath);
-
-    const sendFile = () =>
-      new Promise((resolve, reject) => {
-        file
-          .createWriteStream()
-          .on("error", (err) => {
-            reject(err);
-          })
-          .on("finish", async () => {
-            const url = await file.getSignedUrl({
-              version: "v2",
-              action: "read",
-              expires: Date.now() + 60 * 60 * 100000000,
-            });
-            resolve(url[0]);
-          })
-          .end(fileBuffer);
-      });
-    const url = await sendFile();
-    req.body.mediaUrl = url;
-  } catch (err) {
-    res.status(500).json(err);
-  }
-
   // Saves the post to the database
   try {
-    console.log("2try: " + req.body.mediaUrl);
     const newPost = new Post({
       ownerId: req.user._id,
-      mediaUrl: req.body.mediaUrl,
+      mediaUrl: "",
       content: req.body.content,
     });
+
+    // Uploads the image to firebase storage and saves its URL to 'mediaUrl'
+    if (req.body.fileAsString) {
+      // Raw base64 File
+      const fileBase64 = req.body.fileAsString;
+
+      // Just the bytes without the metadata (needed to upload to firebase storage)
+      const fileBytes = fileBase64.split(",")[1];
+
+      // Creates a buffer with the fileBytes
+      const fileBuffer = Buffer.from(fileBytes, "base64");
+
+      // Gets only the file extension
+      const fileExtension = fileBase64.split(";")[0].split("/")[1];
+
+      // Sets the path for the file on the remote server
+      const remotePath = `images/${newPost.id}.${fileExtension}`;
+
+      const file = bucket.file(remotePath);
+
+      const sendFile = () =>
+        new Promise((resolve, reject) => {
+          file
+            .createWriteStream()
+            .on("error", (err) => {
+              reject(err);
+            })
+            .on("finish", async () => {
+              const url = await file.getSignedUrl({
+                version: "v2",
+                action: "read",
+                expires: Date.now() + 60 * 60 * 100000000,
+              });
+              resolve(url[0]);
+            })
+            .end(fileBuffer);
+        });
+      const url = await sendFile();
+
+      // Sets the url to the mediaUrl property
+      newPost.mediaUrl = url;
+    }
+
+    // Saves the post to the database
     const post = await newPost.save();
+
     res.status(201).json(post);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -134,7 +140,7 @@ router.put("/", [checkToken, upload.single("image")], async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Toggle like/unlike a post **TODO**
+//  Toggle like/unlike a post
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/like", checkToken, async (req, res) => {
   const postId = req.query.postId;
@@ -180,46 +186,3 @@ router.put("/:id/unfollow", async (req, res) => {
 });
 
 module.exports = router;
-
-////////////////////////////////////////////////////////////////////////////////
-// Upload an image
-////////////////////////////////////////////////////////////////////////////////
-router.post("/image", checkToken, async (req, res) => {
-  try {
-    // Raw base64 File
-    const fileBase64 = req.body.fileAsString;
-
-    // Just the bytes without the metadata (needed to upload to firebase storage)
-    const fileBytes = fileBase64.split(",")[1];
-
-    // Creates a buffer with the fileBytes
-    const fileBuffer = Buffer.from(fileBytes, "base64");
-
-    // Gets only the file extension
-    const fileExtension = fileBase64.split(";")[0].split("/")[1];
-
-    // Sets the path for the file on the remote server
-    const remotePath = `avatars/${req.user._id}_avatar.${fileExtension}`;
-
-    const file = bucket.file(remotePath);
-
-    file
-      .createWriteStream()
-      .on("error", (err) => {
-        console.error("Error uploading file:", err);
-      })
-      .on("finish", () => {
-        console.log(`File ${remotePath} uploaded successfully.`);
-      })
-      .end(fileBuffer);
-
-    const url = await file.getSignedUrl({
-      version: "v2",
-      action: "read",
-      expires: Date.now() + 60 * 60 * 100000000,
-    });
-    res.status(201).json({ url });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});

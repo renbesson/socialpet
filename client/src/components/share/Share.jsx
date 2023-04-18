@@ -8,6 +8,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
 import Cookies from "universal-cookie";
 import moment from "moment";
+import toBase64 from "../../utils/toBase64";
 
 export default function Share() {
   const { user } = useAuth();
@@ -17,14 +18,6 @@ export default function Share() {
   ////////////////////////////////////////////////////////////////////////////////
   // Stores the uploaded image as state
   ////////////////////////////////////////////////////////////////////////////////
-
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
 
   const addImage = async (event) => {
     setImage(event.target.files[0]);
@@ -39,7 +32,10 @@ export default function Share() {
 
     try {
       // Converts the file to base64
-      const fileAsString = await toBase64(formData.get("image"));
+      let fileAsString = "";
+
+      if (image) fileAsString = await toBase64(image);
+      else console.log("dasd");
 
       const res = await fetch("/api/post", {
         method: "POST",
@@ -50,7 +46,7 @@ export default function Share() {
           fileAsString,
         }),
       });
-      const { post, message } = await res.json();
+      const { message } = await res.json();
 
       if (!res.ok)
         return toast(

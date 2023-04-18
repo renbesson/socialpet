@@ -1,7 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Requires
 ////////////////////////////////////////////////////////////////////////////////
+const { bucket } = require("../../config/firebase");
 const Pet = require("../../models/Pet");
+const { checkToken } = require("../../utils/checkToken");
 const router = require("express").Router();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,3 +85,54 @@ router.put("/:id/unfollow", async (req, res) => {
 });
 
 module.exports = router;
+
+////////////////////////////////////////////////////////////////////////////////
+// Upload an avatar
+////////////////////////////////////////////////////////////////////////////////
+router.post("/avatar", checkToken, async (req, res) => {
+  try {
+    // Raw base64 File
+    const fileBase64 = req.body.fileAsString;
+
+    // Just the bytes without the metadata (needed to upload to firebase storage)
+    const fileBytes = fileBase64.split(",")[1];
+
+    // Creates a buffer with the fileBytes
+    const fileBuffer = Buffer.from(fileBytes, "base64");
+
+    // Gets only the file extension
+    const fileExtension = fileBase64.split(";")[0].split("/")[1];
+
+    // Sets the path for the file on the remote server
+    const remotePath = `avatars/${req.user._id}_avatar.${fileExtension}`;
+
+    const file = bucket.file(remotePath);
+
+    file
+      .createWriteStream()
+      .on("error", (err) => {
+        console.error("Error uploading file:", err);
+      })
+      .on("finish", () => {
+        console.log(`File ${remotePath} uploaded successfully.`);
+      })
+      .end(fileBuffer);
+
+    const url = await file.getSignedUrl({
+      version: "v2",
+      action: "read",
+      expires: Date.now() + 60 * 60 * 100000000,
+    });
+
+    const pet = await Pet.findByIdAndUpdate(
+      req.user._id,
+      { avatar: url[0] },
+      { new: true }
+    );
+
+    res.status(201).json({ url: url[0], message: "Avatar Updated!" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
