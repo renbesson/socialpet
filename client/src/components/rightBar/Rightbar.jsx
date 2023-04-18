@@ -7,11 +7,16 @@ import Typography from "@mui/material/Typography";
 import FolderIcon from "@mui/icons-material/Folder";
 import { useState } from "react";
 import { RequireAuth, useAuth } from "../../utils/authProvider"; ////// Import to provide access to auth, which stores the user data
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import UpdateIcon from "@mui/icons-material/Update";
+import UpdateProfile from "../updateProfile/Profile";
 
 export default function RightBar() {
   const [dense, setDense] = useState(false);
   const [secondary, setSecondary] = useState(false);
   const { user } = useAuth(); // to grab user data from auth
+  const [open, setOpen] = useState(false);
 
   return (
     <Box
@@ -54,6 +59,16 @@ export default function RightBar() {
           />
         </ListItem>
       </List>
+      <Button
+        variant="contained"
+        startIcon={<UpdateIcon />}
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        Update Profile
+      </Button>
+      <UpdateProfile open={open} setOpen={setOpen} />
     </Box>
   );
 }
