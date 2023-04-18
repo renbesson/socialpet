@@ -31,8 +31,7 @@ export default function ProductHero() {
         variant="h5"
         sx={{ mb: 4, mt: { xs: 4, sm: 10 } }}
       >
-        Welcome to Socialpedia, the best Petworking website (in New Brunswick at
-        least)
+        Welcome to Social Pet, the best Petworking website (in New Brunswick)
       </Typography>
       <Button
         color="secondary"

@@ -4,15 +4,10 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 export default function UpdateProfile(props) {
   const { open, setOpen } = props;
-
-  //   const handleClickOpen = () => {
-  //     setOpen(true);
-  //   };
 
   const handleClose = () => {
     setOpen(false);
@@ -49,24 +44,6 @@ export default function UpdateProfile(props) {
             type="location"
             id="newLocation"
           />
-          {/* <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="type"
-            label="type"
-            type="type"
-            id="type"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="species"
-            label="species"
-            type="species"
-            id="species"
-          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Update</Button>

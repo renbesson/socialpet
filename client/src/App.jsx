@@ -13,7 +13,6 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Signout from "./pages/Signout";
 import Profile from "./pages/Profile";
-import FeedCard from "./components/feedCard";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ResponsiveAppBar from "./components/AppBar";
@@ -40,7 +39,6 @@ const themeOptions = {
 const theme = createTheme(themeOptions);
 
 function App() {
-
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
@@ -56,16 +54,6 @@ function App() {
                 <Route path="/signout" element={<Signout />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/myPosts" element={<MyPosts />} />
-                <Route
-                  path="/feedcard"
-                  element={
-                    <FeedCard
-                      pet={{ Name: "Cat" }}
-                      content="Cat content"
-                      imageUrl="https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1286&q=80"
-                    />
-                  }
-                />
               </Routes>
             </div>
             {/* <Footer /> */}
