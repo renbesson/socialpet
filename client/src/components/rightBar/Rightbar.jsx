@@ -4,13 +4,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
-import FolderIcon from "@mui/icons-material/Folder";
 import { useState } from "react";
 import { RequireAuth, useAuth } from "../../utils/authProvider"; ////// Import to provide access to auth, which stores the user data
 import Button from "@mui/material/Button";
-import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateIcon from "@mui/icons-material/Update";
 import UpdateProfile from "../updateProfile/Profile";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import MailIcon from "@mui/icons-material/Mail";
+import BadgeIcon from "@mui/icons-material/Badge";
+import { green, orange, purple, yellow } from "@mui/material/colors";
 
 export default function RightBar() {
   const [dense, setDense] = useState(false);
@@ -27,13 +29,13 @@ export default function RightBar() {
       }}
     >
       <Typography sx={{ mt: 4, mb: 1 }} variant="h6" component="div">
-        Profile
+        My Profile
       </Typography>
 
       <List dense={dense}>
         <ListItem>
           <ListItemIcon>
-            <FolderIcon />
+            <BadgeIcon sx={{ color: orange[500] }} />
           </ListItemIcon>
           <ListItemText
             primary={user.name}
@@ -42,7 +44,7 @@ export default function RightBar() {
         </ListItem>
         <ListItem>
           <ListItemIcon>
-            <FolderIcon />
+            <MailIcon sx={{ color: purple[500] }} />
           </ListItemIcon>
           <ListItemText
             primary={user.email}
@@ -51,7 +53,7 @@ export default function RightBar() {
         </ListItem>
         <ListItem>
           <ListItemIcon>
-            <FolderIcon />
+            <LocationOnIcon sx={{ color: green[500] }} />
           </ListItemIcon>
           <ListItemText
             primary={user.location}
