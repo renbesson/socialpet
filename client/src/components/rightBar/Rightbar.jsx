@@ -13,6 +13,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MailIcon from "@mui/icons-material/Mail";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { green, orange, purple, yellow } from "@mui/material/colors";
+import UpdateAvatar from "../UpdateAvatar";
 
 export default function RightBar() {
   const [dense, setDense] = useState(false);
@@ -60,16 +61,22 @@ export default function RightBar() {
             secondary={secondary ? "Secondary text" : null}
           />
         </ListItem>
+        <ListItem>
+          <UpdateAvatar />
+        </ListItem>
+        <ListItem>
+          <Button
+            variant="contained"
+            startIcon={<UpdateIcon />}
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Update Profile
+          </Button>
+        </ListItem>
       </List>
-      <Button
-        variant="contained"
-        startIcon={<UpdateIcon />}
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        Update Profile
-      </Button>
+
       <UpdateProfile open={open} setOpen={setOpen} />
     </Box>
   );

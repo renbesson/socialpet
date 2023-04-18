@@ -35,15 +35,11 @@ export default function UpdateAvatar() {
           </div>
         );
 
-      console.log("OLD: " + user?.avatar);
-      setUser((prevData) => {
-        const newData = prevData;
-        newData.avatar = url;
-        return newData;
-      });
-      console.log("OLD: " + user?.avatar);
+      toast(message);
 
-      return toast(message);
+      // Reloads the page to get the new post
+      setTimeout(() => window.location.reload(), 1000);
+
     } catch (err) {
       toast(err.message);
     }
@@ -54,7 +50,7 @@ export default function UpdateAvatar() {
       <Button
         variant="contained"
         component="label"
-        endIcon={<AccountCircleTwoToneIcon />}
+        startIcon={<AccountCircleTwoToneIcon />}
       >
         Upload Avatar
         <input

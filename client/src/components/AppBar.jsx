@@ -12,7 +12,6 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useAuth } from "../utils/authProvider";
-import UpdateAvatar from "./UpdateAvatar";
 
 const pages = [
   { text: "Posts", link: "/myPosts" },
@@ -137,7 +136,7 @@ function ResponsiveAppBar() {
             Social Pet
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <UpdateAvatar />
+
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Typography variant="p" noWrap sx={{ mr: 2 }}>
