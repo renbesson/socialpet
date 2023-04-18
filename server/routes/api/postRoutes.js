@@ -145,10 +145,10 @@ router.post("/like", checkToken, async (req, res) => {
 
     if (!isLiking) {
       await post.updateOne({ $push: { likedBy: req.user._id } });
-      res.status(201).json({ message: "Post has been liked" });
+      res.status(201).json({ message: "Post has been liked." });
     } else {
       await post.updateOne({ $pull: { likedBy: req.user._id } });
-      res.status(200).json({ message: "Post has been unliked" });
+      res.status(200).json({ message: "Post has been unliked." });
     }
   } catch (err) {
     console.log(err);
