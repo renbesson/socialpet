@@ -5,16 +5,18 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import EditIcon from "@mui/icons-material/Edit";
+import { useState } from "react";
 
-export default function UpdateProfile(props) {
-  const { open, setOpen } = props;
+export default function UpdateProfile() {
+  const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   return (
-    <div>
+    <>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Update My Profile</DialogTitle>
         <DialogContent>
@@ -50,6 +52,15 @@ export default function UpdateProfile(props) {
           <Button onClick={handleClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
-    </div>
+      <Button
+        variant="text"
+        startIcon={<EditIcon />}
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        Update Profile
+      </Button>
+    </>
   );
 }

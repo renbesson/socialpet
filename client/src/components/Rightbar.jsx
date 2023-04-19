@@ -7,14 +7,13 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { useAuth } from "../utils/authProvider"; ////// Import to provide access to auth, which stores the user data
 import Button from "@mui/material/Button";
-import UpdateProfile from "./updateProfile/Profile";
+import UpdateProfile from "./buttons/UpdateProfileButton";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MailIcon from "@mui/icons-material/Mail";
 import BadgeIcon from "@mui/icons-material/Badge";
-import { green, orange, purple} from "@mui/material/colors";
-import UpdateAvatar from "./UpdateAvatar";
+import { green, orange, purple } from "@mui/material/colors";
 import { Drawer, Toolbar } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function RightBar({ user }) {
   const { user: userData } = useAuth();
@@ -67,25 +66,7 @@ export default function RightBar({ user }) {
               secondary={secondary ? "Secondary text" : null}
             />
           </ListItem>
-          <ListItem>
-            <UpdateAvatar />
-          </ListItem>
-          <ListItem
-            sx={{ display: userData._id !== user._id ? "none" : "block" }}
-          >
-            <Button
-              variant="contained"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                setOpen(true);
-              }}
-            >
-              Update Profile
-            </Button>
-          </ListItem>
         </List>
-
-        <UpdateProfile open={open} setOpen={setOpen} />
       </Box>
     </Drawer>
   );

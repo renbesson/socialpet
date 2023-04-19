@@ -12,6 +12,13 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useAuth } from "../utils/authProvider";
+import uploadAvatar from "../utils/uploadAvatar";
+import Cookies from "universal-cookie";
+import { toast } from "react-toastify";
+import { Button } from "@mui/material";
+import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
+import UpdateAvatarButton from "./buttons/UpdateAvatarButton";
+import UpdateProfile from "./buttons/UpdateProfileButton";
 
 const pages = [
   { text: "Posts", link: "/myPosts" },
@@ -19,27 +26,12 @@ const pages = [
   { text: "Followers", link: "/following" },
 ];
 
-const signInSettings = [
-  { text: "Profile", link: "/profile" },
-  { text: "Sign Out", link: "/signout" },
-];
-
-const signOutSettings = [
-  { text: "Sign In", link: "/signin" },
-  { text: "Sign Up", link: "/signup" },
-];
-
 function ResponsiveAppBar() {
   const { user } = useAuth();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [settings, setSettings] = useState(signOutSettings);
 
-  useEffect(() => {
-    if (user) {
-      setSettings(signInSettings);
-    }
-  }, [user]);
+  const cookies = new Cookies();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -56,8 +48,33 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const SignOutSettings = () => {
+    const items = [
+      { text: "Sign In", link: "/signin" },
+      { text: "Sign Up", link: "/signup" },
+    ];
+
+    return items.map((item) => (
+      <MenuItem
+        component={RouterLink}
+        to={item.link}
+        onClick={handleCloseUserMenu}
+        key={item.text}
+      >
+        <Typography textAlign="center">{item.text}</Typography>
+      </MenuItem>
+    ));
+  };
+
+  const SignInSettings = () => {
+    return [<UpdateAvatarButton key={1} />, <UpdateProfile key={2} />];
+  };
+
   return (
-    <AppBar position="sticky" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar
+      position="sticky"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -135,9 +152,7 @@ function ResponsiveAppBar() {
           >
             Social Pet
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", lg: "flex" } }}>
-
-          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", lg: "flex" } }}></Box>
           <Box sx={{ flexGrow: 0 }}>
             <Typography variant="p" noWrap sx={{ mr: 2 }}>
               {user?.name}
@@ -169,16 +184,7 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting.text}
-                  component={RouterLink}
-                  to={setting.link}
-                  onClick={handleCloseUserMenu}
-                >
-                  <Typography textAlign="center">{setting.text}</Typography>
-                </MenuItem>
-              ))}
+              {user ? <SignInSettings /> : <SignOutSettings />}
             </Menu>
           </Box>
         </Toolbar>

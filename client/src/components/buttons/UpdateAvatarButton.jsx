@@ -1,32 +1,20 @@
 import React from "react";
 import Cookies from "universal-cookie";
-import toBase64 from "../utils/toBase64";
 import { Box, Button } from "@mui/material";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
-import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
+import uploadAvatar from "../../utils/uploadAvatar";
 
 export default function UpdateAvatar() {
-  const { user, setUser } = useAuth();
-
   const cookies = new Cookies();
 
-  const handleSubmit = async (event) => {
+  const handleUploadAvatar = async (event) => {
     event.preventDefault();
     const image = event.target.files[0];
+    const token = cookies.get("token");
 
     try {
-      // Converts the file to base64
-      const fileAsString = await toBase64(image);
-
-      const res = await fetch(`/api/pet/avatar`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: cookies.get("token"), fileAsString }),
-      });
-      const { url, message } = await res.json();
-
-      if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
+      const { message } = await uploadAvatar(image, token);
 
       toast(message);
 
@@ -40,7 +28,7 @@ export default function UpdateAvatar() {
   return (
     <Box component="form" noValidate>
       <Button
-        variant="contained"
+        variant="text"
         component="label"
         startIcon={<AccountCircleTwoToneIcon />}
       >
@@ -50,7 +38,7 @@ export default function UpdateAvatar() {
           accept="image/*"
           type="file"
           name="avatar"
-          onChange={handleSubmit}
+          onChange={handleUploadAvatar}
         />
       </Button>
     </Box>
