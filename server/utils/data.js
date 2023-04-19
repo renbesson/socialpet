@@ -10,7 +10,10 @@ const Pets = [
     species: "Dog",
     age: 2,
     location: "Moncton",
-    posts: [new mongoose.Types.ObjectId("123458795462154796548761")],
+    posts: [
+      new mongoose.Types.ObjectId("123458795462154796548761"),
+      new mongoose.Types.ObjectId("123458795462154796548771"),
+    ],
     following: [new mongoose.Types.ObjectId("123458795462154796548752")],
     followers: [new mongoose.Types.ObjectId("123458795462154796548753")],
     avatar:

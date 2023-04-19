@@ -8,6 +8,7 @@ import Profile from "../Profile";
 import MyPosts from "../MyPosts";
 import Following from "../Following";
 import Followers from "../Followers";
+import Pet from "../Pet";
 import Sidebar from "../../components/Sidebar";
 import { useAuth } from "../../utils/authProvider";
 import { Box, CssBaseline, Toolbar } from "@mui/material";
@@ -29,9 +30,10 @@ export default function Layout({ children }) {
           <Route path="/signup" element={<Signup />} />
           <Route path="/signout" element={<Signout />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/myPosts" element={<MyPosts />} />
           <Route path="/following" element={<Following />} />
           <Route path="/followers" element={<Followers />} />
-          <Route path="/myPosts" element={<MyPosts />} />
+          <Route path="/pet" element={<Pet />} />
         </Routes>
       </Box>
       <Toolbar />

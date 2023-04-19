@@ -15,6 +15,7 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import { green, orange, purple, yellow } from "@mui/material/colors";
 import UpdateAvatar from "./UpdateAvatar";
 import { Drawer, Toolbar } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function RightBar({ user }) {
   const { user: userData } = useAuth();
@@ -75,7 +76,7 @@ export default function RightBar({ user }) {
           >
             <Button
               variant="contained"
-              startIcon={<UpdateIcon />}
+              startIcon={<EditIcon />}
               onClick={() => {
                 setOpen(true);
               }}

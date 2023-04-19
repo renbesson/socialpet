@@ -5,23 +5,8 @@ import "@fontsource/roboto/700.css";
 
 import "./App.css";
 
-import Home from "./pages/Home";
-import Signin from "./pages/Signin";
-import Signup from "./pages/Signup";
-import Signout from "./pages/Signout";
-import Profile from "./pages/Profile";
-import Following from "./pages/Following";
-
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  BrowserRouter,
-} from "react-router-dom";
-import ResponsiveAppBar from "./components/AppBar";
+import { BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from "./utils/authProvider";
-import MyPosts from "./pages/MyPosts";
-
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import FeedLayout from "./pages/layouts/FeedLayout";
 
