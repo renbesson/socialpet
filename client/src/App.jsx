@@ -9,6 +9,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from "./utils/authProvider";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import FeedLayout from "./pages/layouts/FeedLayout";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const themeOptions = {
   palette: {
@@ -30,6 +32,7 @@ const theme = createTheme(themeOptions);
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer />
       <AuthProvider>
         <Router>
           <FeedLayout />
