@@ -1,13 +1,13 @@
-import Post from "../components/post/Post";
-import Share from "../components/share/Share";
+import Post from "../components/Post";
+import Share from "../components/Share";
 
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Grid } from "@mui/material";
 import { toast } from "react-toastify";
 import { useAuth } from "../utils/authProvider";
-import Sidebar from "../components/sidebar/Sidebar";
-import Rightbar from "../components/rightBar/Rightbar";
+import Sidebar from "../components/Sidebar";
+import Rightbar from "../components/Rightbar";
 
 export default function Feed() {
   const { user } = useAuth();

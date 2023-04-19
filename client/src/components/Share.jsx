@@ -1,6 +1,6 @@
 // import { PermMedia } from "@mui/icons-material";
 import { useState } from "react";
-import { RequireAuth, useAuth } from "../../utils/authProvider";
+import { RequireAuth, useAuth } from "../utils/authProvider";
 import { Avatar, Box, Button, Card, CardActions } from "@mui/material";
 import { CardContent, CardHeader, CardMedia, TextField } from "@mui/material";
 import { Typography } from "@mui/material";
@@ -8,7 +8,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
 import Cookies from "universal-cookie";
 import moment from "moment";
-import toBase64 from "../../utils/toBase64";
+import toBase64 from "../utils/toBase64";
 
 export default function Share() {
   const { user } = useAuth();
@@ -48,14 +48,7 @@ export default function Share() {
       });
       const { message } = await res.json();
 
-      if (!res.ok)
-        return toast(
-          <div>
-            <b>Message:</b> {message}
-            <br />
-            <b>Code:</b> {res.status}
-          </div>
-        );
+      if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
         // Clear the content textfield
         formData.set("content", "");

@@ -57,7 +57,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="fixed">
+    <AppBar position="sticky" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -67,7 +67,7 @@ function ResponsiveAppBar() {
             to="/"
             sx={{
               mr: 2,
-              display: { xs: "none", md: "flex" },
+              display: { xs: "none", lg: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
@@ -77,7 +77,7 @@ function ResponsiveAppBar() {
           >
             Social Pet
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", lg: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -103,7 +103,7 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: { xs: "block", lg: "none" },
               }}
             >
               {pages.map((page) => (
@@ -125,7 +125,7 @@ function ResponsiveAppBar() {
             to="/"
             sx={{
               mr: 2,
-              display: { xs: "flex", md: "none" },
+              display: { xs: "flex", lg: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
@@ -135,7 +135,7 @@ function ResponsiveAppBar() {
           >
             Social Pet
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", lg: "flex" } }}>
 
           </Box>
           <Box sx={{ flexGrow: 0 }}>

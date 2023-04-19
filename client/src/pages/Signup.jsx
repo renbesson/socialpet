@@ -41,14 +41,7 @@ export default function SignUp() {
       });
       const { token, message } = await res.json();
 
-      if (!res.ok)
-        return toast(
-          <div>
-            <b>Message:</b> {message}
-            <br />
-            <b>Code:</b> {res.status}
-          </div>
-        );
+      if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
         // Saves token as browser cookie
         const { data: user } = decode(token);
@@ -68,7 +61,7 @@ export default function SignUp() {
   };
 
   return !user ? (
-    <Grid container component="main" sx={{ height: "80vh" }}>
+    <Grid container component="main" sx={{ height: 'calc(100vh - 64px)' }}>
       <CssBaseline />
       <Grid
         item

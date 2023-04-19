@@ -3,9 +3,6 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import "./App.css";
 
 import Home from "./pages/Home";
@@ -15,12 +12,18 @@ import Signout from "./pages/Signout";
 import Profile from "./pages/Profile";
 import Following from "./pages/Following";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  BrowserRouter,
+} from "react-router-dom";
 import ResponsiveAppBar from "./components/AppBar";
 import { AuthProvider } from "./utils/authProvider";
 import MyPosts from "./pages/MyPosts";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import FeedLayout from "./pages/layouts/FeedLayout";
 
 const themeOptions = {
   palette: {
@@ -44,19 +47,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <Router>
-          <ToastContainer />
-          <ResponsiveAppBar />
-          <div style={{marginTop: '5rem'}}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/signin" element={<Signin />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/signout" element={<Signout />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/following" element={<Following />} />
-              <Route path="/myPosts" element={<MyPosts />} />
-            </Routes>
-          </div>
+          <FeedLayout />
         </Router>
       </AuthProvider>
     </ThemeProvider>

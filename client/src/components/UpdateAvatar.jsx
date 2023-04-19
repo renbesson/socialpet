@@ -26,20 +26,12 @@ export default function UpdateAvatar() {
       });
       const { url, message } = await res.json();
 
-      if (!res.ok)
-        return toast(
-          <div>
-            <b>Message:</b> {message}
-            <br />
-            <b>Code:</b> {res.status}
-          </div>
-        );
+      if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
 
       toast(message);
 
       // Reloads the page to get the new post
       setTimeout(() => window.location.reload(), 1000);
-
     } catch (err) {
       toast(err.message);
     }
