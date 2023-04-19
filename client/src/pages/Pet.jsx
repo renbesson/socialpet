@@ -15,11 +15,10 @@ export default function Feed() {
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
   const [searchParams] = useSearchParams();
+  const petId = searchParams.get("petId");
 
   const getPosts = async () => {
     try {
-      const petId = searchParams.get("petId");
-
       const res = await fetch(`/api/post/pet/?petId=${petId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -34,13 +33,18 @@ export default function Feed() {
     }
   };
 
+  /* eslint-disable */
   useEffect(() => {
     getPosts();
   }, [user]);
+  /* eslint-enable */
 
   return (
     <>
       <Grid sx={{ mt: 1 }} container spacing={5} justifyContent="center">
+        <Grid item xs={10}>
+          {petId === user._id && <Share />}
+        </Grid>
         {posts?.map((post) => (
           <Grid key={post._id} item xs={10}>
             <Post post={post} />

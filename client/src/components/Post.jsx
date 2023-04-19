@@ -89,7 +89,7 @@ export default function Post({ post }) {
           <Typography>
             {likeCount} {likeCount > 1 ? "Likes" : "Like"}
           </Typography>
-          {user._id == post.ownerId._id && (
+          {user._id === post.ownerId._id && (
             <Button variant="contained" startIcon={<EditIcon />}>
               Edit Post
             </Button>
