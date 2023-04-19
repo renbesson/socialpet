@@ -22,7 +22,7 @@ function AuthProvider({ children }) {
         // Checks if token is not expired
         if (Date.now() <= exp * 1000) {
           //Sets user state
-          setUser((user));
+          setUser(user);
         } else {
           // Removes expired cookie
           cookies.remove("token");
@@ -31,23 +31,7 @@ function AuthProvider({ children }) {
     })();
   }, [cookies, user?.avatar]);
 
-  ////////////////////////////////////////////////////////////////////////////////
-  // Function for signing out
-  ////////////////////////////////////////////////////////////////////////////////
-  let signout = async (token) => {
-    try {
-      // Removes token as browser cookie
-      cookies.remove("token");
-
-      // Clears user state
-      setUser(null);
-      window.location.href = "/";
-    } catch (err) {
-      return err;
-    }
-  };
-
-  let value = { user, setUser, signout };
+  let value = { user, setUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

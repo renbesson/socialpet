@@ -7,17 +7,79 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
+import { useAuth } from "../../utils/authProvider";
+import Cookies from "universal-cookie";
+import { toast } from "react-toastify";
+import decode from "jwt-decode";
 
-export default function UpdateProfile() {
+export default function UpdateProfileButton() {
+  const { user, setUser } = useAuth();
   const [open, setOpen] = useState(false);
+  const cookies = new Cookies();
+  const [userData, setUserData] = useState({});
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  ////////////////////////////////////////////////////////////////////////////////
+  // Function for updating profile
+  ////////////////////////////////////////////////////////////////////////////////
+  const handleUpdateProfile = async (event) => {
+    event.preventDefault();
+
+    try {
+      const res = await fetch(`/api/auth/update`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          petId: user?._id,
+          data: userData,
+          token: cookies.get("token"),
+        }),
+      });
+      const { token, message, code } = await res.json();
+
+      if (res.status === 406)
+        return toast("Password must be at least 8 characters!");
+      if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
+      if (res.status === 201) {
+        // Saves token as browser cookie
+        const { data: user } = decode(token);
+        cookies.set("token", token, { maxAge: process.env.MAX_AGE });
+
+        // Saves user state
+        setUser(user);
+
+        toast("Profile Updated!");
+      }
+
+      return { user, message, code };
+    } catch (err) {
+      toast(err.message);
+    }
+  };
+
+  const updateField = (event) => {
+    setUserData((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const stopPropagationForTab = (event) => {
+    if (event.key === "Tab") {
+      event.stopPropagation();
+    }
+  };
+
   return (
     <>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog
+        onKeyDown={stopPropagationForTab}
+        open={open}
+        onClose={handleClose}
+      >
         <DialogTitle>Update My Profile</DialogTitle>
         <DialogContent>
           <TextField
@@ -25,30 +87,53 @@ export default function UpdateProfile() {
             required
             fullWidth
             name="name"
-            label="name"
+            label="Name"
             type="name"
             id="name"
+            onChange={updateField}
           />
           <TextField
             margin="normal"
             required
             fullWidth
-            id="newEmail"
+            id="email"
             label="Email Address"
-            name="newEmail"
+            name="email"
+            onChange={updateField}
           />
           <TextField
             margin="normal"
             required
             fullWidth
-            name="newLocation"
+            name="type"
+            label="Type"
+            type="type"
+            id="type"
+            onChange={updateField}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="species"
+            label="Species"
+            type="species"
+            id="species"
+            onChange={updateField}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="location"
             label="Location"
             type="location"
-            id="newLocation"
+            id="location"
+            onChange={updateField}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Update</Button>
+          <Button onClick={handleUpdateProfile}>Update</Button>
           <Button onClick={handleClose}>Cancel</Button>
         </DialogActions>
       </Dialog>

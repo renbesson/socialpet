@@ -34,11 +34,12 @@ export default function RightBar({ user }) {
     >
       <Toolbar />
       <Box sx={{ overflow: "auto", mt: 2 }}>
-        <Typography sx={{ mb: 1 }} variant="h6" component="div">
-          My Profile
-        </Typography>
-
         <List dense={dense}>
+          <ListItem>
+            <Typography sx={{ mb: 1 }} variant="h6" component="div">
+              User Profile
+            </Typography>
+          </ListItem>
           <ListItem>
             <ListItemIcon>
               <BadgeIcon sx={{ color: orange[500] }} />

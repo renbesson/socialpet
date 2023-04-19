@@ -18,10 +18,12 @@ import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import UpdateAvatarButton from "./buttons/UpdateAvatarButton";
-import UpdateProfile from "./buttons/UpdateProfileButton";
+import UpdateProfileButton from "./buttons/UpdateProfileButton";
+import SignOutButton from "./buttons/SignoutButton";
 
 const pages = [
-  { text: "Posts", link: "/myPosts" },
+  { text: "Main Feed", link: "/" },
+  { text: "My Posts", link: "/myPosts" },
   { text: "Following", link: "/following" },
   { text: "Followers", link: "/following" },
 ];
@@ -67,7 +69,11 @@ function ResponsiveAppBar() {
   };
 
   const SignInSettings = () => {
-    return [<UpdateAvatarButton key={1} />, <UpdateProfile key={2} />];
+    return [
+      <UpdateAvatarButton key={1} />,
+      <UpdateProfileButton key={2} />,
+      <SignOutButton key={3} />,
+    ];
   };
 
   return (
@@ -154,7 +160,7 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", lg: "flex" } }}></Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Typography variant="p" noWrap sx={{ mr: 2 }}>
+            <Typography variant="p" noWrap sx={{ mr: 2, fontWeight: "500" }}>
               {user?.name}
             </Typography>
             <Tooltip title="Open settings">

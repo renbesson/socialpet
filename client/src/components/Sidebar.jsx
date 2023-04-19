@@ -1,4 +1,4 @@
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import { Divider, MenuList, MenuItem, List } from "@mui/material";
 import { Avatar, ListItemButton, ListItemAvatar } from "@mui/material";
@@ -7,12 +7,21 @@ import { ListItem, ListItemText, ListItemIcon } from "@mui/material";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 
 const pages = [
+  { text: " Main Feed", link: "/" },
   { text: " My Posts", link: "/myPosts" },
   { text: "Following", link: "/following" },
   { text: "Followers", link: "/followers" },
 ];
 
 export default function Sidebar() {
+  const location = useLocation();
+
+  const setColor = (link) => {
+    const path = location.pathname;
+    if (path === link) return "primary.main";
+    else return "secondary.main";
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -32,7 +41,7 @@ export default function Sidebar() {
                 <ListItemIcon>
                   <ContentPaste fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>{page.text}</ListItemText>
+                <ListItemText sx={{ color: setColor(page.link) }}>{page.text}</ListItemText>
               </MenuItem>
               <Divider />
             </div>

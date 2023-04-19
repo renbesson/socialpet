@@ -43,7 +43,7 @@ export default function Feed() {
     <>
       <Grid sx={{ mt: 1 }} container spacing={5} justifyContent="center">
         <Grid item xs={10}>
-          {petId === user._id && <Share />}
+          {petId === user?._id && <Share />}
         </Grid>
         {posts?.map((post) => (
           <Grid key={post._id} item xs={10}>

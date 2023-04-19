@@ -3,8 +3,6 @@ import ResponsiveAppBar from "../../components/AppBar";
 
 import Signin from "../Signin";
 import Signup from "../Signup";
-import Signout from "../Signout";
-import Profile from "../Profile";
 import MyPosts from "../MyPosts";
 import Following from "../Following";
 import Followers from "../Followers";
@@ -28,8 +26,6 @@ export default function Layout({ children }) {
           <Route path="/" element={<Feed />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/signout" element={<Signout />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/myPosts" element={<MyPosts />} />
           <Route path="/following" element={<Following />} />
           <Route path="/followers" element={<Followers />} />
