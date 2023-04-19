@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Get one post **TODO**
+//  Get one post
 ////////////////////////////////////////////////////////////////////////////////
 router.get("/", async (req, res) => {
   const postId = req.query.postId;
@@ -91,6 +91,23 @@ router.post("/followers", checkToken, async (req, res) => {
     }
 
     res.status(200).json({ posts });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get all posts of a user
+////////////////////////////////////////////////////////////////////////////////
+router.post("/pet", checkToken, async (req, res) => {
+  const petId = req.query.petId;
+
+  try {
+    const posts = await Post.find({ ownerId: petId }).populate("ownerId");
+    const pet = await Pet.findById(petId);
+    const { name, email, avatar, location } = pet;
+
+    res.status(200).json({ pet: { name, email, avatar, location }, posts });
   } catch (err) {
     res.status(500).json(err);
   }

@@ -1,7 +1,9 @@
+import { Link as RouterLink } from "react-router-dom";
 import { RequireAuth, useAuth } from "../utils/authProvider";
-import { Avatar, Card, CardActions, IconButton, Tooltip } from "@mui/material";
+import { Avatar, Button, Card, CardActions } from "@mui/material";
 import { CardContent, CardHeader, CardMedia } from "@mui/material";
-import { Typography } from "@mui/material";
+import { IconButton, Link, Tooltip, Typography } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment";
 import { Fingerprint } from "@mui/icons-material";
 import Cookies from "universal-cookie";
@@ -52,7 +54,13 @@ export default function Post({ post }) {
           }
           title={
             <Typography sx={{ fontWeight: 500 }}>
-              {post?.ownerId?.name}
+              <Link
+                component={RouterLink}
+                to={`pet/?petId=${post?.ownerId._id}`}
+                color={"#000"}
+              >
+                {post?.ownerId?.name}
+              </Link>
             </Typography>
           }
           subheader={`Last updated: ${moment(post.updatedAt).format(
@@ -65,7 +73,7 @@ export default function Post({ post }) {
           image={post.mediaUrl}
         />
         <CardContent>
-          <Typography>{post.content}</Typography>
+          <Typography color="primary">{post.content}</Typography>
         </CardContent>
         <CardActions disableSpacing>
           <Tooltip title="Like" placement="right">
@@ -81,6 +89,11 @@ export default function Post({ post }) {
           <Typography>
             {likeCount} {likeCount > 1 ? "Likes" : "Like"}
           </Typography>
+          {user._id == post.ownerId._id && (
+            <Button variant="contained" startIcon={<EditIcon />}>
+              Edit Post
+            </Button>
+          )}
         </CardActions>
       </Card>
     </RequireAuth>
