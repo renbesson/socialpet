@@ -1,11 +1,11 @@
-import Post from "../post/Post";
-import Share from "../share/Share";
-import "./feed.css";
-import { useAuth } from "../../utils/authProvider";
+import Post from "../components/Post";
+import Share from "../components/Share";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Grid } from "@mui/material";
 import { toast } from "react-toastify";
+import { useAuth } from "../utils/authProvider";
+import RightBar from "../components/Rightbar";
 
 export default function Feed() {
   const { user } = useAuth();
@@ -14,11 +14,13 @@ export default function Feed() {
 
   const getPosts = async () => {
     try {
-      const res = await fetch(`/api/post/following/?petId${user._id}`, {
+      const res = await fetch("/api/post/followers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: cookies.get("token") }),
       });
       const { posts, message } = await res.json();
+
       setPosts(posts);
     } catch (err) {
       toast(err.message);
@@ -30,15 +32,18 @@ export default function Feed() {
   }, [user]);
 
   return (
-    <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
-      <Grid item xs={10}>
-        <Share />
-      </Grid>
-      {posts?.map((post) => (
-        <Grid key={post._id} item xs={10}>
-          <Post post={post} />
+    <>
+      <Grid sx={{ mt: 1 }} container spacing={5} justifyContent="center">
+        <Grid item xs={10}>
+          <Share />
         </Grid>
-      ))}
-    </Grid>
+        {posts?.map((post) => (
+          <Grid key={post._id} item xs={10}>
+            <Post post={post} />
+          </Grid>
+        ))}
+      </Grid>
+      {user && <RightBar user={user} />}
+    </>
   );
 }

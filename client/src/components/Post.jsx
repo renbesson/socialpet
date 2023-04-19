@@ -1,4 +1,4 @@
-import { RequireAuth, useAuth } from "../../utils/authProvider";
+import { RequireAuth, useAuth } from "../utils/authProvider";
 import { Avatar, Card, CardActions, IconButton, Tooltip } from "@mui/material";
 import { CardContent, CardHeader, CardMedia } from "@mui/material";
 import { Typography } from "@mui/material";
@@ -24,14 +24,7 @@ export default function Post({ post }) {
       });
       const { message } = await res.json();
 
-      if (!res.ok)
-        return toast(
-          <div>
-            <b>Message:</b> {message}
-            <br />
-            <b>Code:</b> {res.status}
-          </div>
-        );
+      if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       // Code 201 - Like added
       if (res.status === 201) setLikeCount((prev) => prev + 1);
 

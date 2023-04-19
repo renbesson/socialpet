@@ -41,14 +41,7 @@ export default function Login() {
 
       if (res.status === 404) return toast("Wrong Email!");
       if (res.status === 401) return toast("Wrong Password!");
-      if (!res.ok)
-        return toast(
-          <div>
-            <b>Message:</b> {message}
-            <br />
-            <b>Code:</b> {res.status}
-          </div>
-        );
+      if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 200) {
         // Saves token as browser cookie
         const { data: user } = decode(token);
@@ -68,7 +61,7 @@ export default function Login() {
   };
 
   return !user ? (
-    <Grid container component="main" sx={{ height: "100vh" }}>
+    <Grid container component="main" sx={{ height: "calc(100vh - 64px)" }}>
       <CssBaseline />
       <Grid
         item

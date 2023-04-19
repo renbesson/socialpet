@@ -15,7 +15,7 @@ const upload = multer({ dest: "images/" });
 ////////////////////////////////////////////////////////////////////////////////
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().populate("ownerId");
     res.status(200).json({ posts });
   } catch (err) {
     res.status(500).json(err);
@@ -41,7 +41,9 @@ router.get("/", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/myPosts", checkToken, async (req, res) => {
   try {
-    const posts = await Post.find({ ownerId: req.user._id });
+    const posts = await Post.find({ ownerId: req.user._id }).populate(
+      "ownerId"
+    );
     res.status(200).json({ posts });
   } catch (err) {
     res.status(500).json(err);
@@ -52,15 +54,38 @@ router.post("/myPosts", checkToken, async (req, res) => {
 //  Get following posts
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/following", checkToken, async (req, res) => {
-  const petId = req.query.petId;
-
   const pet = await Pet.findById(req.user._id);
 
   try {
     const posts = [];
     // Get posts and sort them as newly updated first
     for (const following of pet.following) {
-      const post = await Post.find({ ownerId: following._id });
+      const post = await Post.find({ ownerId: following._id }).populate(
+        "ownerId"
+      );
+
+      posts.push(post[0]);
+    }
+
+    res.status(200).json({ posts });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get followers posts
+////////////////////////////////////////////////////////////////////////////////
+router.post("/followers", checkToken, async (req, res) => {
+  const pet = await Pet.findById(req.user._id);
+
+  try {
+    const posts = [];
+    // Get posts and sort them as newly updated first
+    for (const follower of pet.followers) {
+      const post = await Post.find({ ownerId: follower._id }).populate(
+        "ownerId"
+      );
 
       posts.push(post[0]);
     }

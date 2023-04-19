@@ -1,12 +1,11 @@
-import Post from "../components/Post";
-import Share from "../components/Share";
-
+import Post from "./Post";
+import Share from "./Share";
+import { useAuth } from "../utils/authProvider";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Grid } from "@mui/material";
 import { toast } from "react-toastify";
-import { useAuth } from "../utils/authProvider";
-import RightBar from "../components/Rightbar";
+import RightBar from "./Rightbar";
 
 export default function Feed() {
   const { user } = useAuth();
@@ -15,12 +14,11 @@ export default function Feed() {
 
   const getPosts = async () => {
     try {
-      const res = await fetch("/api/post/myPosts", {
-        method: "POST",
+      const res = await fetch("/api/post", {
+        method: "GET",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: cookies.get("token") }),
       });
-      const { posts } = await res.json();
+      const { posts, message } = await res.json();
       setPosts(posts);
     } catch (err) {
       toast(err.message);

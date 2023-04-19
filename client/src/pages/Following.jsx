@@ -1,12 +1,11 @@
-import Post from "../components/post/Post";
-import Share from "../components/share/Share";
+import Post from "../components/Post";
+import Share from "../components/Share";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Grid } from "@mui/material";
 import { toast } from "react-toastify";
 import { useAuth } from "../utils/authProvider";
-import Sidebar from "../components/sidebar/Sidebar";
-import Rightbar from "../components/rightBar/Rightbar";
+import RightBar from "../components/Rightbar";
 
 export default function Feed() {
   const { user } = useAuth();
@@ -20,7 +19,7 @@ export default function Feed() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: cookies.get("token") }),
       });
-      const { posts, message } = await res.json();
+      const { posts } = await res.json();
 
       setPosts(posts);
     } catch (err) {
@@ -33,25 +32,18 @@ export default function Feed() {
   }, [user]);
 
   return (
-    <Grid sx={{}} container spacing={1} justifyContent="center">
-      <Grid item md>
-        <Sidebar />
-      </Grid>
-      <Grid item md={8}>
-        <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
-          <Grid item xs={10}>
-            <Share />
-          </Grid>
-          {posts?.map((post) => (
-            <Grid key={post._id} item xs={10}>
-              <Post post={post} />
-            </Grid>
-          ))}
+    <>
+      <Grid sx={{ mt: 1 }} container spacing={5} justifyContent="center">
+        <Grid item xs={10}>
+          <Share />
         </Grid>
+        {posts?.map((post) => (
+          <Grid key={post._id} item xs={10}>
+            <Post post={post} />
+          </Grid>
+        ))}
       </Grid>
-      <Grid item sx={{ display: { xs: "none", md: "block" } }}>
-        {user && <Rightbar user={user} />}
-      </Grid>
-    </Grid>
+      {user && <RightBar user={user} />}
+    </>
   );
 }
