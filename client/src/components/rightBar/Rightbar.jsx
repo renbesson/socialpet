@@ -15,21 +15,15 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import { green, orange, purple, yellow } from "@mui/material/colors";
 import UpdateAvatar from "../UpdateAvatar";
 
-export default function RightBar() {
+export default function RightBar({ user }) {
+  const { user: userData } = useAuth();
   const [dense, setDense] = useState(false);
   const [secondary, setSecondary] = useState(false);
-  const { user } = useAuth(); // to grab user data from auth
   const [open, setOpen] = useState(false);
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: { md: 200, lg: 300 },
-        display: { xs: "none", md: "block" },
-      }}
-    >
-      <Typography sx={{ mt: 4, mb: 1 }} variant="h6" component="div">
+    <Box sx={{ width: "100%" }}>
+      <Typography sx={{ mt: 5, mb: 1 }} variant="h6" component="div">
         My Profile
       </Typography>
 
@@ -39,7 +33,7 @@ export default function RightBar() {
             <BadgeIcon sx={{ color: orange[500] }} />
           </ListItemIcon>
           <ListItemText
-            primary={user.name}
+            primary={user?.name}
             secondary={secondary ? "Secondary text" : null}
           />
         </ListItem>
@@ -64,7 +58,7 @@ export default function RightBar() {
         <ListItem>
           <UpdateAvatar />
         </ListItem>
-        <ListItem>
+        <ListItem sx={{ display: userData._id != user._id ? "none" : "block" }}>
           <Button
             variant="contained"
             startIcon={<UpdateIcon />}

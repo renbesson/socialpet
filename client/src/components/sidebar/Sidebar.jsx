@@ -7,22 +7,23 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { Link as RouterLink } from "react-router-dom";
 import ContentPaste from "@mui/icons-material/ContentPaste";
-import { Box } from "@mui/material";
+import { Box, Drawer } from "@mui/material";
 
 const pages = [
-  { text: "Posts", link: "/myPosts" },
+  { text: " My Posts", link: "/myPosts" },
   { text: "Following", link: "/following" },
   { text: "Followers", link: "/following" },
 ];
 
-export default function IconMenu() {
+export default function Sidebar() {
   return (
-    <Box
+    <Drawer
+      variant="permanent"
       sx={{
-        width: "100%",
-        maxWidth: { md: 200, lg: 300 },
-        display: { xs: "none", md: "block" },
+        display: { xs: "none", sm: "block" },
+        "& .MuiDrawer-paper": { boxSizing: "border-box", width: 240 },
       }}
+      open
     >
       <MenuList>
         {pages.map((page) => (
@@ -37,6 +38,6 @@ export default function IconMenu() {
           </div>
         ))}
       </MenuList>
-    </Box>
+    </Drawer>
   );
 }

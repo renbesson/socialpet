@@ -7,9 +7,20 @@ const { checkToken } = require("../../utils/checkToken");
 const router = require("express").Router();
 const { bucket } = require("../../config/firebase");
 const multer = require("multer");
-const mongoose = require("mongoose");
 
 const upload = multer({ dest: "images/" });
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get all posts
+////////////////////////////////////////////////////////////////////////////////
+router.get("/", async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.status(200).json({ posts });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get one post **TODO**
@@ -21,7 +32,18 @@ router.get("/", async (req, res) => {
     const post = await Post.findById(postId).populate("ownerId");
     res.status(200).json(post);
   } catch (err) {
-    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//  Get my posts
+////////////////////////////////////////////////////////////////////////////////
+router.post("/myPosts", checkToken, async (req, res) => {
+  try {
+    const posts = await Post.find({ ownerId: req.user._id });
+    res.status(200).json({ posts });
+  } catch (err) {
     res.status(500).json(err);
   }
 });
@@ -29,14 +51,20 @@ router.get("/", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get following posts
 ////////////////////////////////////////////////////////////////////////////////
-router.get("/following", async (req, res) => {
+router.post("/following", checkToken, async (req, res) => {
   const petId = req.query.petId;
 
+  const pet = await Pet.findById(req.user._id);
+
   try {
+    const posts = [];
     // Get posts and sort them as newly updated first
-    const posts = await Post.find({})
-      .populate("ownerId")
-      .sort({ updatedAt: -1 });
+    for (const following of pet.following) {
+      const post = await Post.find({ ownerId: following._id });
+
+      posts.push(post[0]);
+    }
+
     res.status(200).json({ posts });
   } catch (err) {
     res.status(500).json(err);
@@ -102,7 +130,6 @@ router.post("/", checkToken, async (req, res) => {
 
     res.status(201).json(post);
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -157,7 +184,6 @@ router.post("/like", checkToken, async (req, res) => {
       res.status(200).json({ message: "Post has been unliked." });
     }
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });

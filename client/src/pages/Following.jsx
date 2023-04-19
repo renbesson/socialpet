@@ -1,6 +1,5 @@
 import Post from "../components/post/Post";
 import Share from "../components/share/Share";
-
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Grid } from "@mui/material";
@@ -16,11 +15,13 @@ export default function Feed() {
 
   const getPosts = async () => {
     try {
-      const res = await fetch("/api/post", {
-        method: "GET",
+      const res = await fetch("/api/post/following", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: cookies.get("token") }),
       });
       const { posts, message } = await res.json();
+
       setPosts(posts);
     } catch (err) {
       toast(err.message);

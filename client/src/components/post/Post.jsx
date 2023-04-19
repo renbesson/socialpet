@@ -59,7 +59,7 @@ export default function Post({ post }) {
           }
           title={
             <Typography sx={{ fontWeight: 500 }}>
-              {post.ownerId.name}
+              {post?.ownerId?.name}
             </Typography>
           }
           subheader={`Last updated: ${moment(post.updatedAt).format(

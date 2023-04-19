@@ -13,6 +13,7 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Signout from "./pages/Signout";
 import Profile from "./pages/Profile";
+import Following from "./pages/Following";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ResponsiveAppBar from "./components/AppBar";
@@ -44,19 +45,17 @@ function App() {
       <AuthProvider>
         <Router>
           <ToastContainer />
-          <div className="flex-column justify-flex-start min-100-vh">
-            <ResponsiveAppBar />
-            <div className="container">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/signin" element={<Signin />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/signout" element={<Signout />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/myPosts" element={<MyPosts />} />
-              </Routes>
-            </div>
-            {/* <Footer /> */}
+          <ResponsiveAppBar />
+          <div style={{marginTop: '5rem'}}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signin" element={<Signin />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/signout" element={<Signout />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/following" element={<Following />} />
+              <Route path="/myPosts" element={<MyPosts />} />
+            </Routes>
           </div>
         </Router>
       </AuthProvider>

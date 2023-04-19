@@ -1,26 +1,57 @@
-import { useState } from 'react';
-import { RequireAuth, useAuth } from '../utils/authProvider';
+import Post from "../components/post/Post";
+import Share from "../components/share/Share";
 
-export default function MyPosts() {
-  const auth = useAuth();
+import { useEffect, useState } from "react";
+import Cookies from "universal-cookie";
+import { Grid } from "@mui/material";
+import { toast } from "react-toastify";
+import { useAuth } from "../utils/authProvider";
+import Sidebar from "../components/sidebar/Sidebar";
+import Rightbar from "../components/rightBar/Rightbar";
+
+export default function Feed() {
+  const { user } = useAuth();
   const [posts, setPosts] = useState([]);
+  const cookies = new Cookies();
 
-  const fetchData = async () => {
-    const petId = auth.user?._id;
-
+  const getPosts = async () => {
     try {
-      const res = await fetch(`/api/pet/${petId}/posts`);
-      console.log(res);
-      const data = await res.json();
-      setPosts(data);
+      const res = await fetch("/api/post/myPosts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: cookies.get("token") }),
+      });
+      const { posts, message } = await res.json();
+      setPosts(posts);
     } catch (err) {
-      console.error(err);
+      toast(err.message);
     }
   };
+
+  useEffect(() => {
+    getPosts();
+  }, [user]);
+
   return (
-    <RequireAuth>
-      <h1>MyPosts</h1>
-      <p>{JSON.stringify(posts)}</p>
-    </RequireAuth>
+    <Grid sx={{}} container spacing={1} justifyContent="center">
+      <Grid item md>
+        <Sidebar />
+      </Grid>
+      <Grid item md={8}>
+        <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
+          <Grid item xs={10}>
+            <Share />
+          </Grid>
+          {posts?.map((post) => (
+            <Grid key={post._id} item xs={10}>
+              <Post post={post} />
+            </Grid>
+          ))}
+        </Grid>
+      </Grid>
+      <Grid item sx={{ display: { xs: "none", md: "block" } }}>
+        {user && <Rightbar user={user} />}
+      </Grid>
+    </Grid>
   );
 }

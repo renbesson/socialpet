@@ -15,7 +15,7 @@ export default function Feed() {
   const getPosts = async () => {
     try {
       const res = await fetch(`/api/post/following/?petId${user._id}`, {
-        method: "GET",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
       });
       const { posts, message } = await res.json();
@@ -34,9 +34,9 @@ export default function Feed() {
       <Grid item xs={10}>
         <Share />
       </Grid>
-      {posts?.map((p) => (
-        <Grid key={p._id} item xs={10}>
-          <Post post={p} />
+      {posts?.map((post) => (
+        <Grid key={post._id} item xs={10}>
+          <Post post={post} />
         </Grid>
       ))}
     </Grid>
