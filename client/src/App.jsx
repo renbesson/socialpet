@@ -33,7 +33,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <ToastContainer />
       <AuthProvider>
-        <Router>
+        <Router basename="/">
           <FeedLayout />
         </Router>
       </AuthProvider>
