@@ -1,8 +1,6 @@
 import Post from "../components/Post";
 import Share from "../components/Share";
-
 import { useEffect, useState } from "react";
-import Cookies from "universal-cookie";
 import { Grid, Stack } from "@mui/material";
 import { toast } from "react-toastify";
 import { RequireAuth, useAuth } from "../utils/authProvider";
@@ -13,7 +11,6 @@ import Typography from "../components/modules/Typography";
 export default function SignedHome() {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
-  const cookies = new Cookies();
 
   const getPosts = async () => {
     try {
@@ -21,7 +18,7 @@ export default function SignedHome() {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-      const { posts, message } = await res.json();
+      const { posts } = await res.json();
       setPosts(posts);
     } catch (err) {
       toast(err.message);

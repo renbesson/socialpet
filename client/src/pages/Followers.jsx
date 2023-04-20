@@ -21,7 +21,7 @@ export default function Feed() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: cookies.get("token") }),
       });
-      const { posts, message } = await res.json();
+      const { posts } = await res.json();
 
       setPosts(posts);
     } catch (err) {

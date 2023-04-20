@@ -2,6 +2,7 @@ import * as React from "react";
 import Button from "./Button";
 import Typography from "./Typography";
 import ProductHeroLayout from "./ProductHeroLayout";
+import { Link as RouterLink } from "react-router-dom";
 
 const backgroundImage =
   "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTV8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60";
@@ -37,8 +38,8 @@ export default function ProductHero() {
         color="secondary"
         variant="contained"
         size="large"
-        component="a"
-        href="/premium-themes/onepirate/sign-up/"
+        component={RouterLink}
+        to="/signup"
         sx={{ minWidth: 200 }}
       >
         Sign up
