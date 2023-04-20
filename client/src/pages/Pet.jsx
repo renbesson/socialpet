@@ -93,7 +93,7 @@ export default function Feed() {
           </Grid>
         </Grid>
 
-        {user && <Rightbar user={user} />}
+        {user && <Rightbar user={pet} />}
       </Grid>
     </RequireAuth>
   );
