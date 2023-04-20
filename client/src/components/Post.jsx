@@ -54,7 +54,7 @@ export default function Post({ post }) {
           <Typography sx={{ fontWeight: 500 }}>
             <Link
               component={RouterLink}
-              to={`/pet/?petId=${post?.ownerId._id}`}
+              to={`/pet?petId=${post?.ownerId._id}`}
               color={"#000"}
             >
               {post?.ownerId?.name}
