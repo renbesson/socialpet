@@ -1,9 +1,8 @@
 import Post from "../components/Post";
 import Share from "../components/Share";
-
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { RequireAuth, useAuth } from "../utils/authProvider";
 import Rightbar from "../components/Rightbar";

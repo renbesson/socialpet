@@ -1,5 +1,5 @@
 import { Link as RouterLink } from "react-router-dom";
-import { RequireAuth, useAuth } from "../utils/authProvider";
+import { useAuth } from "../utils/authProvider";
 import { Avatar, Card, CardActions } from "@mui/material";
 import { CardContent, CardHeader, CardMedia } from "@mui/material";
 import { IconButton, Link, Tooltip, Typography } from "@mui/material";
