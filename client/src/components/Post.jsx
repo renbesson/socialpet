@@ -41,64 +41,60 @@ export default function Post({ post }) {
   };
 
   return (
-    <RequireAuth>
-      <Card sx={{ boxShadow: 5, maxWidth: 800 }}>
-        <CardHeader
-          avatar={
-            <Avatar
-              sx={{ width: 64, height: 64 }}
-              aria-label="avatar"
-              src={
-                owner?.avatar ? owner?.avatar : "assets/images/catAvatar.png"
-              }
-            ></Avatar>
-          }
-          title={
-            <Typography sx={{ fontWeight: 500 }}>
-              <Link
-                component={RouterLink}
-                to={`pet/?petId=${post?.ownerId._id}`}
-                color={"#000"}
-              >
-                {post?.ownerId?.name}
-              </Link>
-            </Typography>
-          }
-          subheader={`Last updated: ${moment(post.updatedAt).format(
-            "MMMM DD, YYYY - h:mm:ss a"
-          )}`}
-        />
-        <CardMedia
-          component="img"
-          sx={{ objectFit: "fill", maxHeight: 400 }}
-          image={post.mediaUrl}
-        />
-        <CardContent>
-          <Typography color="primary">{post.content}</Typography>
-        </CardContent>
-        <CardActions>
-          <Tooltip title="Like" placement="right">
-            <IconButton
-              aria-label="fingerprint"
-              color="secondary"
-              size="large"
-              onClick={() => likePost(post._id)}
+    <Card sx={{ boxShadow: 5, maxWidth: 800 }}>
+      <CardHeader
+        avatar={
+          <Avatar
+            sx={{ width: 64, height: 64 }}
+            aria-label="avatar"
+            src={owner?.avatar ? owner?.avatar : "assets/images/catAvatar.png"}
+          ></Avatar>
+        }
+        title={
+          <Typography sx={{ fontWeight: 500 }}>
+            <Link
+              component={RouterLink}
+              to={`/pet/?petId=${post?.ownerId._id}`}
+              color={"#000"}
             >
-              <Fingerprint />
-            </IconButton>
-          </Tooltip>
-
-          <Typography>
-            {likeCount} {likeCount > 1 ? "Likes" : "Like"}
+              {post?.ownerId?.name}
+            </Link>
           </Typography>
-          {user._id === post.ownerId._id && (
-            <>
-              <UpdatePostButton postId={post._id} />
-              <DeletePostButton postId={post._id} />
-            </>
-          )}
-        </CardActions>
-      </Card>
-    </RequireAuth>
+        }
+        subheader={`Last updated: ${moment(post.updatedAt).format(
+          "MMMM DD, YYYY - h:mm:ss a"
+        )}`}
+      />
+      <CardMedia
+        component="img"
+        sx={{ objectFit: "fill", maxHeight: 400 }}
+        image={post.mediaUrl}
+      />
+      <CardContent>
+        <Typography color="primary">{post.content}</Typography>
+      </CardContent>
+      <CardActions>
+        <Tooltip title="Like" placement="right">
+          <IconButton
+            aria-label="fingerprint"
+            color="secondary"
+            size="large"
+            onClick={() => likePost(post._id)}
+          >
+            <Fingerprint />
+          </IconButton>
+        </Tooltip>
+
+        <Typography>
+          {likeCount} {likeCount > 1 ? "Likes" : "Like"}
+        </Typography>
+        {user._id === post.ownerId._id && (
+          <>
+            <UpdatePostButton postId={post._id} />
+            <DeletePostButton postId={post._id} />
+          </>
+        )}
+      </CardActions>
+    </Card>
   );
 }

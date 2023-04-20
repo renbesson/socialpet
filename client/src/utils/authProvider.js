@@ -56,6 +56,7 @@ function RequireAuth({ children }) {
   const cookies = new Cookies();
   let location = useLocation();
   const token = cookies.get("token");
+  const { user } = useAuth();
 
   if (!token) {
     // Redirect them to the /login page, but save the current location they were
@@ -65,7 +66,7 @@ function RequireAuth({ children }) {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
-  return children;
+  if (user) return children;
 }
 
 export { AuthProvider, useAuth, RequireAuth };

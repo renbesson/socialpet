@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Button, Grid, Stack, Typography } from "@mui/material";
 import { toast } from "react-toastify";
-import { useAuth } from "../utils/authProvider";
-import RightBar from "../components/Rightbar";
+import { RequireAuth, useAuth } from "../utils/authProvider";
+import Rightbar from "../components/Rightbar";
 import { useSearchParams } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 export default function Feed() {
   const { user } = useAuth();
@@ -59,40 +60,41 @@ export default function Feed() {
   const isFollowing = user?.following.includes(pet?._id);
 
   return (
-    <>
-      <Grid sx={{ mt: 1 }} container spacing={5} justifyContent="center">
-        <Grid item xs={12}>
-          <Stack
-            sx={{ maxWidth: 800 }}
-            direction="row"
-            justifyContent="space-around"
-            alignItems="flex-start"
-          >
-            <Typography variant="h3">
-              <Typography variant="span" color="primary">
-                {`${pet?.name}'s `}
-              </Typography>
-              Profile
+    <RequireAuth>
+      <Grid sx={{mt: 5}} container spacing={1} justifyContent="space-evenly">
+        <Grid item>
+          <Typography variant="h3">
+            <Typography variant="span" color="primary">
+              {`${pet?.name}'s `}
             </Typography>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={toggleFollowPet}
-            >
-              {!isFollowing ? "Follow" : "Unfollow"}
-            </Button>
-          </Stack>
+            Profile
+          </Typography>
         </Grid>
-        <Grid item xs={10}>
-          {petId === user?._id && <Share />}
+        <Grid item>
+          <Button variant="outlined" color="primary" onClick={toggleFollowPet}>
+            {!isFollowing ? "Follow" : "Unfollow"}
+          </Button>
         </Grid>
-        {posts?.map((post) => (
-          <Grid key={post._id} item xs={10}>
-            <Post post={post} />
-          </Grid>
-        ))}
       </Grid>
-      {user && <RightBar user={pet} />}
-    </>
+
+      <Grid container spacing={1} justifyContent="center">
+        <Sidebar />
+
+        <Grid item md>
+          <Grid sx={{ mt: 1 }} container spacing={5} justifyContent="center">
+            <Grid item xs={10}>
+              <Share />
+            </Grid>
+            {posts?.map((post) => (
+              <Grid key={post._id} item xs={10}>
+                <Post post={post} />
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+
+        {user && <Rightbar user={user} />}
+      </Grid>
+    </RequireAuth>
   );
 }

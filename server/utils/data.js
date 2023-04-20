@@ -4,7 +4,7 @@ const Pets = [
   {
     _id: new mongoose.Types.ObjectId("123458795462154796548751"),
     name: "Blue",
-    email: "Blue@gmail.com",
+    email: "blue@gmail.com",
     password: "$2a$10$VM35l839cEbwR75FpMTu.OpDsFORU2go4vrs3xtOIsnGhOV87Bjwe",
     type: "Parrot",
     species: "Eclectus",

@@ -3,13 +3,14 @@ import Share from "../components/Share";
 
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
-import { Grid } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import { toast } from "react-toastify";
-import { useAuth } from "../utils/authProvider";
+import { RequireAuth, useAuth } from "../utils/authProvider";
 import Sidebar from "../components/Sidebar";
 import Rightbar from "../components/Rightbar";
+import Typography from "../components/modules/Typography";
 
-export default function Feed() {
+export default function SignedHome() {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
@@ -32,25 +33,30 @@ export default function Feed() {
   }, [user]);
 
   return (
-    <Grid sx={{}} container spacing={1} justifyContent="center">
-      <Grid item md>
+    <RequireAuth>
+      <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
+        <Typography variant="h3" color="primary">
+          Main Feed
+        </Typography>
+      </Stack>
+      <Grid container spacing={1} justifyContent="center">
         <Sidebar />
-      </Grid>
-      <Grid item md={8}>
-        <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
-          <Grid item xs={10}>
-            <Share />
-          </Grid>
-          {posts?.map((post) => (
-            <Grid key={post._id} item xs={10}>
-              <Post post={post} />
+
+        <Grid item md>
+          <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
+            <Grid item xs={10}>
+              <Share />
             </Grid>
-          ))}
+            {posts?.map((post) => (
+              <Grid key={post._id} item xs={10}>
+                <Post post={post} />
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid item sx={{ display: { xs: "none", md: "block" } }}>
+
         {user && <Rightbar user={user} />}
       </Grid>
-    </Grid>
+    </RequireAuth>
   );
 }
