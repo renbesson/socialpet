@@ -4,12 +4,15 @@ import { Box, Drawer, Toolbar } from "@mui/material";
 import { ListItemText, ListItemIcon } from "@mui/material";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import RssFeedIcon from "@mui/icons-material/RssFeed";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import HailOutlinedIcon from "@mui/icons-material/HailOutlined";
+import MessageIcon from "@mui/icons-material/Message";
 
 const pages = [
   { text: " Main Feed", link: "/", icon: <RssFeedIcon /> },
-  { text: " My Posts", link: "/myPosts", icon: <RssFeedIcon /> },
-  { text: "Following", link: "/following", icon: <RssFeedIcon /> },
-  { text: "Followers", link: "/followers", icon: <RssFeedIcon /> },
+  { text: " My Posts", link: "/myPosts", icon: <MessageIcon /> },
+  { text: "Following", link: "/following", icon: <HailOutlinedIcon /> },
+  { text: "Followers", link: "/followers", icon: <PeopleAltOutlinedIcon /> },
 ];
 
 export default function Sidebar() {
