@@ -79,7 +79,7 @@ export default function Feed() {
               color="primary"
               onClick={toggleFollowPet}
             >
-              {isFollowing ? "Follow" : "Unfollow"}
+              {!isFollowing ? "Follow" : "Unfollow"}
             </Button>
           </Stack>
         </Grid>

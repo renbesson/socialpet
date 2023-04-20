@@ -7,6 +7,8 @@ const { checkToken } = require("../../utils/checkToken");
 const router = require("express").Router();
 const { bucket } = require("../../config/firebase");
 const multer = require("multer");
+const { fromBase64 } = require("../../utils/fromBase64");
+const { uploadToFirestorage } = require("../../utils/uploadToFirestorage");
 
 const upload = multer({ dest: "images/" });
 
@@ -15,7 +17,7 @@ const upload = multer({ dest: "images/" });
 ////////////////////////////////////////////////////////////////////////////////
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find().populate("ownerId");
+    const posts = await Post.find().populate("ownerId").sort({ updatedAt: -1 });
     res.status(200).json({ posts });
   } catch (err) {
     res.status(500).json(err);
@@ -29,7 +31,9 @@ router.get("/", async (req, res) => {
   const postId = req.query.postId;
 
   try {
-    const post = await Post.findById(postId).populate("ownerId");
+    const post = await Post.findById(postId)
+      .populate("ownerId")
+      .sort({ updatedAt: -1 });
     res.status(200).json(post);
   } catch (err) {
     res.status(500).json(err);
@@ -41,9 +45,9 @@ router.get("/", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/myPosts", checkToken, async (req, res) => {
   try {
-    const posts = await Post.find({ ownerId: req.user._id }).populate(
-      "ownerId"
-    );
+    const posts = await Post.find({ ownerId: req.user._id })
+      .populate("ownerId")
+      .sort({ updatedAt: -1 });
     res.status(200).json({ posts });
   } catch (err) {
     res.status(500).json(err);
@@ -60,9 +64,9 @@ router.post("/following", checkToken, async (req, res) => {
     const posts = [];
     // Get posts and sort them as newly updated first
     for (const following of pet.following) {
-      const post = await Post.find({ ownerId: following._id }).populate(
-        "ownerId"
-      );
+      const post = await Post.find({ ownerId: following._id })
+        .populate("ownerId")
+        .sort({ updatedAt: -1 });
 
       posts.push(post[0]);
     }
@@ -83,9 +87,9 @@ router.post("/followers", checkToken, async (req, res) => {
     const posts = [];
     // Get posts and sort them as newly updated first
     for (const follower of pet.followers) {
-      const post = await Post.find({ ownerId: follower._id }).populate(
-        "ownerId"
-      );
+      const post = await Post.find({ ownerId: follower._id })
+        .populate("ownerId")
+        .sort({ updatedAt: -1 });
 
       posts.push(post[0]);
     }
@@ -103,7 +107,9 @@ router.post("/pet", checkToken, async (req, res) => {
   const petId = req.query.petId;
 
   try {
-    const posts = await Post.find({ ownerId: petId }).populate("ownerId");
+    const posts = await Post.find({ ownerId: petId })
+      .populate("ownerId")
+      .sort({ updatedAt: -1 });
     const pet = await Pet.findById(petId);
     const { _id, name, email, avatar, location } = pet;
 
@@ -119,54 +125,24 @@ router.post("/pet", checkToken, async (req, res) => {
 //  Post a post
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/", checkToken, async (req, res) => {
+  const fileAsString = req.body.fileAsString;
+  const id = req.user._id;
+
   // Saves the post to the database
   try {
     const newPost = new Post({
-      ownerId: req.user._id,
+      ownerId: id,
       mediaUrl: "",
       content: req.body.content,
     });
 
     // Uploads the image to firebase storage and saves its URL to 'mediaUrl'
-    if (req.body.fileAsString) {
-      // Raw base64 File
-      const fileBase64 = req.body.fileAsString;
-
-      // Just the bytes without the metadata (needed to upload to firebase storage)
-      const fileBytes = fileBase64.split(",")[1];
-
-      // Creates a buffer with the fileBytes
-      const fileBuffer = Buffer.from(fileBytes, "base64");
-
-      // Gets only the file extension
-      const fileExtension = fileBase64.split(";")[0].split("/")[1];
-
-      // Sets the path for the file on the remote server
-      const remotePath = `images/${newPost.id}.${fileExtension}`;
-
-      const file = bucket.file(remotePath);
-
-      const sendFile = () =>
-        new Promise((resolve, reject) => {
-          file
-            .createWriteStream()
-            .on("error", (err) => {
-              reject(err);
-            })
-            .on("finish", async () => {
-              const url = await file.getSignedUrl({
-                version: "v2",
-                action: "read",
-                expires: Date.now() + 60 * 60 * 100000000,
-              });
-              resolve(url[0]);
-            })
-            .end(fileBuffer);
-        });
-      const url = await sendFile();
+    if (fileAsString) {
+      const { fileBuffer, remotePath } = await fromBase64(fileAsString);
+      const { url } = await uploadToFirestorage(bucket, fileBuffer, remotePath);
 
       // Sets the url to the mediaUrl property
-      newPost.mediaUrl = url;
+      newPost.mediaUrl = url[0];
     }
 
     // Saves the post to the database
@@ -174,6 +150,7 @@ router.post("/", checkToken, async (req, res) => {
 
     res.status(201).json(post);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -182,29 +159,35 @@ router.post("/", checkToken, async (req, res) => {
 //  Update a post
 ////////////////////////////////////////////////////////////////////////////////
 
-router.put("/", [checkToken, upload.single("image")], async (req, res) => {
+router.put("/", checkToken, async (req, res) => {
+  const { content, fileAsString } = req.body;
   const postId = req.query.postId;
 
   // Gets the post and checks if the requester is the owner
   const post = await Post.findById(postId);
 
   // Code 401 - Unauthorized
-  if (req.user._id !== post._doc.ownerId)
+  if (req.user._id != post?.ownerId)
     return res.status(401).json({ message: "You are not the owner!" });
 
   try {
-    // Destructuring to make sure only these proprieties get updated
-    const { content, comments, mediaUrl } = req.body;
-    const updatedPost = await Post.findByIdAndUpdate(
-      postId,
-      {
-        $set: { content, comments, mediaUrl },
-      },
-      { new: true }
-    );
+    // Uploads the image to firebase storage and saves its URL to 'mediaUrl'
+    if (fileAsString) {
+      const { fileBuffer, remotePath } = await fromBase64(fileAsString);
+      const { url } = await uploadToFirestorage(bucket, fileBuffer, remotePath);
 
-    // Code 201 - Created
-    res.status(201).json(updatedPost);
+      console.log(url[0]);
+
+      await post.updateOne({
+        $set: { content, mediaUrl: url[0] },
+      });
+    } else {
+      await post.updateOne({
+        $set: { content, mediaUrl: "" },
+      });
+    }
+    // Code 200 - Accepted
+    res.status(200).json({ message: "Post Updated." });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -235,23 +218,21 @@ router.post("/like", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 // Delete a post **TODO**
 ////////////////////////////////////////////////////////////////////////////////
-router.put("/:id/unfollow", async (req, res) => {
-  if (req.body.petId !== req.params.id) {
-    try {
-      const pet = await Pet.findById(req.params.id);
-      const currentPet = await Pet.findById(req.body.petId);
-      if (pet.followers.includes(req.body.petId)) {
-        await pet.updateOne({ $pull: { followers: req.body.petId } });
-        await currentPet.updateOne({ $pull: { followings: req.params.id } });
-        res.status(200).json({ message: "pet has been unfollowed" });
-      } else {
-        res.status(403).json({ message: "you dont follow this pet" });
-      }
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(403).json({ message: "you cant unfollow yourself" });
+router.delete("/", checkToken, async (req, res) => {
+  const postId = req.query.postId;
+
+  const post = await Post.findById(postId);
+
+  // Code 401 - Unauthorized
+  if (req.user._id != post?.ownerId)
+    return res.status(401).json({ message: "You are not the owner!" });
+
+  try {
+    await post.deleteOne();
+
+    res.status(200).json({ message: "Post Deleted." });
+  } catch (err) {
+    res.status(500).json(err);
   }
 });
 

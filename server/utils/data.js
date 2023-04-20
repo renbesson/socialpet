@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const Pets = [
   {
     _id: new mongoose.Types.ObjectId("123458795462154796548751"),
-    name: "Anna",
-    email: "anna@gmail.com",
+    name: "Blue",
+    email: "Blue@gmail.com",
     password: "$2a$10$VM35l839cEbwR75FpMTu.OpDsFORU2go4vrs3xtOIsnGhOV87Bjwe",
-    type: "Dog",
-    species: "Dog",
-    age: 2,
-    location: "Moncton",
+    type: "Parrot",
+    species: "Eclectus",
+    age: 7,
+    location: "Sussex",
     posts: [
       new mongoose.Types.ObjectId("123458795462154796548761"),
       new mongoose.Types.ObjectId("123458795462154796548771"),
@@ -17,7 +17,7 @@ const Pets = [
     following: [new mongoose.Types.ObjectId("123458795462154796548752")],
     followers: [new mongoose.Types.ObjectId("123458795462154796548753")],
     avatar:
-      "https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTl8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60 ",
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/avatars%2F123458795462154796548751_avatar.png?alt=media&token=8ddc359b-98a4-4b99-9ad3-f94cb1a6fbaf",
   },
   {
     _id: new mongoose.Types.ObjectId("123458795462154796548752"),
@@ -56,8 +56,8 @@ const Posts = [
     _id: new mongoose.Types.ObjectId("123458795462154796548761"),
     ownerId: new mongoose.Types.ObjectId("123458795462154796548751"),
     mediaUrl:
-      "https://images.unsplash.com/photo-1591608971376-46e64aa7fd19?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NjR8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60",
-    content: "Amzaing",
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/images%2F123458795462154796548761.png?alt=media&token=bc59798a-d5e7-4439-99b8-963d2a78e6c7",
+    content: "Me watching Birdflix.",
 
     comments: " ",
   },
@@ -65,8 +65,8 @@ const Posts = [
     _id: new mongoose.Types.ObjectId("123458795462154796548771"),
     ownerId: new mongoose.Types.ObjectId("123458795462154796548751"),
     mediaUrl:
-      "https://www.google.com/url?sa=i&url=http%3A%2F%2Ft1.gstatic.com%2Flicensed-image%3Fq%3Dtbn%3AANd9GcS_9i-kxwPsZenCXAF1NkQSwbd5pHXR3usdHV3YxvkMxSJn3DZd6T_kMEtLiW63fvAPsa3JqHPgFagNHyE&psig=AOvVaw10IZxVWcon7dA60zSlLs5c&ust=1681943086443000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCNiRj7O8tP4CFQAAAAAdAAAAABAE",
-    content: "Amzaing",
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/images%2F123458795462154796548771.jpeg?alt=media&token=b284caff-a25c-4855-949a-c029fb67b37a",
+    content: "My brother after he left his wife (cheating issues).",
 
     comments: " ",
   },

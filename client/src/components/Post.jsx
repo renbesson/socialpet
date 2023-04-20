@@ -1,14 +1,15 @@
 import { Link as RouterLink } from "react-router-dom";
 import { RequireAuth, useAuth } from "../utils/authProvider";
-import { Avatar, Button, Card, CardActions } from "@mui/material";
+import { Avatar, Card, CardActions } from "@mui/material";
 import { CardContent, CardHeader, CardMedia } from "@mui/material";
 import { IconButton, Link, Tooltip, Typography } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment";
 import { Fingerprint } from "@mui/icons-material";
 import Cookies from "universal-cookie";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import UpdatePostButton from "./buttons/UpdatePostButton";
+import DeletePostButton from "./buttons/DeletePostButton";
 
 export default function Post({ post }) {
   const { user } = useAuth();
@@ -75,7 +76,7 @@ export default function Post({ post }) {
         <CardContent>
           <Typography color="primary">{post.content}</Typography>
         </CardContent>
-        <CardActions disableSpacing>
+        <CardActions>
           <Tooltip title="Like" placement="right">
             <IconButton
               aria-label="fingerprint"
@@ -86,13 +87,15 @@ export default function Post({ post }) {
               <Fingerprint />
             </IconButton>
           </Tooltip>
+
           <Typography>
             {likeCount} {likeCount > 1 ? "Likes" : "Like"}
           </Typography>
           {user._id === post.ownerId._id && (
-            <Button variant="contained" startIcon={<EditIcon />}>
-              Edit Post
-            </Button>
+            <>
+              <UpdatePostButton postId={post._id} />
+              <DeletePostButton postId={post._id} />
+            </>
           )}
         </CardActions>
       </Card>

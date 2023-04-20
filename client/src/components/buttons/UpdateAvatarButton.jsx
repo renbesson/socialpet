@@ -4,8 +4,9 @@ import { Box, Button } from "@mui/material";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import { toast } from "react-toastify";
 import uploadAvatar from "../../utils/uploadAvatar";
+import toBase64 from "../../utils/toBase64";
 
-export default function UpdateAvatar() {
+export default function UpdateAvatarButton() {
   const cookies = new Cookies();
 
   const handleUploadAvatar = async (event) => {
@@ -14,7 +15,10 @@ export default function UpdateAvatar() {
     const token = cookies.get("token");
 
     try {
-      const { message } = await uploadAvatar(image, token);
+      // Converts the file to base64
+      const fileAsString = await toBase64(image);
+
+      const { message } = await uploadAvatar(fileAsString, token);
 
       toast(message);
 

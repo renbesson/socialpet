@@ -43,7 +43,6 @@ function AuthProvider({ children }) {
     })();
   }, [cookies, user?.avatar]);
 
-  console.log("effect");
   let value = { user, setUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

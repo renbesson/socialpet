@@ -1,10 +1,5 @@
-import toBase64 from "./toBase64";
-
-export default async function uploadAvatar(image, token) {
+export default async function uploadAvatar(fileAsString, token) {
   try {
-    // Converts the file to base64
-    const fileAsString = await toBase64(image);
-
     const res = await fetch(`/api/pet/avatar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -12,8 +7,8 @@ export default async function uploadAvatar(image, token) {
     });
     const { url, message } = await res.json();
 
-    if (!res.ok) return message;
-    if (res.status === 201) return url;
+    if (!res.ok) return { message };
+    if (res.status === 201) return { url, message };
   } catch (err) {
     return err;
   }

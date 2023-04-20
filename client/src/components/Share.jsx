@@ -35,7 +35,6 @@ export default function Share() {
       let fileAsString = "";
 
       if (image) fileAsString = await toBase64(image);
-      else console.log("dasd");
 
       const res = await fetch("/api/post", {
         method: "POST",
@@ -46,6 +45,7 @@ export default function Share() {
           fileAsString,
         }),
       });
+
       const { message } = await res.json();
 
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
@@ -56,6 +56,9 @@ export default function Share() {
         toast("Post Created!");
 
         toast(message);
+
+        // Reloads the page to get the new post
+        setTimeout(() => window.location.reload(), 1000);
       }
     } catch (err) {
       toast(err.message);

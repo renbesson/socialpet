@@ -4,6 +4,8 @@
 const { bucket } = require("../../config/firebase");
 const Pet = require("../../models/Pet");
 const { checkToken } = require("../../utils/checkToken");
+const { fromBase64 } = require("../../utils/fromBase64");
+const { uploadToFirestorage } = require("../../utils/uploadToFirestorage");
 const router = require("express").Router();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +66,7 @@ router.put("/follow", checkToken, async (req, res) => {
           .json({ message: `You are no longer following ${pet.name}.` });
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json(err);
     }
   } else {
@@ -77,44 +79,18 @@ router.put("/follow", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/avatar", checkToken, async (req, res) => {
   try {
-    // Raw base64 File
-    const fileBase64 = req.body.fileAsString;
+    const fileAsString = req.body.fileAsString;
+    const id = req.user._id;
 
-    // Just the bytes without the metadata (needed to upload to firebase storage)
-    const fileBytes = fileBase64.split(",")[1];
+    const { fileBuffer, remotePath } = await fromBase64(fileAsString, id);
 
-    // Creates a buffer with the fileBytes
-    const fileBuffer = Buffer.from(fileBytes, "base64");
+    const { url } = await uploadToFirestorage(bucket, fileBuffer, remotePath);
 
-    // Gets only the file extension
-    const fileExtension = fileBase64.split(";")[0].split("/")[1];
-
-    // Sets the path for the file on the remote server
-    const remotePath = `avatars/${req.user._id}_avatar.${fileExtension}`;
-
-    const file = bucket.file(remotePath);
-
-    file
-      .createWriteStream()
-      .on("error", (err) => {
-        console.error("Error uploading file:", err);
-      })
-      .end(fileBuffer);
-
-    const url = await file.getSignedUrl({
-      version: "v2",
-      action: "read",
-      expires: Date.now() + 60 * 60 * 100000000,
-    });
-
-    const pet = await Pet.findByIdAndUpdate(
-      req.user._id,
-      { avatar: url[0] },
-      { new: true }
-    );
+    await Pet.findByIdAndUpdate(id, { avatar: url[0] }, { new: true });
 
     res.status(201).json({ url: url[0], message: "Avatar Updated!" });
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
