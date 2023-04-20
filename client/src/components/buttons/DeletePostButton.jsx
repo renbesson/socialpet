@@ -2,8 +2,10 @@ import Button from "@mui/material/Button";
 import Cookies from "universal-cookie";
 import { toast } from "react-toastify";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useAuth } from "../../utils/authProvider";
 
 export default function DeletePostButton({ postId }) {
+  const { refresh, setRefresh } = useAuth();
   const cookies = new Cookies();
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -27,8 +29,7 @@ export default function DeletePostButton({ postId }) {
       if (res.status === 200) {
         toast(message);
 
-        // Reloads the page to get the new post
-        setTimeout(() => window.location.reload(), 1000);
+        setRefresh(refresh + 1);
       }
     } catch (err) {
       toast(err.message);

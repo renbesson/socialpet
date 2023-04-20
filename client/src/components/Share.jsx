@@ -11,7 +11,7 @@ import moment from "moment";
 import toBase64 from "../utils/toBase64";
 
 export default function Share() {
-  const { user } = useAuth();
+  const { user, refresh, setRefresh } = useAuth();
   const cookies = new Cookies();
   const [image, setImage] = useState(null);
 
@@ -57,8 +57,7 @@ export default function Share() {
 
         toast(message);
 
-        // Reloads the page to get the new post
-        setTimeout(() => window.location.reload(), 1000);
+        setRefresh(refresh + 1);
       }
     } catch (err) {
       toast(err.message);

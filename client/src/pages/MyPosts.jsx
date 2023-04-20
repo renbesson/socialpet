@@ -11,7 +11,7 @@ import Sidebar from "../components/Sidebar";
 import Typography from "../components/modules/Typography";
 
 export default function Feed() {
-  const { user } = useAuth();
+  const { user, refresh } = useAuth();
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
 
@@ -31,8 +31,9 @@ export default function Feed() {
 
   useEffect(() => {
     getPosts();
-  }, [user]);
+  }, [refresh]);
 
+  console.log("sdasd");
   return (
     <RequireAuth>
       <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
@@ -41,7 +42,7 @@ export default function Feed() {
         </Typography>
       </Stack>
       <Grid container spacing={1} justifyContent="center">
-      <Sidebar />
+        <Sidebar />
 
         <Grid item md>
           <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">

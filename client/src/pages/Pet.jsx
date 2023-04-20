@@ -10,7 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 export default function Feed() {
-  const { user } = useAuth();
+  const { user, refresh, setRefresh } = useAuth();
   const [pet, setPet] = useState([]);
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
@@ -50,8 +50,7 @@ export default function Feed() {
 
       toast(message);
 
-      // Reloads the page to get the new post
-      setTimeout(() => window.location.reload(), 1000);
+      setRefresh(refresh + 1);
     } catch (err) {
       toast(err.message);
     }
@@ -60,7 +59,7 @@ export default function Feed() {
 
   return (
     <RequireAuth>
-      <Grid sx={{mt: 5}} container spacing={1} justifyContent="space-evenly">
+      <Grid sx={{ mt: 5 }} container spacing={1} justifyContent="space-evenly">
         <Grid item>
           <Typography variant="h3">
             <Typography variant="span" color="primary">

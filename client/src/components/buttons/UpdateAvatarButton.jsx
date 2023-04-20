@@ -5,8 +5,10 @@ import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import { toast } from "react-toastify";
 import uploadAvatar from "../../utils/uploadAvatar";
 import toBase64 from "../../utils/toBase64";
+import { useAuth } from "../../utils/authProvider";
 
 export default function UpdateAvatarButton() {
+  const { refresh, setRefresh } = useAuth();
   const cookies = new Cookies();
 
   const handleUploadAvatar = async (event) => {
@@ -22,8 +24,7 @@ export default function UpdateAvatarButton() {
 
       toast(message);
 
-      // Reloads the page to get the new post
-      setTimeout(() => window.location.reload(), 1000);
+      setRefresh(refresh + 1);
     } catch (err) {
       toast(err.message);
     }
