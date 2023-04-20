@@ -105,9 +105,11 @@ router.post("/pet", checkToken, async (req, res) => {
   try {
     const posts = await Post.find({ ownerId: petId }).populate("ownerId");
     const pet = await Pet.findById(petId);
-    const { name, email, avatar, location } = pet;
+    const { _id, name, email, avatar, location } = pet;
 
-    res.status(200).json({ pet: { name, email, avatar, location }, posts });
+    res
+      .status(200)
+      .json({ pet: { _id, name, email, avatar, location }, posts });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -216,7 +218,7 @@ router.post("/like", checkToken, async (req, res) => {
 
   try {
     const post = await Post.findById(postId);
-    const isLiking = post.likedBy.some((id) => id.equals(req.user._id));
+    const isLiking = post.likedBy.includes(req.user._id);
 
     if (!isLiking) {
       await post.updateOne({ $push: { likedBy: req.user._id } });

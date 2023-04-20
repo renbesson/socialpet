@@ -29,8 +29,8 @@ const Pets = [
     age: 2,
     location: "Outside Moncton",
     posts: [new mongoose.Types.ObjectId("123458795462154796548762")],
-    following: [new mongoose.Types.ObjectId("123458795462154796548751")],
-    followers: [new mongoose.Types.ObjectId("123458795462154796548753")],
+    following: [new mongoose.Types.ObjectId("123458795462154796548753")],
+    followers: [new mongoose.Types.ObjectId("123458795462154796548751")],
     avatar:
       "https://images.unsplash.com/photo-1607923432848-62f872d16daf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8ODl8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
   },

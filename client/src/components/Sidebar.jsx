@@ -1,9 +1,7 @@
 import { Link as RouterLink, useLocation } from "react-router-dom";
-
 import { Divider, MenuList, MenuItem, List } from "@mui/material";
-import { Avatar, ListItemButton, ListItemAvatar } from "@mui/material";
 import { Box, Drawer, Toolbar } from "@mui/material";
-import { ListItem, ListItemText, ListItemIcon } from "@mui/material";
+import { ListItemText, ListItemIcon } from "@mui/material";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 
 const pages = [

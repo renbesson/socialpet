@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect, useMemo } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import decode from "jwt-decode";
+import { toast } from "react-toastify";
 
 let AuthContext = createContext(null);
 
@@ -17,12 +18,23 @@ function AuthProvider({ children }) {
 
       // Checks if a token exists as cookie
       if (token) {
-        const { data: user, exp } = decode(token);
+        const { data: userToken, exp } = decode(token);
 
         // Checks if token is not expired
         if (Date.now() <= exp * 1000) {
-          //Sets user state
-          setUser(user);
+          //Gets user data sets user state
+          try {
+            const res = await fetch(`/api/pet/?petId=${userToken?._id}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token: cookies.get("token") }),
+            });
+            const { pet } = await res.json();
+
+            setUser(pet);
+          } catch (err) {
+            toast(err.message);
+          }
         } else {
           // Removes expired cookie
           cookies.remove("token");
@@ -31,6 +43,7 @@ function AuthProvider({ children }) {
     })();
   }, [cookies, user?.avatar]);
 
+  console.log("effect");
   let value = { user, setUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

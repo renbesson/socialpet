@@ -10,7 +10,6 @@ import RightBar from "./Rightbar";
 export default function Feed() {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
-  const cookies = new Cookies();
 
   const getPosts = async () => {
     try {
@@ -18,7 +17,7 @@ export default function Feed() {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-      const { posts, message } = await res.json();
+      const { posts } = await res.json();
       setPosts(posts);
     } catch (err) {
       toast(err.message);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -12,11 +12,7 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useAuth } from "../utils/authProvider";
-import uploadAvatar from "../utils/uploadAvatar";
 import Cookies from "universal-cookie";
-import { toast } from "react-toastify";
-import { Button } from "@mui/material";
-import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import UpdateAvatarButton from "./buttons/UpdateAvatarButton";
 import UpdateProfileButton from "./buttons/UpdateProfileButton";
 import SignOutButton from "./buttons/SignoutButton";

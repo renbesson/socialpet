@@ -55,9 +55,6 @@ export default function Share() {
 
         toast("Post Created!");
 
-        // Reloads the page to get the new post
-        setTimeout(() => window.location.reload(), 1000);
-
         toast(message);
       }
     } catch (err) {

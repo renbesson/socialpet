@@ -5,21 +5,15 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
-import { useAuth } from "../utils/authProvider"; ////// Import to provide access to auth, which stores the user data
-import Button from "@mui/material/Button";
-import UpdateProfile from "./buttons/UpdateProfileButton";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MailIcon from "@mui/icons-material/Mail";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { green, orange, purple } from "@mui/material/colors";
 import { Drawer, Toolbar } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 
 export default function RightBar({ user }) {
-  const { user: userData } = useAuth();
   const [dense] = useState(false);
   const [secondary] = useState(false);
-  const [open, setOpen] = useState(false);
 
   return (
     <Drawer

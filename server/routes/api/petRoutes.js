@@ -9,13 +9,13 @@ const router = require("express").Router();
 ////////////////////////////////////////////////////////////////////////////////
 //  Get one pet
 ////////////////////////////////////////////////////////////////////////////////
-router.get("/", async (req, res) => {
+router.post("/", checkToken, async (req, res) => {
   const petId = req.query.petId;
 
   try {
     const pet = await Pet.findById(petId);
     const { password, updatedAt, ...other } = pet._doc;
-    res.status(200).json(other);
+    res.status(200).json({ pet: other });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -37,54 +37,40 @@ router.get("/follow", async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Follow a pet
+//  Follow/Unfollow a pet
 ////////////////////////////////////////////////////////////////////////////////
-router.put("/:id/follow", async (req, res) => {
+router.put("/follow", checkToken, async (req, res) => {
   const petId = req.query.petId;
 
-  if (req.body.petId !== req.params.id) {
+  if (petId !== req.user._id) {
     try {
-      const pet = await Pet.findById(req.params.id);
-      const currentPet = await Pet.findById(req.body.petId);
-      if (!pet.followers.includes(req.body.petId)) {
-        await pet.updateOne({ $push: { followers: req.body.petId } });
-        await currentPet.updateOne({ $push: { followings: req.params.id } });
-        res.status(200).json("pet has been followed");
+      const user = await Pet.findById(req.user._id);
+      const pet = await Pet.findById(petId);
+
+      const isFollowing = user.following.includes(petId);
+      const isBeingFollowed = pet.followers.includes(user._id);
+
+      console.log(isFollowing);
+
+      if (!isFollowing && !isBeingFollowed) {
+        await pet.updateOne({ $push: { followers: user._id } });
+        await user.updateOne({ $push: { following: pet._id } });
+        res.status(201).json({ message: `You are now following ${pet.name}.` });
       } else {
-        res.status(403).json("you allready follow this pet");
+        await pet.updateOne({ $pull: { followers: user._id } });
+        await user.updateOne({ $pull: { following: pet._id } });
+        res
+          .status(201)
+          .json({ message: `You are no longer following ${pet.name}.` });
       }
     } catch (err) {
+      console.log(err);
       res.status(500).json(err);
     }
   } else {
-    res.status(403).json("you cant follow yourself");
+    res.status(403).json({ message: "You can't follow yourself." });
   }
 });
-
-////////////////////////////////////////////////////////////////////////////////
-// Unfollow a pet
-////////////////////////////////////////////////////////////////////////////////
-router.put("/:id/unfollow", async (req, res) => {
-  if (req.body.petId !== req.params.id) {
-    try {
-      const pet = await Pet.findById(req.params.id);
-      const currentPet = await Pet.findById(req.body.petId);
-      if (pet.followers.includes(req.body.petId)) {
-        await pet.updateOne({ $pull: { followers: req.body.petId } });
-        await currentPet.updateOne({ $pull: { followings: req.params.id } });
-        res.status(200).json("pet has been unfollowed");
-      } else {
-        res.status(403).json("you dont follow this pet");
-      }
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(403).json("you cant unfollow yourself");
-  }
-});
-
-module.exports = router;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Upload an avatar
@@ -113,9 +99,6 @@ router.post("/avatar", checkToken, async (req, res) => {
       .on("error", (err) => {
         console.error("Error uploading file:", err);
       })
-      .on("finish", () => {
-        console.log(`File ${remotePath} uploaded successfully.`);
-      })
       .end(fileBuffer);
 
     const url = await file.getSignedUrl({
@@ -132,7 +115,8 @@ router.post("/avatar", checkToken, async (req, res) => {
 
     res.status(201).json({ url: url[0], message: "Avatar Updated!" });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
+
+module.exports = router;

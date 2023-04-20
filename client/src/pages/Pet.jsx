@@ -3,7 +3,7 @@ import Share from "../components/Share";
 
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
-import { Grid } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { useAuth } from "../utils/authProvider";
 import RightBar from "../components/Rightbar";
@@ -39,9 +39,50 @@ export default function Feed() {
   }, [user]);
   /* eslint-enable */
 
+  const toggleFollowPet = async () => {
+    try {
+      const res = await fetch(`/api/pet/follow/?petId=${petId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: cookies.get("token") }),
+      });
+      const { message } = await res.json();
+
+      toast(message);
+
+      // Reloads the page to get the new post
+      setTimeout(() => window.location.reload(), 1000);
+    } catch (err) {
+      toast(err.message);
+    }
+  };
+  const isFollowing = user?.following.includes(pet?._id);
+
   return (
     <>
       <Grid sx={{ mt: 1 }} container spacing={5} justifyContent="center">
+        <Grid item xs={12}>
+          <Stack
+            sx={{ maxWidth: 800 }}
+            direction="row"
+            justifyContent="space-around"
+            alignItems="flex-start"
+          >
+            <Typography variant="h3">
+              <Typography variant="span" color="primary">
+                {`${pet?.name}'s `}
+              </Typography>
+              Profile
+            </Typography>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={toggleFollowPet}
+            >
+              {isFollowing ? "Follow" : "Unfollow"}
+            </Button>
+          </Stack>
+        </Grid>
         <Grid item xs={10}>
           {petId === user?._id && <Share />}
         </Grid>
