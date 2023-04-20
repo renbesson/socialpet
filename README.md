@@ -14,3 +14,18 @@ Follow the below to install the application:
 4. Run `npm run seed` to seed the mock data.
 
 ## Usage
+
+- This is an application that will allow the user to :
+  - Create,
+  - Read,
+  - Update and
+  - Delete posts on the application through the use of the MongoDB.
+- Please see the application deployed on the following website https://socialpet.herokuapp.com/.
+
+## Credits
+
+N/A
+
+## License
+
+Please refer to LICENSE in the repo
