@@ -24,7 +24,7 @@ export default function Layout() {
         <Route path="/myPosts" element={<MyPosts />} />
         <Route path="/following" element={<Following />} />
         <Route path="/followers" element={<Followers />} />
-        <Route path="/pet" element={<Pet />} />
+        <Route path="/pet/:petId" element={<Pet />} />
       </Routes>
 
       <Toolbar />

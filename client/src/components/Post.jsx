@@ -4,7 +4,7 @@ import { Avatar, Card, CardActions } from "@mui/material";
 import { CardContent, CardHeader, CardMedia } from "@mui/material";
 import { IconButton, Link, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
-import { Fingerprint } from "@mui/icons-material";
+import PetsIcon from '@mui/icons-material/Pets';
 import Cookies from "universal-cookie";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -76,12 +76,12 @@ export default function Post({ post }) {
       <CardActions>
         <Tooltip title="Like" placement="right">
           <IconButton
-            aria-label="fingerprint"
+            aria-label="like"
             color="secondary"
             size="large"
             onClick={() => likePost(post._id)}
           >
-            <Fingerprint />
+            <PetsIcon />
           </IconButton>
         </Tooltip>
 
