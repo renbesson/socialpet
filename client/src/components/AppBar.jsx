@@ -81,11 +81,6 @@ function ResponsiveAppBar() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 0 }}>
-            <Image src="/assets/images/socialpet-logo.png" width={256} />
-            {/* <PetsOutlinedIcon /> */}
-          </Box>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", lg: "none" } }}>
             <IconButton
               size="large"
@@ -127,24 +122,15 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component={RouterLink}
-            to="/"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", lg: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              color: "white",
-              textDecoration: "none",
-            }}
-          >
-            Social Pet
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", lg: "flex" } }}></Box>
+          <Box sx={{ flexGrow: 0 }}>
+            <img
+              src="/assets/images/socialpet-logo.png"
+              sx={{ display: { xs: "none", lg: "flex" } }}
+              width={256}
+            />
+            {/* <PetsOutlinedIcon /> */}
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", lg: "flex" } }}></Box>
           <Box sx={{ flexGrow: 0 }}>
             <Typography variant="p" noWrap sx={{ mr: 2, fontWeight: "500" }}>
               {user?.name}
