@@ -3,12 +3,13 @@ import { Divider, MenuList, MenuItem, List } from "@mui/material";
 import { Box, Drawer, Toolbar } from "@mui/material";
 import { ListItemText, ListItemIcon } from "@mui/material";
 import ContentPaste from "@mui/icons-material/ContentPaste";
+import RssFeedIcon from "@mui/icons-material/RssFeed";
 
 const pages = [
-  { text: " Main Feed", link: "/" },
-  { text: " My Posts", link: "/myPosts" },
-  { text: "Following", link: "/following" },
-  { text: "Followers", link: "/followers" },
+  { text: " Main Feed", link: "/", icon: <RssFeedIcon /> },
+  { text: " My Posts", link: "/myPosts", icon: <RssFeedIcon /> },
+  { text: "Following", link: "/following", icon: <RssFeedIcon /> },
+  { text: "Followers", link: "/followers", icon: <RssFeedIcon /> },
 ];
 
 export default function Sidebar() {
@@ -36,10 +37,10 @@ export default function Sidebar() {
           {pages.map((page) => (
             <div key={page.text}>
               <MenuItem component={RouterLink} to={page.link}>
-                <ListItemIcon>
-                  <ContentPaste fontSize="small" />
-                </ListItemIcon>
-                <ListItemText sx={{ color: setColor(page.link) }}>{page.text}</ListItemText>
+                <ListItemIcon>{page.icon}</ListItemIcon>
+                <ListItemText sx={{ color: setColor(page.link) }}>
+                  {page.text}
+                </ListItemText>
               </MenuItem>
               <Divider />
             </div>

@@ -16,6 +16,8 @@ import Cookies from "universal-cookie";
 import UpdateAvatarButton from "./buttons/UpdateAvatarButton";
 import UpdateProfileButton from "./buttons/UpdateProfileButton";
 import SignOutButton from "./buttons/SignoutButton";
+import { Image } from "mui-image";
+import PetsOutlinedIcon from "@mui/icons-material/PetsOutlined";
 
 const pages = [
   { text: "Main Feed", link: "/" },
@@ -79,6 +81,10 @@ function ResponsiveAppBar() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <Box sx={{ flexGrow: 0 }}>
+            <Image src="/assets/images/Logo" sx={{ width: 56, height: 56 }} />
+            {/* <PetsOutlinedIcon /> */}
+          </Box>
           <Typography
             variant="h6"
             noWrap
@@ -90,7 +96,7 @@ function ResponsiveAppBar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "white",
               textDecoration: "none",
             }}
           >
@@ -148,7 +154,7 @@ function ResponsiveAppBar() {
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
-              color: "inherit",
+              color: "white",
               textDecoration: "none",
             }}
           >
