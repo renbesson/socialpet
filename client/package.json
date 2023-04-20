@@ -1,5 +1,6 @@
 {
-  "name": "client",
+  "homepage": "https://socialpet.herokuapp.com",
+  "name": "socialpet",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:3001",
