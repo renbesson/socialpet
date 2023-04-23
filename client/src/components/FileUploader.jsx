@@ -8,7 +8,6 @@ export default function FileUploader() {
 
   const addImage = (event) => {
     setImage(event.target.files[0]);
-    console.log(event.target.files[0]);
   };
 
   return (

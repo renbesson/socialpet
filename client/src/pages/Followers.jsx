@@ -1,5 +1,4 @@
 import Post from "../components/Post";
-import Share from "../components/Share";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Grid, Stack } from "@mui/material";
@@ -46,7 +45,6 @@ export default function Feed() {
         <Grid item md>
           <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
             <Grid item xs={10}>
-              <Share />
             </Grid>
             {posts?.map((post) => (
               <Grid key={post._id} item xs={10}>

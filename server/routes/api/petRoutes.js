@@ -19,6 +19,7 @@ router.post("/", checkToken, async (req, res) => {
     const { password, updatedAt, ...other } = pet._doc;
     res.status(200).json({ pet: other });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -34,6 +35,7 @@ router.get("/follow", async (req, res) => {
     const { password, updatedAt, ...other } = followingPet._doc;
     res.status(200).json(other);
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -52,7 +54,6 @@ router.put("/follow", checkToken, async (req, res) => {
       const isFollowing = user.following.includes(petId);
       const isBeingFollowed = pet.followers.includes(user._id);
 
-      console.log(isFollowing);
 
       if (!isFollowing && !isBeingFollowed) {
         await pet.updateOne({ $push: { followers: user._id } });
@@ -90,7 +91,7 @@ router.post("/avatar", checkToken, async (req, res) => {
 
     res.status(201).json({ url: url[0], message: "Avatar Updated!" });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json(err);
   }
 });

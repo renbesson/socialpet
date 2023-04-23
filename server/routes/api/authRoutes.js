@@ -69,6 +69,7 @@ router.put("/update", checkToken, async (req, res) => {
   const password = req.body.data?.password?.trim();
 
   // Encrypts the new password and updates it first to avoid
+  if (password?.length > 0 && password.length < 8) return res.status(406).json({});
   if (password?.length >= 8) {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -83,10 +84,8 @@ router.put("/update", checkToken, async (req, res) => {
     } catch (err) {
       return res.status(500).json(err);
     }
-  } else if (password?.length > 0 && password.length < 8) {
-    // Code 406 - Not Acceptable
-    return res.status(406).json({});
   }
+
   try {
     const { name, email, type, species, location } = req.body.data;
     const pet = await Pet.findByIdAndUpdate(

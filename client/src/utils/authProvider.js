@@ -8,7 +8,7 @@ let AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [refresh, setRefresh] = useState(0);
+  const [refetch, setRefetch] = useState(0);
   const cookies = useMemo(() => new Cookies(), []);
   ////////////////////////////////////////////////////////////////////////////////
   // Checks if client already has a valid token
@@ -42,9 +42,9 @@ function AuthProvider({ children }) {
         }
       }
     })();
-  }, [cookies, refresh]);
+  }, [cookies, refetch]);
 
-  let value = { user, setUser, refresh, setRefresh };
+  let value = { user, setUser, refetch, setRefetch };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

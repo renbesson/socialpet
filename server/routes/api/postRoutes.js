@@ -117,12 +117,13 @@ router.post("/pet", checkToken, async (req, res) => {
       .status(200)
       .json({ pet: { _id, name, email, avatar, location }, posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Post a post
+//  Create a post
 ////////////////////////////////////////////////////////////////////////////////
 router.post("/", checkToken, async (req, res) => {
   const fileAsString = req.body.fileAsString;
@@ -150,7 +151,7 @@ router.post("/", checkToken, async (req, res) => {
 
     res.status(201).json(post);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -176,8 +177,6 @@ router.put("/", checkToken, async (req, res) => {
       const { fileBuffer, remotePath } = await fromBase64(fileAsString);
       const { url } = await uploadToFirestorage(bucket, fileBuffer, remotePath);
 
-      console.log(url[0]);
-
       await post.updateOne({
         $set: { content, mediaUrl: url[0] },
       });
@@ -189,6 +188,7 @@ router.put("/", checkToken, async (req, res) => {
     // Code 200 - Accepted
     res.status(200).json({ message: "Post Updated." });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -211,12 +211,13 @@ router.post("/like", checkToken, async (req, res) => {
       res.status(200).json({ message: "Post has been unliked." });
     }
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-// Delete a post **TODO**
+// Delete a post
 ////////////////////////////////////////////////////////////////////////////////
 router.delete("/", checkToken, async (req, res) => {
   const postId = req.query.postId;
@@ -232,6 +233,7 @@ router.delete("/", checkToken, async (req, res) => {
 
     res.status(200).json({ message: "Post Deleted." });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });

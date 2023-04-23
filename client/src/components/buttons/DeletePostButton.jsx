@@ -5,7 +5,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useAuth } from "../../utils/authProvider";
 
 export default function DeletePostButton({ postId }) {
-  const { refresh, setRefresh } = useAuth();
+  const { refetch, setRefetch } = useAuth();
   const cookies = new Cookies();
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ export default function DeletePostButton({ postId }) {
       if (res.status === 200) {
         toast(message);
 
-        setRefresh(refresh + 1);
+        setRefetch(refetch + 1);
       }
     } catch (err) {
       toast(err.message);
@@ -43,7 +43,7 @@ export default function DeletePostButton({ postId }) {
       onClick={handleDeletePost}
       color="error"
     >
-      Update Post
+      Delete Post
     </Button>
   );
 }

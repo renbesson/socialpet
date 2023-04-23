@@ -1,5 +1,4 @@
 import Post from "../components/Post";
-import Share from "../components/Share";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Button, Grid, Typography } from "@mui/material";
@@ -10,7 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 export default function Feed() {
-  const { user, refresh, setRefresh } = useAuth();
+  const { user, refetch, setRefetch } = useAuth();
   const [pet, setPet] = useState([]);
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
@@ -50,7 +49,7 @@ export default function Feed() {
 
       toast(message);
 
-      setRefresh(refresh + 1);
+      setRefetch(refetch + 1);
     } catch (err) {
       toast(err.message);
     }
@@ -69,7 +68,7 @@ export default function Feed() {
           </Typography>
         </Grid>
         <Grid item>
-          <Button variant="outlined" color="primary" onClick={toggleFollowPet}>
+          <Button variant="contained" color="secondary" onClick={toggleFollowPet}>
             {!isFollowing ? "Follow" : "Unfollow"}
           </Button>
         </Grid>
@@ -81,7 +80,6 @@ export default function Feed() {
         <Grid item md>
           <Grid sx={{ mt: 1 }} container spacing={5} justifyContent="center">
             <Grid item xs={10}>
-              <Share />
             </Grid>
             {posts?.map((post) => (
               <Grid key={post._id} item xs={10}>

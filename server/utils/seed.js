@@ -9,7 +9,6 @@ connection.on("error", (err) => err);
 
 connection.once("open", async () => {
   console.log("connected");
-  console.log(Pets);
 
   // Drop existing pets
   await Pet.deleteMany({});

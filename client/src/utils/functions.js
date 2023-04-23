@@ -19,7 +19,7 @@ let updateProfile = async (data) => {
     setUser(user);
     return user;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return err;
   }
 };

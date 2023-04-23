@@ -11,7 +11,7 @@ import moment from "moment";
 import toBase64 from "../utils/toBase64";
 
 export default function Share() {
-  const { user, refresh, setRefresh } = useAuth();
+  const { user, refetch, setRefetch } = useAuth();
   const cookies = new Cookies();
   const [image, setImage] = useState(null);
 
@@ -50,14 +50,13 @@ export default function Share() {
 
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
-        // Clear the content textfield
+        // Clear the content textfield and image
+        setImage(null);
         formData.set("content", "");
 
         toast("Post Created!");
 
-        toast(message);
-
-        setRefresh(refresh + 1);
+        setRefetch(refetch + 1);
       }
     } catch (err) {
       toast(err.message);
@@ -84,19 +83,9 @@ export default function Share() {
       />
       <CardContent>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <Button
-            variant="contained"
-            component="label"
-            endIcon={<CloudUploadIcon />}
-          >
+          <Button variant="contained" component="label" endIcon={<CloudUploadIcon />}>
             Upload Image
-            <input
-              hidden
-              accept="image/*"
-              type="file"
-              name="image"
-              onChange={addImage}
-            />
+            <input hidden accept="image/*" type="file" name="image" onChange={addImage} />
           </Button>
           <TextField
             margin="normal"
@@ -108,12 +97,7 @@ export default function Share() {
             label="Say something..."
             id="content"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Share
           </Button>
         </Box>

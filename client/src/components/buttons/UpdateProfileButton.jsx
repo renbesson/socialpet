@@ -40,8 +40,7 @@ export default function UpdateProfileButton() {
       });
       const { token, message, code } = await res.json();
 
-      if (res.status === 406)
-        return toast("Password must be at least 8 characters!");
+      if (res.status === 406) return toast("Password must be at least 8 characters!");
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
         // Saves token as browser cookie
@@ -75,11 +74,7 @@ export default function UpdateProfileButton() {
 
   return (
     <>
-      <Dialog
-        onKeyDown={stopPropagationForTab}
-        open={open}
-        onClose={handleClose}
-      >
+      <Dialog onKeyDown={stopPropagationForTab} open={open} onClose={handleClose}>
         <DialogTitle>Update My Profile</DialogTitle>
         <DialogContent>
           <TextField
@@ -90,6 +85,7 @@ export default function UpdateProfileButton() {
             label="Name"
             type="name"
             id="name"
+            defaultValue={user?.name}
             onChange={updateField}
           />
           <TextField
@@ -99,6 +95,7 @@ export default function UpdateProfileButton() {
             id="email"
             label="Email Address"
             name="email"
+            defaultValue={user?.email}
             onChange={updateField}
           />
           <TextField
@@ -109,6 +106,7 @@ export default function UpdateProfileButton() {
             label="Type"
             type="type"
             id="type"
+            defaultValue={user?.type}
             onChange={updateField}
           />
           <TextField
@@ -119,6 +117,7 @@ export default function UpdateProfileButton() {
             label="Species"
             type="species"
             id="species"
+            defaultValue={user?.species}
             onChange={updateField}
           />
           <TextField
@@ -129,6 +128,7 @@ export default function UpdateProfileButton() {
             label="Location"
             type="location"
             id="location"
+            defaultValue={user?.location}
             onChange={updateField}
           />
         </DialogContent>

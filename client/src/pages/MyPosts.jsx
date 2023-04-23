@@ -11,7 +11,7 @@ import Sidebar from "../components/Sidebar";
 import Typography from "../components/modules/Typography";
 
 export default function Feed() {
-  const { user, refresh } = useAuth();
+  const { user, refetch } = useAuth();
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
 
@@ -31,9 +31,8 @@ export default function Feed() {
 
   useEffect(() => {
     getPosts();
-  }, [refresh]);
+  }, [refetch]);
 
-  console.log("sdasd");
   return (
     <RequireAuth>
       <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>

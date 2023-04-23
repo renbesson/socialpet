@@ -2,7 +2,6 @@ import Post from "./Post";
 import Share from "./Share";
 import { useAuth } from "../utils/authProvider";
 import { useEffect, useState } from "react";
-import Cookies from "universal-cookie";
 import { Grid } from "@mui/material";
 import { toast } from "react-toastify";
 import RightBar from "./Rightbar";
