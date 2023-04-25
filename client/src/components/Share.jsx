@@ -11,9 +11,10 @@ import moment from "moment";
 import toBase64 from "../utils/toBase64";
 
 export default function Share() {
-  const { user, refetch, setRefetch } = useAuth();
+  const { user, fetchUser } = useAuth();
   const cookies = new Cookies();
   const [image, setImage] = useState(null);
+  const [content, setContent] = useState("");
 
   ////////////////////////////////////////////////////////////////////////////////
   // Stores the uploaded image as state
@@ -41,7 +42,7 @@ export default function Share() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token: cookies.get("token"),
-          content: formData.get("content"),
+          content: content,
           fileAsString,
         }),
       });
@@ -52,11 +53,11 @@ export default function Share() {
       if (res.status === 201) {
         // Clear the content textfield and image
         setImage(null);
-        formData.set("content", "");
+        setContent("");
 
         toast("Post Created!");
 
-        setRefetch(refetch + 1);
+        fetchUser();
       }
     } catch (err) {
       toast(err.message);
@@ -94,6 +95,8 @@ export default function Share() {
             multiline
             minRows={5}
             name="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             label="Say something..."
             id="content"
           />

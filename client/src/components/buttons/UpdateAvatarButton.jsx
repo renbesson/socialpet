@@ -8,7 +8,7 @@ import toBase64 from "../../utils/toBase64";
 import { useAuth } from "../../utils/authProvider";
 
 export default function UpdateAvatarButton() {
-  const { refetch, setRefetch } = useAuth();
+  const { fetchUser } = useAuth();
   const cookies = new Cookies();
 
   const handleUploadAvatar = async (event) => {
@@ -24,7 +24,7 @@ export default function UpdateAvatarButton() {
 
       toast(message);
 
-      setRefetch(refetch + 1);
+      fetchUser();
     } catch (err) {
       toast(err.message);
     }

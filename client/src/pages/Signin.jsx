@@ -13,7 +13,7 @@ import Cookies from "universal-cookie";
 import decode from "jwt-decode";
 
 export default function Login() {
-  let { user, setUser } = useAuth();
+  let { user, fetchUser } = useAuth();
   const cookies = new Cookies();
   let location = useLocation();
   let navigate = useNavigate();
@@ -47,8 +47,7 @@ export default function Login() {
         const { data: user } = decode(token);
         cookies.set("token", token, { maxAge: process.env.MAX_AGE });
 
-        // Saves user state
-        setUser(user);
+        fetchUser();
 
         toast(`Welcome back, ${user.name}!`);
 
@@ -69,14 +68,11 @@ export default function Login() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1517105274840-437212774105?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTU4fHxwZXRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1000&q=60)",
+          backgroundImage: "url(/assets/images/signin.jpeg)",
           backgroundRepeat: "no-repeat",
           // backgroundAttachment: "fixed",
           backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
+            t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -94,12 +90,7 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSignin}
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" noValidate onSubmit={handleSignin} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -120,12 +111,7 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
             <Grid container>

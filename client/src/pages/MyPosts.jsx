@@ -11,7 +11,7 @@ import Sidebar from "../components/Sidebar";
 import Typography from "../components/modules/Typography";
 
 export default function Feed() {
-  const { user, refetch } = useAuth();
+  const { user, fetchUser } = useAuth();
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
 
@@ -31,7 +31,7 @@ export default function Feed() {
 
   useEffect(() => {
     getPosts();
-  }, [refetch]);
+  }, [fetchUser]);
 
   return (
     <RequireAuth>

@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import decode from "jwt-decode";
 
 export default function UpdateProfileButton() {
-  const { user, setUser } = useAuth();
+  const { user, fetchUser } = useAuth();
   const [open, setOpen] = useState(false);
   const cookies = new Cookies();
   const [userData, setUserData] = useState({});
@@ -44,11 +44,9 @@ export default function UpdateProfileButton() {
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
         // Saves token as browser cookie
-        const { data: user } = decode(token);
         cookies.set("token", token, { maxAge: process.env.MAX_AGE });
 
-        // Saves user state
-        setUser(user);
+        fetchUser();
 
         toast("Profile Updated!");
       }

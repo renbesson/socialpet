@@ -8,43 +8,47 @@ let AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [refetch, setRefetch] = useState(0);
   const cookies = useMemo(() => new Cookies(), []);
+
   ////////////////////////////////////////////////////////////////////////////////
   // Checks if client already has a valid token
   ////////////////////////////////////////////////////////////////////////////////
-  useEffect(() => {
-    (async () => {
-      const token = cookies.get("token");
+  const fetchUser = async () => {
+    const token = cookies.get("token");
 
-      // Checks if a token exists as cookie
-      if (token) {
-        const { data: userToken, exp } = decode(token);
+    // Checks if a token exists as cookie
+    if (token) {
+      const { data: userToken, exp } = decode(token);
 
-        // Checks if token is not expired
-        if (Date.now() <= exp * 1000) {
-          //Gets user data sets user state
-          try {
-            const res = await fetch(`/api/pet/?petId=${userToken?._id}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ token: cookies.get("token") }),
-            });
-            const { pet } = await res.json();
+      // Checks if token is not expired
+      if (Date.now() <= exp * 1000) {
+        //Gets user data sets user state
+        try {
+          const res = await fetch(`/api/pet/?petId=${userToken?._id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: cookies.get("token") }),
+          });
+          const { pet } = await res.json();
 
-            setUser(pet);
-          } catch (err) {
-            toast(err.message);
-          }
-        } else {
-          // Removes expired cookie
-          cookies.remove("token");
+          setUser(pet);
+        } catch (err) {
+          toast(err.message);
         }
+      } else {
+        // Removes expired cookie
+        cookies.remove("token");
       }
-    })();
-  }, [cookies, refetch]);
+    }
+  };
 
-  let value = { user, setUser, refetch, setRefetch };
+  const fetchUserMemo = useMemo(() => fetchUser(), []);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUserMemo, cookies]);
+
+  let value = { user, fetchUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -9,7 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 export default function Feed() {
-  const { user, refetch, setRefetch } = useAuth();
+  const { user, fetchUser } = useAuth();
   const [pet, setPet] = useState([]);
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
@@ -49,7 +49,7 @@ export default function Feed() {
 
       toast(message);
 
-      setRefetch(refetch + 1);
+      fetchUser();
     } catch (err) {
       toast(err.message);
     }

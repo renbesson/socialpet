@@ -32,6 +32,7 @@ export default function Feed() {
     getPosts();
   }, [user]);
 
+  console.log(posts)
   return (
     <RequireAuth>
       <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
@@ -44,8 +45,7 @@ export default function Feed() {
 
         <Grid item md>
           <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
-            <Grid item xs={10}>
-            </Grid>
+            <Grid item xs={10}></Grid>
             {posts?.map((post) => (
               <Grid key={post._id} item xs={10}>
                 <Post post={post} />
