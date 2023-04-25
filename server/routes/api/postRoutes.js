@@ -31,9 +31,7 @@ router.get("/", async (req, res) => {
   const postId = req.query.postId;
 
   try {
-    const post = await Post.findById(postId)
-      .populate("ownerId")
-      .sort({ updatedAt: -1 });
+    const post = await Post.findById(postId).populate("ownerId").sort({ updatedAt: -1 });
     res.status(200).json(post);
   } catch (err) {
     res.status(500).json(err);
@@ -68,7 +66,7 @@ router.post("/following", checkToken, async (req, res) => {
         .populate("ownerId")
         .sort({ updatedAt: -1 });
 
-      posts.push(post[0]);
+      posts.push(...post);
     }
 
     res.status(200).json({ posts });
@@ -91,7 +89,7 @@ router.post("/followers", checkToken, async (req, res) => {
         .populate("ownerId")
         .sort({ updatedAt: -1 });
 
-      posts.push(post[0]);
+      posts.push(...post);
     }
 
     res.status(200).json({ posts });
@@ -107,15 +105,11 @@ router.post("/pet", checkToken, async (req, res) => {
   const petId = req.query.petId;
 
   try {
-    const posts = await Post.find({ ownerId: petId })
-      .populate("ownerId")
-      .sort({ updatedAt: -1 });
+    const posts = await Post.find({ ownerId: petId }).populate("ownerId").sort({ updatedAt: -1 });
     const pet = await Pet.findById(petId);
     const { _id, name, email, avatar, location } = pet;
 
-    res
-      .status(200)
-      .json({ pet: { _id, name, email, avatar, location }, posts });
+    res.status(200).json({ pet: { _id, name, email, avatar, location }, posts });
   } catch (err) {
     console.error(err);
     res.status(500).json(err);

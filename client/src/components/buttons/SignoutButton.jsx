@@ -5,7 +5,7 @@ import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import { useAuth } from "../../utils/authProvider";
 
 export default function SignOutButton() {
-  const { setUser } = useAuth();
+  const { fetchUser } = useAuth();
   const cookies = new Cookies();
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +17,8 @@ export default function SignOutButton() {
       cookies.remove("token");
 
       // Clears user state
-      setUser(null);
+      fetchUser();
+      
       window.location.href = "/";
     } catch (err) {
       return err;

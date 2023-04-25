@@ -24,15 +24,18 @@ const Pets = [
     name: "Tibido",
     email: "tibz@gmail.com",
     password: "$2a$10$VM35l839cEbwR75FpMTu.OpDsFORU2go4vrs3xtOIsnGhOV87Bjwe",
-    type: "Cat",
-    species: "Cat",
-    age: 2,
-    location: "Outside Moncton",
-    posts: [new mongoose.Types.ObjectId("123458795462154796548762")],
+    type: "Dog",
+    species: "Golden Retriever",
+    age: 3,
+    location: "Moncton",
+    posts: [
+      new mongoose.Types.ObjectId("123458795462154796548762"),
+      new mongoose.Types.ObjectId("123458795462154796548772"),
+    ],
     following: [new mongoose.Types.ObjectId("123458795462154796548753")],
     followers: [new mongoose.Types.ObjectId("123458795462154796548751")],
     avatar:
-      "https://images.unsplash.com/photo-1607923432848-62f872d16daf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8ODl8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/avatars%2F123458795462154796548752_avatar.jpeg?alt=media&token=ec13c94d-7cef-46ce-b48c-c06d7e739579",
   },
   {
     _id: new mongoose.Types.ObjectId("123458795462154796548753"),
@@ -43,11 +46,14 @@ const Pets = [
     species: "Dog",
     age: 5,
     location: "Halifax",
-    posts: [new mongoose.Types.ObjectId("123458795462154796548763")],
+    posts: [
+      new mongoose.Types.ObjectId("123458795462154796548763"),
+      new mongoose.Types.ObjectId("123458795462154796548773"),
+    ],
     following: [new mongoose.Types.ObjectId("123458795462154796548751")],
     followers: [new mongoose.Types.ObjectId("123458795462154796548752")],
     avatar:
-      "https://images.unsplash.com/photo-1591608971376-46e64aa7fd19?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NjR8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60",
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/avatars%2F123458795462154796548753_avatar.jpeg?alt=media&token=9ace4553-db59-4a74-a5a7-da5c8a896e62",
   },
 ];
 
@@ -58,8 +64,6 @@ const Posts = [
     mediaUrl:
       "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/images%2F123458795462154796548761.png?alt=media&token=bc59798a-d5e7-4439-99b8-963d2a78e6c7",
     content: "Me watching Birdflix.",
-
-    comments: " ",
   },
   {
     _id: new mongoose.Types.ObjectId("123458795462154796548771"),
@@ -67,26 +71,34 @@ const Posts = [
     mediaUrl:
       "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/images%2F123458795462154796548771.jpeg?alt=media&token=b284caff-a25c-4855-949a-c029fb67b37a",
     content: "My brother after he left his wife (cheating issues).",
-
-    comments: " ",
   },
   {
     _id: new mongoose.Types.ObjectId("123458795462154796548762"),
     ownerId: new mongoose.Types.ObjectId("123458795462154796548752"),
     mediaUrl:
-      "https://images.unsplash.com/photo-1560743173-567a3b5658b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8ODN8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/images%2F123458795462154796548762.jpeg?alt=media&token=22809c68-eb48-4a0f-a487-93e40a7d151c",
     content: "Nice one --> great stuff",
-
-    comments: " ",
+  },
+  {
+    _id: new mongoose.Types.ObjectId("123458795462154796548772"),
+    ownerId: new mongoose.Types.ObjectId("123458795462154796548752"),
+    mediaUrl:
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/images%2F123458795462154796548772.jpeg?alt=media&token=135122a4-8efa-431c-8054-ec547661cfd2",
+    content: "Me = Super dog!",
   },
   {
     _id: new mongoose.Types.ObjectId("123458795462154796548763"),
     ownerId: new mongoose.Types.ObjectId("123458795462154796548753"),
     mediaUrl:
-      "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTd8fHBldHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-    content: "Nice one --> great stuff",
-
-    comments: " ",
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/images%2F123458795462154796548763.jpeg?alt=media&token=1f089933-4dcb-4fbc-91cd-eadba377fe95",
+    content: "Just hanginnn...",
+  },
+  {
+    _id: new mongoose.Types.ObjectId("123458795462154796548773"),
+    ownerId: new mongoose.Types.ObjectId("123458795462154796548753"),
+    mediaUrl:
+      "https://firebasestorage.googleapis.com/v0/b/socialpet-ren.appspot.com/o/images%2F123458795462154796548773.jpeg?alt=media&token=02ced35a-7f27-4f51-89f7-6f0bf4a257f5",
+    content: "Pose in the wild.",
   },
 ];
 

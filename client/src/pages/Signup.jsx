@@ -10,10 +10,9 @@ import Typography from "@mui/material/Typography";
 import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
 import Cookies from "universal-cookie";
-import decode from "jwt-decode";
 
 export default function SignUp() {
-  let { user, setUser } = useAuth();
+  let { user, fetchUser } = useAuth();
   let location = useLocation();
   let navigate = useNavigate();
   const cookies = new Cookies();
@@ -44,11 +43,9 @@ export default function SignUp() {
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
         // Saves token as browser cookie
-        const { data: user } = decode(token);
         cookies.set("token", token, { maxAge: process.env.MAX_AGE });
 
-        // Saves user state
-        setUser(user);
+        fetchUser();
 
         toast("Pet Created Successfully!");
 
@@ -61,7 +58,7 @@ export default function SignUp() {
   };
 
   return !user ? (
-    <Grid container component="main" sx={{ height: 'calc(100vh - 64px)' }}>
+    <Grid container component="main" sx={{ height: "calc(100vh - 64px)" }}>
       <CssBaseline />
       <Grid
         item
@@ -69,14 +66,11 @@ export default function SignUp() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1580649969708-0f2c74c81797?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzUwfHxwZXRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60)",
+          backgroundImage: "url(/assets/images/signup.jpg)",
           backgroundRepeat: "no-repeat",
           // backgroundAttachment: "fixed",
           backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
+            t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -94,12 +88,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSignup}
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" noValidate onSubmit={handleSignup} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -145,12 +134,7 @@ export default function SignUp() {
               id="species"
             />
             {/* Name, emailadd, pw, type, species, Age,  */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
             </Button>
             <Grid container>
