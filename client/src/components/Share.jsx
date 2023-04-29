@@ -84,9 +84,19 @@ export default function Share() {
       />
       <CardContent>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <Button variant="contained" component="label" endIcon={<CloudUploadIcon />}>
+          <Button
+            variant="contained"
+            component="label"
+            endIcon={<CloudUploadIcon />}
+          >
             Upload Image
-            <input hidden accept="image/*" type="file" name="image" onChange={addImage} />
+            <input
+              hidden
+              accept="image/*"
+              type="file"
+              name="image"
+              onChange={addImage}
+            />
           </Button>
           <TextField
             margin="normal"
@@ -100,7 +110,12 @@ export default function Share() {
             label="Say something..."
             id="content"
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Share
           </Button>
         </Box>

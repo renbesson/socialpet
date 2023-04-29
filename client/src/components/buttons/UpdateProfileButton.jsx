@@ -40,7 +40,8 @@ export default function UpdateProfileButton() {
       });
       const { token, message, code } = await res.json();
 
-      if (res.status === 406) return toast("Password must be at least 8 characters!");
+      if (res.status === 406)
+        return toast("Password must be at least 8 characters!");
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
         // Saves token as browser cookie
@@ -72,7 +73,11 @@ export default function UpdateProfileButton() {
 
   return (
     <>
-      <Dialog onKeyDown={stopPropagationForTab} open={open} onClose={handleClose}>
+      <Dialog
+        onKeyDown={stopPropagationForTab}
+        open={open}
+        onClose={handleClose}
+      >
         <DialogTitle>Update My Profile</DialogTitle>
         <DialogContent>
           <TextField

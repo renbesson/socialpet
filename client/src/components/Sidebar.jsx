@@ -7,12 +7,17 @@ import RssFeedIcon from "@mui/icons-material/RssFeed";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import HailOutlinedIcon from "@mui/icons-material/HailOutlined";
 import MessageIcon from "@mui/icons-material/Message";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import HomeIcon from "@mui/icons-material/Home";
 
 const pages = [
-  { text: " Main Feed", link: "/", icon: <RssFeedIcon /> },
-  { text: " My Posts", link: "/myPosts", icon: <MessageIcon /> },
+  { text: " Home", link: "/", icon: <HomeIcon /> },
+  // { text: " Main Feed", link: "/", icon: <RssFeedIcon /> },
+  { text: " My Posts", link: "/myPosts", icon: <RssFeedIcon /> },
   { text: "Following", link: "/following", icon: <HailOutlinedIcon /> },
   { text: "Followers", link: "/followers", icon: <PeopleAltOutlinedIcon /> },
+  { text: "Create Post", link: "/", icon: <AddCircleOutlineIcon /> },
+  { text: "Messages", link: "/", icon: <MessageIcon /> },
 ];
 
 export default function Sidebar() {
@@ -45,7 +50,7 @@ export default function Sidebar() {
                   {page.text}
                 </ListItemText>
               </MenuItem>
-              <Divider />
+              {/* <Divider /> */}
             </div>
           ))}
         </MenuList>
