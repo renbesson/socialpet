@@ -140,10 +140,10 @@ export default function SignIn() {
                 </div>
 
                 <div className="flex justify-between text-sm">
-                  <a href="#" className="text-green-400 hover:text-green-500">
+                  <a href="#" className="text-primary">
                     Forgot your password?
                   </a>
-                  <Link to="/signin" className="text-pink-400 hover:text-pink-500">
+                  <Link to="/signin" className="text-secondary">
                     Have an account?
                   </Link>
                 </div>

@@ -80,7 +80,6 @@ router.get("/signout", checkToken, async (req, res) => {
 // Validate user route
 ////////////////////////////////////////////////////////////////////////////////
 router.get("/fetchPet", checkToken, async (req, res) => {
-  console.log("token " + req.cookies);
   try {
     const { user } = req;
     if (user) {

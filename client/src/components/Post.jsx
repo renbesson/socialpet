@@ -8,8 +8,8 @@ import PetsIcon from '@mui/icons-material/Pets';
 import Cookies from "universal-cookie";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import UpdatePostButton from "./buttons/UpdatePostButton";
-import DeletePostButton from "./buttons/DeletePostButton";
+import UpdatePostButton from "./modals/UpdatePostButton";
+import DeletePostButton from "./modals/DeletePostButton";
 
 export default function Post({ post }) {
   const { user } = useAuth();
