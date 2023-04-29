@@ -14,10 +14,7 @@ export default function SignedHome() {
 
   const getPosts = async () => {
     try {
-      const res = await fetch("/api/post", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch("/api/post");
       const { posts } = await res.json();
       setPosts(posts);
     } catch (err) {
@@ -30,7 +27,7 @@ export default function SignedHome() {
   }, [user]);
 
   return (
-    <RequireAuth>
+    <>
       <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
         <Typography variant="h3" color="primary">
           Main Feed
@@ -54,6 +51,6 @@ export default function SignedHome() {
 
         {user && <Rightbar user={user} />}
       </Grid>
-    </RequireAuth>
+    </>
   );
 }

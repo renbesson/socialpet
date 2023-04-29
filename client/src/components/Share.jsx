@@ -11,7 +11,7 @@ import moment from "moment";
 import toBase64 from "../utils/toBase64";
 
 export default function Share() {
-  const { user, fetchUser } = useAuth();
+  const { user, fetchPet } = useAuth();
   const cookies = new Cookies();
   const [image, setImage] = useState(null);
   const [content, setContent] = useState("");
@@ -57,7 +57,7 @@ export default function Share() {
 
         toast("Post Created!");
 
-        fetchUser();
+        fetchPet();
       }
     } catch (err) {
       toast(err.message);

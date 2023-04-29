@@ -16,8 +16,6 @@ import Cookies from "universal-cookie";
 import UpdateAvatarButton from "./buttons/UpdateAvatarButton";
 import UpdateProfileButton from "./buttons/UpdateProfileButton";
 import SignOutButton from "./buttons/SignoutButton";
-import { Image } from "mui-image";
-import PetsOutlinedIcon from "@mui/icons-material/PetsOutlined";
 
 const pages = [
   { text: "Main Feed", link: "/" },

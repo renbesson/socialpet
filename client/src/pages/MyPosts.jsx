@@ -1,27 +1,19 @@
-import Post from "../components/Post";
-import Share from "../components/Share";
-
 import { useEffect, useState } from "react";
-import Cookies from "universal-cookie";
-import { Grid, Stack } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { RequireAuth, useAuth } from "../utils/authProvider";
 import Rightbar from "../components/Rightbar";
 import Sidebar from "../components/Sidebar";
-import Typography from "../components/modules/Typography";
+import Post from "../components/Post";
+import Share from "../components/Share";
 
 export default function Feed() {
-  const { user, fetchUser } = useAuth();
+  const { user } = useAuth();
   const [posts, setPosts] = useState([]);
-  const cookies = new Cookies();
 
   const getPosts = async () => {
     try {
-      const res = await fetch("/api/post/myPosts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: cookies.get("token") }),
-      });
+      const res = await fetch("/api/post/myPosts");
       const { posts } = await res.json();
       setPosts(posts);
     } catch (err) {
@@ -31,10 +23,10 @@ export default function Feed() {
 
   useEffect(() => {
     getPosts();
-  }, [fetchUser]);
+  }, [user]);
 
   return (
-    <RequireAuth>
+    <>
       <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
         <Typography variant="h3" color="primary">
           My Posts
@@ -58,6 +50,6 @@ export default function Feed() {
 
         {user && <Rightbar user={user} />}
       </Grid>
-    </RequireAuth>
+    </>
   );
 }

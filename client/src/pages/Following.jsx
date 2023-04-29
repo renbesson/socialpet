@@ -33,7 +33,7 @@ export default function Feed() {
   }, [user]);
 
   return (
-    <RequireAuth>
+    <>
       <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
         <Typography variant="h3" color="primary">
           Following
@@ -56,6 +56,6 @@ export default function Feed() {
 
         {user && <Rightbar user={user} />}
       </Grid>
-    </RequireAuth>
+    </>
   );
 }

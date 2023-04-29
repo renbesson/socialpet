@@ -9,13 +9,11 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
-import Cookies from "universal-cookie";
 
 export default function SignUp() {
-  let { user, fetchUser } = useAuth();
+  let { user, fetchPet } = useAuth();
   let location = useLocation();
   let navigate = useNavigate();
-  const cookies = new Cookies();
 
   let origin = location.state?.from?.pathname || "/";
 
@@ -38,14 +36,11 @@ export default function SignUp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
       });
-      const { token, message } = await res.json();
+      const { message } = await res.json();
 
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
-        // Saves token as browser cookie
-        cookies.set("token", token, { maxAge: process.env.MAX_AGE });
-
-        fetchUser();
+        await fetchPet();
 
         toast("Pet Created Successfully!");
 

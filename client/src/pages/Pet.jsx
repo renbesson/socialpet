@@ -9,7 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 export default function Feed() {
-  const { user, fetchUser } = useAuth();
+  const { user, fetchPet } = useAuth();
   const [pet, setPet] = useState([]);
   const [posts, setPosts] = useState([]);
   const cookies = new Cookies();
@@ -49,7 +49,7 @@ export default function Feed() {
 
       toast(message);
 
-      fetchUser();
+      fetchPet();
     } catch (err) {
       toast(err.message);
     }
@@ -57,7 +57,7 @@ export default function Feed() {
   const isFollowing = user?.following.includes(pet?._id);
 
   return (
-    <RequireAuth>
+    <>
       <Grid sx={{ mt: 5 }} container spacing={1} justifyContent="space-evenly">
         <Grid item>
           <Typography variant="h3">
@@ -91,6 +91,6 @@ export default function Feed() {
 
         {user && <Rightbar user={pet} />}
       </Grid>
-    </RequireAuth>
+    </>
   );
 }

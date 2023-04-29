@@ -32,9 +32,8 @@ export default function Feed() {
     getPosts();
   }, [user]);
 
-  console.log(posts)
   return (
-    <RequireAuth>
+    <>
       <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
         <Typography variant="h3" color="primary">
           Followers
@@ -56,6 +55,6 @@ export default function Feed() {
 
         {user && <Rightbar user={user} />}
       </Grid>
-    </RequireAuth>
+    </>
   );
 }

@@ -1,12 +1,13 @@
 import React from "react";
-import Cookies from "universal-cookie";
 import { Box, Button } from "@mui/material";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import { useAuth } from "../../utils/authProvider";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function SignOutButton() {
-  const { fetchUser } = useAuth();
-  const cookies = new Cookies();
+  const { fetchPet } = useAuth();
+  let navigate = useNavigate();
 
   ////////////////////////////////////////////////////////////////////////////////
   // Function for signing out
@@ -14,12 +15,15 @@ export default function SignOutButton() {
   let handleSignOut = async () => {
     try {
       // Removes token as browser cookie
-      cookies.remove("token");
+      const res = await fetch("/api/auth/signout");
 
-      // Clears user state
-      fetchUser();
-      
-      window.location.href = "/";
+      if (!res.ok) return toast("Signout unsuccessful.");
+      if (res.status === 200) {
+        // Clears user state
+        await fetchPet();
+
+        navigate('/', { replace: true });
+      }
     } catch (err) {
       return err;
     }

@@ -9,12 +9,9 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
-import Cookies from "universal-cookie";
-import decode from "jwt-decode";
 
 export default function Login() {
-  let { user, fetchUser } = useAuth();
-  const cookies = new Cookies();
+  let { user, fetchPet } = useAuth();
   let location = useLocation();
   let navigate = useNavigate();
 
@@ -37,19 +34,15 @@ export default function Login() {
           password: form.get("password"),
         }),
       });
-      const { token, message } = await res.json();
+      const { message } = await res.json();
 
       if (res.status === 404) return toast("Wrong Email!");
       if (res.status === 401) return toast("Wrong Password!");
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 200) {
-        // Saves token as browser cookie
-        const { data: user } = decode(token);
-        cookies.set("token", token, { maxAge: process.env.MAX_AGE });
+        await fetchPet();
 
-        fetchUser();
-
-        toast(`Welcome back, ${user.name}!`);
+        toast(`Welcome back!`);
 
         // Sends the user back to original page they were
         navigate(origin, { replace: true });

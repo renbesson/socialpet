@@ -15,7 +15,7 @@ import { CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
 import toBase64 from "../../utils/toBase64";
 
 export default function UpdatePostButton({ postId }) {
-  const { user, fetchUser } = useAuth();
+  const { user, fetchPet } = useAuth();
   const [open, setOpen] = useState(false);
   const cookies = new Cookies();
 
@@ -68,7 +68,7 @@ export default function UpdatePostButton({ postId }) {
       if (res.status === 200) {
         toast(message);
 
-        fetchUser();
+        fetchPet();
       }
     } catch (err) {
       toast(err.message);

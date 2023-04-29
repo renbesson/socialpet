@@ -6,20 +6,18 @@ const Post = require("../../models/Post");
 const { checkToken } = require("../../utils/checkToken");
 const router = require("express").Router();
 const { bucket } = require("../../config/firebase");
-const multer = require("multer");
 const { fromBase64 } = require("../../utils/fromBase64");
 const { uploadToFirestorage } = require("../../utils/uploadToFirestorage");
-
-const upload = multer({ dest: "images/" });
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get all posts
 ////////////////////////////////////////////////////////////////////////////////
-router.get("/", async (req, res) => {
+router.get("/", checkToken, async (req, res) => {
   try {
     const posts = await Post.find().populate("ownerId").sort({ updatedAt: -1 });
     res.status(200).json({ posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -27,13 +25,14 @@ router.get("/", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get one post
 ////////////////////////////////////////////////////////////////////////////////
-router.get("/", async (req, res) => {
-  const postId = req.query.postId;
+router.get("/single/:postId", checkToken, async (req, res) => {
+  const postId = req.params.postId;
 
   try {
     const post = await Post.findById(postId).populate("ownerId").sort({ updatedAt: -1 });
     res.status(200).json(post);
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -41,13 +40,14 @@ router.get("/", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get my posts
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/myPosts", checkToken, async (req, res) => {
+router.get("/myPosts", checkToken, async (req, res) => {
   try {
     const posts = await Post.find({ ownerId: req.user._id })
       .populate("ownerId")
       .sort({ updatedAt: -1 });
     res.status(200).json({ posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -71,6 +71,7 @@ router.post("/following", checkToken, async (req, res) => {
 
     res.status(200).json({ posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -94,6 +95,7 @@ router.post("/followers", checkToken, async (req, res) => {
 
     res.status(200).json({ posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
