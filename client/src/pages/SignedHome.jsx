@@ -1,5 +1,5 @@
 import Post from "../components/Post";
-import Share from "../components/Share";
+// import Share from "../components/Share";
 import { useEffect, useState } from "react";
 import { Grid, Stack } from "@mui/material";
 import { toast } from "react-toastify";
@@ -31,18 +31,18 @@ export default function SignedHome() {
 
   return (
     <RequireAuth>
-      <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
+      {/* <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
         <Typography variant="h3" color="primary">
           Main Feed
         </Typography>
-      </Stack>
+      </Stack> */}
       <Grid container spacing={1} justifyContent="center">
         <Sidebar />
 
         <Grid item md>
           <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
             <Grid item xs={10}>
-              <Share />
+              {/* <Share /> */}
             </Grid>
             {posts?.map((post) => (
               <Grid key={post._id} item xs={10}>

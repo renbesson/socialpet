@@ -1,6 +1,7 @@
 .suggestions {
-  /* margin-top: 5px; */
-  margin-right: 70px;
+  margin-top: 30px;
+  margin-left: 1200px;
+  position: fixed;
 }
 
 .suggestions__title {
@@ -19,7 +20,7 @@
 }
 
 .relation {
-  color: grey;
+  color: rgba(128, 128, 128, 0.401);
   font-size: 12px;
 }
 
