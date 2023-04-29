@@ -1,44 +1,35 @@
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-import "./App.css";
-
-import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "./utils/authProvider";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import FeedLayout from "./pages/layouts/FeedLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+import AppSideBar from "./components/AppSideBar";
+import { AuthProvider, useAuth } from "./utils/authProvider";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-const themeOptions = {
-  palette: {
-    mode: "light",
-    primary: {
-      main: "#8093f1",
-    },
-    secondary: {
-      main: "#f7aef8",
-    },
-    info: {
-      main: "#72ddf7",
-    },
-  },
-};
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import MyPosts from "./pages/MyPosts";
+import Following from "./pages/Following";
+import Followers from "./pages/Followers";
+import Pet from "./pages/Pet";
+import Home from "./pages/Home";
 
-const theme = createTheme(themeOptions);
-
-function App() {
+export default function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <AuthProvider>
       <ToastContainer />
-      <AuthProvider>
-        <Router basename="/">
-          <FeedLayout />
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+      <BrowserRouter basename="/">
+        <AppSideBar>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signin" element={<Signin />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/myPosts" element={<MyPosts />} />
+            <Route path="/following" element={<Following />} />
+            <Route path="/followers" element={<Followers />} />
+            <Route path="/pet" element={<Pet />} />
+          </Routes>
+        </AppSideBar>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
-
-export default App;

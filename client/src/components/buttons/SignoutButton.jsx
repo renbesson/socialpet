@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import { useAuth } from "../../utils/authProvider";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignOutButton() {
   const { fetchPet } = useAuth();
@@ -22,7 +22,7 @@ export default function SignOutButton() {
         // Clears user state
         await fetchPet();
 
-        navigate('/', { replace: true });
+        navigate("/", { replace: true });
       }
     } catch (err) {
       return err;
@@ -31,14 +31,7 @@ export default function SignOutButton() {
 
   return (
     <Box component="form" noValidate>
-      <Button
-        variant="text"
-        component="label"
-        startIcon={<AccountCircleTwoToneIcon />}
-        onClick={handleSignOut}
-      >
-        Sign Out
-      </Button>
+      <Link onClick={handleSignOut}>Sign Out</Link>
     </Box>
   );
 }

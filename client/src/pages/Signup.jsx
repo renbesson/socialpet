@@ -1,154 +1,163 @@
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import { useAuth } from "../utils/authProvider";
 import { toast } from "react-toastify";
+import { useAuth } from "../utils/authProvider";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
-export default function SignUp() {
-  let { user, fetchPet } = useAuth();
-  let location = useLocation();
-  let navigate = useNavigate();
-
-  let origin = location.state?.from?.pathname || "/";
+export default function SignIn() {
+  const { user, fetchPet } = useAuth();
+  const navigate = useNavigate();
 
   ////////////////////////////////////////////////////////////////////////////////
-  // Function for signing up
+  // Function for signing in
   ////////////////////////////////////////////////////////////////////////////////
-  const handleSignup = async (event) => {
+  const handleSignin = async (event) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const newUser = {
-      name: form.get("name"),
-      email: form.get("newEmail"),
-      password: form.get("newPassword"),
-      type: form.get("type"),
-      species: form.get("species"),
-    };
+
     try {
-      const res = await fetch("/api/auth/signup", {
+      const form = new FormData(event.currentTarget);
+
+      const res = await fetch("/api/auth/signup/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
+        body: JSON.stringify({
+          name: form.get("name"),
+          email: form.get("email"),
+          password: form.get("new-password"),
+          type: form.get("type"),
+          species: form.get("species"),
+        }),
       });
       const { message } = await res.json();
 
+      if (res.status === 404) return toast("Wrong Email!");
+      if (res.status === 401) return toast("Wrong Password!");
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
       if (res.status === 201) {
+        // Saves user state
+
         await fetchPet();
+        toast(`Welcome back!`);
 
-        toast("Pet Created Successfully!");
-
-        // Sends the user back to original page they were
-        navigate(origin, { replace: true });
+        navigate("/", { replace: true });
       }
     } catch (err) {
+      console.error(err);
       toast(err.message);
     }
   };
 
-  return !user ? (
-    <Grid container component="main" sx={{ height: "calc(100vh - 64px)" }}>
-      <CssBaseline />
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundImage: "url(/assets/images/signup.jpg)",
-          backgroundRepeat: "no-repeat",
-          // backgroundAttachment: "fixed",
-          backgroundColor: (t) =>
-            t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box
-          sx={{
-            my: 8,
-            mx: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Sign Up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSignup} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="name"
-              label="name"
-              type="name"
-              id="name"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="newEmail"
-              label="Email Address"
-              name="newEmail"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="newPassword"
-              label="Password"
-              type="password"
-              id="newPassword"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="type"
-              label="type"
-              type="type"
-              id="type"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="species"
-              label="species"
-              type="species"
-              id="species"
-            />
-            {/* Name, emailadd, pw, type, species, Age,  */}
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign Up
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link component={RouterLink} to="/signin" variant="body2">
-                  {"Already have an account? Sign In"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Grid>
-    </Grid>
+  return user ? (
+    <Navigate to="/" />
   ) : (
-    <h1>Already signed up/in!</h1>
+    <div
+      className="bg-no-repeat bg-cover bg-center relative"
+      style={{
+        backgroundImage: "url(/assets/images/signup.jpeg)",
+      }}
+    >
+      <div className="h-[calc(100vh-64px)] sm:flex sm:flex-row mx-0 justify-center">
+        <div className="flex-col flex  self-center p-10 sm:max-w-5xl xl:max-w-2xl  z-10">
+          <div className="self-start hidden lg:flex flex-col  text-white">
+            <img src="" className="mb-3" />
+            <h1 className="mb-3 font-bold text-5xl">Welcome!</h1>
+          </div>
+        </div>
+        <div className="flex justify-center self-center  z-10">
+          <div className="card w-96 bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="card-title font-semibold text-2xl text-gray-800">Sign Up</h2>
+              <form className="form-control w-full max-w-xs gap-2" onSubmit={handleSignin}>
+                <div>
+                  <label className="label">
+                    <span className="label-text">Name</span>
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="Eg: Bubbaloo"
+                    className="input input-bordered w-full max-w-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="label">
+                    <span className="label-text">Email</span>
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="Eg: bestpet@socialpet.ca"
+                    className="input input-bordered w-full max-w-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="label">
+                    <span className="label-text">Password</span>
+                  </label>
+                  <input
+                    id="new-password"
+                    name="new-password"
+                    autoComplete="new-password"
+                    type="password"
+                    required
+                    minLength="8"
+                    placeholder="Type you password"
+                    className="input input-bordered w-full max-w-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="label">
+                    <span className="label-text">Type</span>
+                  </label>
+                  <input
+                    autoComplete="type"
+                    id="type"
+                    name="type"
+                    type="text"
+                    required
+                    placeholder="Eg: Dog"
+                    className="input input-bordered w-full max-w-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="label">
+                    <span className="label-text">Species</span>
+                  </label>
+                  <input
+                    id="species"
+                    name="species"
+                    type="text"
+                    required
+                    placeholder="Eg: Chihuahua"
+                    className="input input-bordered w-full max-w-xs"
+                  />
+                </div>
+
+                <div className="flex justify-between text-sm">
+                  <a href="#" className="text-green-400 hover:text-green-500">
+                    Forgot your password?
+                  </a>
+                  <Link to="/signin" className="text-pink-400 hover:text-pink-500">
+                    Have an account?
+                  </Link>
+                </div>
+
+                <div>
+                  <button type="submit" className="btn btn-primary w-full">
+                    Sign in
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

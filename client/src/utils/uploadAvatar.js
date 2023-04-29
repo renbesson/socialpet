@@ -1,9 +1,9 @@
-export default async function uploadAvatar(fileAsString, token) {
+export default async function uploadAvatar(fileAsString) {
   try {
     const res = await fetch(`/api/pet/avatar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, fileAsString }),
+      body: JSON.stringify({ fileAsString }),
     });
     const { url, message } = await res.json();
 

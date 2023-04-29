@@ -11,6 +11,7 @@ import { useAuth } from "../../utils/authProvider";
 import Cookies from "universal-cookie";
 import { toast } from "react-toastify";
 import decode from "jwt-decode";
+import { Link } from "react-router-dom";
 
 export default function UpdateProfileButton() {
   const { user, fetchPet } = useAuth();
@@ -135,15 +136,13 @@ export default function UpdateProfileButton() {
           <Button onClick={handleClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
-      <Button
-        variant="text"
-        startIcon={<EditIcon />}
+      <Link
         onClick={() => {
           setOpen(true);
         }}
       >
         Update Profile
-      </Button>
+      </Link>
     </>
   );
 }

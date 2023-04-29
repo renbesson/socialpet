@@ -1,30 +1,28 @@
-import React from "react";
-import Cookies from "universal-cookie";
-import { Box, Button } from "@mui/material";
-import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
+import { useRef } from "react";
+import { Box } from "@mui/material";
 import { toast } from "react-toastify";
 import uploadAvatar from "../../utils/uploadAvatar";
 import toBase64 from "../../utils/toBase64";
 import { useAuth } from "../../utils/authProvider";
+import { Link } from "react-router-dom";
 
 export default function UpdateAvatarButton() {
   const { fetchPet } = useAuth();
-  const cookies = new Cookies();
+  const imgInput = useRef();
 
   const handleUploadAvatar = async (event) => {
     event.preventDefault();
     const image = event.target.files[0];
-    const token = cookies.get("token");
 
     try {
       // Converts the file to base64
       const fileAsString = await toBase64(image);
 
-      const { message } = await uploadAvatar(fileAsString, token);
+      const { message } = await uploadAvatar(fileAsString);
 
       toast(message);
 
-      fetchPet();
+      await fetchPet();
     } catch (err) {
       toast(err.message);
     }
@@ -32,20 +30,15 @@ export default function UpdateAvatarButton() {
 
   return (
     <Box component="form" noValidate>
-      <Button
-        variant="text"
-        component="label"
-        startIcon={<AccountCircleTwoToneIcon />}
-      >
-        Upload Avatar
-        <input
-          hidden
-          accept="image/*"
-          type="file"
-          name="avatar"
-          onChange={handleUploadAvatar}
-        />
-      </Button>
+      <Link onClick={() => imgInput.current.click()}>Update Avatar</Link>
+      <input
+        hidden
+        accept="image/*"
+        type="file"
+        ref={imgInput}
+        name="avatar"
+        onChange={handleUploadAvatar}
+      />
     </Box>
   );
 }
