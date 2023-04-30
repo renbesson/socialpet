@@ -62,7 +62,7 @@ export default function AppSideBar({ children }) {
           <div className="flex-1 justify-end">
             <div className="dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                <div className="w-12 rounded-full">
+                <div className="w-12 mask mask-squircle">
                   <img src={user?.avatar ? user.avatar : "/assets/images/avatar.png"} />
                 </div>
               </label>
@@ -76,8 +76,10 @@ export default function AppSideBar({ children }) {
           </div>
         </div>
         {/* <!-- Page content --> */}
-        {children}
-        <UpdateProfileButton />
+        <div className="bg-base-100">
+          {children}
+          <UpdateProfileButton />
+        </div>
       </div>
       {user && (
         <div className="drawer-side">

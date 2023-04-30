@@ -25,8 +25,6 @@ function AuthProvider({ children }) {
     fetchPet();
   }, []);
 
-  console.log("AuthProvider " + user);
-
   let value = { user, fetchPet };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
