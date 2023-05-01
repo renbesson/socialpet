@@ -6,20 +6,18 @@ const Post = require("../../models/Post");
 const { checkToken } = require("../../utils/checkToken");
 const router = require("express").Router();
 const { bucket } = require("../../config/firebase");
-const multer = require("multer");
 const { fromBase64 } = require("../../utils/fromBase64");
 const { uploadToFirestorage } = require("../../utils/uploadToFirestorage");
-
-const upload = multer({ dest: "images/" });
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Get all posts
 ////////////////////////////////////////////////////////////////////////////////
-router.get("/", async (req, res) => {
+router.get("/", checkToken, async (req, res) => {
   try {
     const posts = await Post.find().populate("ownerId").sort({ updatedAt: -1 });
     res.status(200).json({ posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -27,13 +25,14 @@ router.get("/", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get one post
 ////////////////////////////////////////////////////////////////////////////////
-router.get("/", async (req, res) => {
-  const postId = req.query.postId;
+router.get("/single/:postId", checkToken, async (req, res) => {
+  const postId = req.params.postId;
 
   try {
     const post = await Post.findById(postId).populate("ownerId").sort({ updatedAt: -1 });
     res.status(200).json(post);
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -41,13 +40,14 @@ router.get("/", async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get my posts
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/myPosts", checkToken, async (req, res) => {
+router.get("/myPosts", checkToken, async (req, res) => {
   try {
     const posts = await Post.find({ ownerId: req.user._id })
       .populate("ownerId")
       .sort({ updatedAt: -1 });
     res.status(200).json({ posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -55,7 +55,7 @@ router.post("/myPosts", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get following posts
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/following", checkToken, async (req, res) => {
+router.get("/following", checkToken, async (req, res) => {
   const pet = await Pet.findById(req.user._id);
 
   try {
@@ -71,6 +71,7 @@ router.post("/following", checkToken, async (req, res) => {
 
     res.status(200).json({ posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -78,7 +79,7 @@ router.post("/following", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get followers posts
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/followers", checkToken, async (req, res) => {
+router.get("/followers", checkToken, async (req, res) => {
   const pet = await Pet.findById(req.user._id);
 
   try {
@@ -94,6 +95,7 @@ router.post("/followers", checkToken, async (req, res) => {
 
     res.status(200).json({ posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -101,7 +103,7 @@ router.post("/followers", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get all posts of a user
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/pet", checkToken, async (req, res) => {
+router.get("/pet", checkToken, async (req, res) => {
   const petId = req.query.petId;
 
   try {
@@ -190,7 +192,7 @@ router.put("/", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Toggle like/unlike a post
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/like", checkToken, async (req, res) => {
+router.put("/like", checkToken, async (req, res) => {
   const postId = req.query.postId;
 
   try {
@@ -198,10 +200,10 @@ router.post("/like", checkToken, async (req, res) => {
     const isLiking = post.likedBy.includes(req.user._id);
 
     if (!isLiking) {
-      await post.updateOne({ $push: { likedBy: req.user._id } });
+      await post.updateOne({ $push: { likedBy: req.user._id } }, { timestamps: false });
       res.status(201).json({ message: "Post has been liked." });
     } else {
-      await post.updateOne({ $pull: { likedBy: req.user._id } });
+      await post.updateOne({ $pull: { likedBy: req.user._id } }, { timestamps: false });
       res.status(200).json({ message: "Post has been unliked." });
     }
   } catch (err) {

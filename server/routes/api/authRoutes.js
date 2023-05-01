@@ -29,7 +29,8 @@ router.post("/signup", async (req, res) => {
     const pet = await newPet.save();
     const token = signToken(pet);
     // Code 201 - Created
-    res.status(201).json({ token });
+    res.cookie("token", token, { MaxAge: 3600, httpOnly: true, sameSite: true, secure: true });
+    res.status(201).json({});
   } catch (err) {
     res.status(500).json(err);
   }
@@ -55,7 +56,44 @@ router.post("/signin", async (req, res) => {
     const token = signToken(pet);
 
     // Code 200 - Ok
-    res.status(200).json({ token });
+    res.cookie("token", token, { MaxAge: 3600, httpOnly: true, sameSite: true, secure: true });
+    res.status(200).json({});
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Sign out route
+////////////////////////////////////////////////////////////////////////////////
+router.get("/signout", checkToken, async (req, res) => {
+  try {
+    // Code 200 - Ok
+    res.clearCookie("token");
+    res.status(200).json({});
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Validate user route
+////////////////////////////////////////////////////////////////////////////////
+router.get("/fetchPet", checkToken, async (req, res) => {
+  try {
+    const { user } = req;
+    if (user) {
+      const pet = await Pet.findById(user._id);
+
+      // Code 404 - Not Found
+      if (!pet) return res.status(404).json({});
+
+      // Refreshes the cookie
+      const token = signToken(pet);
+      res.cookie("token", token, { MaxAge: 3600, httpOnly: true, sameSite: true, secure: true });
+      // Code 200 - Ok
+      res.status(200).json({ pet });
+    }
   } catch (err) {
     res.status(500).json(err);
   }

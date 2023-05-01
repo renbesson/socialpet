@@ -1,38 +1,25 @@
-import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../utils/authProvider";
-import { Avatar, Card, CardActions } from "@mui/material";
-import { CardContent, CardHeader, CardMedia } from "@mui/material";
-import { IconButton, Link, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
-import PetsIcon from '@mui/icons-material/Pets';
-import Cookies from "universal-cookie";
+import PetsIcon from "@mui/icons-material/Pets";
 import { toast } from "react-toastify";
-import { useState } from "react";
-import UpdatePostButton from "./buttons/UpdatePostButton";
-import DeletePostButton from "./buttons/DeletePostButton";
+import UpdatePostButton from "./modals/UpdatePostButton";
+import DeletePostButton from "./modals/DeletePostButton";
+import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
-  const { user } = useAuth();
-  const [likeCount, setLikeCount] = useState(post.likes);
-  const cookies = new Cookies();
+  const { user, fetchPet } = useAuth();
 
   const owner = post.ownerId;
 
   const likePost = async (id) => {
     try {
       const res = await fetch(`/api/post/like/?postId=${id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: cookies.get("token") }),
+        method: "PUT",
       });
       const { message } = await res.json();
 
       if (!res.ok) return toast(`Message: ${message} | Code: ${res.status}`);
-      // Code 201 - Like added
-      if (res.status === 201) setLikeCount((prev) => prev + 1);
-
-      // Code 200 - Like removed
-      if (res.status === 200) setLikeCount((prev) => prev - 1);
+      await fetchPet();
 
       return toast(message);
     } catch (err) {
@@ -41,60 +28,44 @@ export default function Post({ post }) {
   };
 
   return (
-    <Card sx={{ boxShadow: 5, maxWidth: 800 }}>
-      <CardHeader
-        avatar={
-          <Avatar
-            sx={{ width: 64, height: 64 }}
-            aria-label="avatar"
-            src={owner?.avatar ? owner?.avatar : "assets/images/catAvatar.png"}
-          ></Avatar>
-        }
-        title={
-          <Typography sx={{ fontWeight: 500 }}>
-            <Link
-              component={RouterLink}
-              to={`/pet?petId=${post?.ownerId._id}`}
-              color={"#000"}
-            >
-              {post?.ownerId?.name}
-            </Link>
-          </Typography>
-        }
-        subheader={`Last updated: ${moment(post.updatedAt).format(
-          "MMMM DD, YYYY - h:mm:ss a"
-        )}`}
-      />
-      <CardMedia
-        component="img"
-        sx={{ objectFit: "fill", maxHeight: 400 }}
-        image={post.mediaUrl}
-      />
-      <CardContent>
-        <Typography color="primary">{post.content}</Typography>
-      </CardContent>
-      <CardActions>
-        <Tooltip title="Like" placement="right">
-          <IconButton
-            aria-label="like"
-            color="secondary"
-            size="large"
+    <div className="card max-w-3xl glass shadow-md">
+      <Link className="flex gap-3 p-2" to={`/pet?petId=${post?.ownerId._id}`}>
+        <div className="avatar">
+          <div className="w-16 mask mask-squircle">
+            <img src={owner?.avatar ? owner?.avatar : "assets/images/catAvatar.png"} />
+          </div>
+        </div>
+        <div className="card-title">
+          {post?.ownerId?.name}
+          <span className="text-sm font-light">
+            Last updated: {moment(post.updatedAt).format("MMMM DD, YYYY - h:mm a")}
+          </span>
+        </div>
+      </Link>
+      <figure>
+        {post.mediaUrl && (
+          <img className=" max-h-fit object-fill" src={post.mediaUrl} alt="selected image" />
+        )}
+      </figure>
+      <div className="card-body">
+        <p>{post?.content}</p>
+        <div className="card-actions gap-5 items-center">
+          <button
+            className="btn btn-circle btn-primary flex-col"
             onClick={() => likePost(post._id)}
           >
             <PetsIcon />
-          </IconButton>
-        </Tooltip>
+            {!!post?.likes && post?.likes}
+          </button>
 
-        <Typography>
-          {likeCount} {likeCount > 1 ? "Likes" : "Like"}
-        </Typography>
-        {user._id === post.ownerId._id && (
-          <>
-            <UpdatePostButton postId={post._id} />
-            <DeletePostButton postId={post._id} />
-          </>
-        )}
-      </CardActions>
-    </Card>
+          {user._id === post.ownerId._id && (
+            <>
+              <UpdatePostButton postId={post._id} />
+              <DeletePostButton postId={post._id} />
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -1,12 +1,7 @@
-import Post from "../components/Post";
-import Share from "../components/Share";
 import { useEffect, useState } from "react";
-import { Grid, Stack } from "@mui/material";
 import { toast } from "react-toastify";
-import { RequireAuth, useAuth } from "../utils/authProvider";
-import Sidebar from "../components/Sidebar";
-import Rightbar from "../components/Rightbar";
-import Typography from "../components/modules/Typography";
+import Post from "../components/Post";
+import { useAuth } from "../utils/authProvider";
 
 export default function SignedHome() {
   const { user } = useAuth();
@@ -14,10 +9,7 @@ export default function SignedHome() {
 
   const getPosts = async () => {
     try {
-      const res = await fetch("/api/post", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch("/api/post");
       const { posts } = await res.json();
       setPosts(posts);
     } catch (err) {
@@ -30,30 +22,13 @@ export default function SignedHome() {
   }, [user]);
 
   return (
-    <RequireAuth>
-      <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
-        <Typography variant="h3" color="primary">
-          Main Feed
-        </Typography>
-      </Stack>
-      <Grid container spacing={1} justifyContent="center">
-        <Sidebar />
-
-        <Grid item md>
-          <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
-            <Grid item xs={10}>
-              <Share />
-            </Grid>
-            {posts?.map((post) => (
-              <Grid key={post._id} item xs={10}>
-                <Post post={post} />
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-
-        {user && <Rightbar user={user} />}
-      </Grid>
-    </RequireAuth>
+    <div className="container mx-auto flex flex-col gap-8">
+      <h3 className="mt-5 text-5xl font-bold text-secondary self-center">
+        Main Feed
+      </h3>
+      {posts?.map((post) => (
+        <Post key={post._id} post={post} />
+      ))}
+    </div>
   );
 }

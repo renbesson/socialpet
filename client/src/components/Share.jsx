@@ -1,18 +1,11 @@
-// import { PermMedia } from "@mui/icons-material";
 import { useState } from "react";
-import { RequireAuth, useAuth } from "../utils/authProvider";
-import { Avatar, Box, Button, Card, CardActions } from "@mui/material";
-import { CardContent, CardHeader, CardMedia, TextField } from "@mui/material";
-import { Typography } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
-import Cookies from "universal-cookie";
 import moment from "moment";
+import { useAuth } from "../utils/authProvider";
 import toBase64 from "../utils/toBase64";
 
 export default function Share() {
-  const { user, fetchUser } = useAuth();
-  const cookies = new Cookies();
+  const { user, fetchPet } = useAuth();
   const [image, setImage] = useState(null);
   const [content, setContent] = useState("");
 
@@ -27,9 +20,8 @@ export default function Share() {
   ////////////////////////////////////////////////////////////////////////////////
   //  Creates the post
   ////////////////////////////////////////////////////////////////////////////////
-  const handleSubmit = async (event) => {
+  const handleShare = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
 
     try {
       // Converts the file to base64
@@ -41,7 +33,6 @@ export default function Share() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          token: cookies.get("token"),
           content: content,
           fileAsString,
         }),
@@ -57,7 +48,7 @@ export default function Share() {
 
         toast("Post Created!");
 
-        fetchUser();
+        await fetchPet();
       }
     } catch (err) {
       toast(err.message);
@@ -65,47 +56,48 @@ export default function Share() {
   };
 
   return (
-    <Card sx={{ boxShadow: 5, maxWidth: 800 }}>
-      <CardHeader
-        avatar={
-          <Avatar
-            sx={{ width: 64, height: 64 }}
-            aria-label="avatar"
-            src={user?.avatar ? user.avatar : "assets/images/catAvatar.png"}
-          ></Avatar>
-        }
-        title={<Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>}
-        subheader={moment().format("MMMM DD, YYYY")}
-      />
-      <CardMedia
-        component="img"
-        sx={{ objectFit: "fill", maxHeight: 400 }}
-        image={image ? URL.createObjectURL(image) : ""}
-      />
-      <CardContent>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <Button variant="contained" component="label" endIcon={<CloudUploadIcon />}>
-            Upload Image
-            <input hidden accept="image/*" type="file" name="image" onChange={addImage} />
-          </Button>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            multiline
-            minRows={5}
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            label="Say something..."
-            id="content"
+    <div className="card max-w-3xl glass shadow-md">
+      <div className="flex gap-3 p-2">
+        <div className="avatar">
+          <div className="w-16 mask mask-squircle">
+            <img src="/assets/images/avatar.png" />
+          </div>
+        </div>
+        <div className="card-title">
+          {user?.name}
+          <span className="text-sm font-light">{moment().format("MMMM DD, YYYY")}</span>
+        </div>
+      </div>
+      <figure>
+        {image && (
+          <img
+            className=" max-h-fit object-fill"
+            src={URL.createObjectURL(image)}
+            alt="selected image"
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+        )}
+      </figure>
+      <div className="card-body">
+        <input
+          accept="image/*"
+          type="file"
+          name="image"
+          onChange={addImage}
+          className="file-input file-input-bordered file-input-secondary w-full max-w-xs"
+        />
+        <textarea
+          className="textarea textarea-secondary textarea-bordered"
+          placeholder="Say something..."
+          rows={4}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <div className="card-actions justify-end">
+          <button className="btn btn-primary" onClick={handleShare}>
             Share
-          </Button>
-        </Box>
-      </CardContent>
-      <CardActions disableSpacing></CardActions>
-    </Card>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
