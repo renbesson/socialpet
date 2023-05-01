@@ -62,7 +62,7 @@ export default function UpdatePostButton({ postId }) {
               <img
                 className="max-h-fit object-fill"
                 src={URL.createObjectURL(image)}
-                alt="selected image"
+                alt="selected"
               />
             )}
           </figure>

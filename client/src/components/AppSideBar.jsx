@@ -63,7 +63,10 @@ export default function AppSideBar({ children }) {
             <div className="dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-12 mask mask-squircle">
-                  <img src={user?.avatar ? user.avatar : "/assets/images/avatar.png"} />
+                  <img
+                    src={user?.avatar ? user.avatar : "/assets/images/avatar.png"}
+                    alt="avatar"
+                  />
                 </div>
               </label>
               <ul
