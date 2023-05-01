@@ -28,7 +28,7 @@ export default function Post({ post }) {
   };
 
   return (
-    <div className="card max-w-3xl glass shadow-md">
+    <div className="card max-w-3xl glass shadow-md rounded-none sm:rounded-lg">
       <Link className="flex gap-3 p-2" to={`/pet?petId=${post?.ownerId._id}`}>
         <div className="avatar">
           <div className="w-16 mask mask-squircle">

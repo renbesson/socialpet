@@ -5,6 +5,8 @@ import UpdateAvatarButton from "./modals/UpdateAvatarButton";
 import SignOutButton from "./modals/SignoutButton";
 import { ReactComponent as MenuIcon } from "../icons/MenuIcon.svg";
 import { ReactComponent as SignalIcon } from "../icons/SignalIcon.svg";
+import { ReactComponent as FollowingIcon } from "../icons/FollowingIcon.svg";
+import { ReactComponent as FollowersIcon } from "../icons/FollowersIcon.svg";
 
 export default function AppSideBar({ children }) {
   const { user } = useAuth();
@@ -45,7 +47,7 @@ export default function AppSideBar({ children }) {
             <div className="flex-none lg:hidden">
               {user && (
                 <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost">
-                  <MenuIcon />
+                  <MenuIcon width={32}/>
                 </label>
               )}
             </div>
@@ -86,21 +88,23 @@ export default function AppSideBar({ children }) {
         <div className="drawer-side">
           {/* <!-- Sidebar --> */}
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
-          <ul className="menu p-4 w-56 bg-base-100">
+          <ul className="menu p-4 w-56 bg-base-100 border-r border-secondary">
             <div className="navbar bg-secondary absolute left-0 top-0 h-16"></div>
             <li className="mt-16">
-              <Link to="/myPosts" className="text-primary">
-                <SignalIcon />
+              <Link to="/myPosts" className="text-primary mb-1">
+                <SignalIcon width={24} />
                 My Posts
               </Link>
             </li>
             <li>
-              <Link to="/following" className="text-primary">
+              <Link to="/following" className="text-primary mb-1">
+                <FollowingIcon width={24} />
                 Following
               </Link>
             </li>
             <li>
-              <Link to="/followers" className="text-primary">
+              <Link to="/followers" className="text-primary mb-1">
+                <FollowersIcon width={24} />
                 Followers
               </Link>
             </li>

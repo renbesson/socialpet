@@ -44,7 +44,7 @@ export default function Feed() {
   const isFollowing = user?.following.includes(pet?._id);
 
   return (
-    <div className="container mx-auto flex flex-col gap-8">
+    <div className="container mx-auto items-center flex flex-col gap-8">
       <h3 className="mt-5 text-5xl font-bold text-secondary self-center">{pet?.name}'s Profile</h3>
       <button className="btn btn-primary w-32" onClick={toggleFollowPet}>
         {!isFollowing ? "Follow" : "Unfollow"}

@@ -22,7 +22,7 @@ export default function SignedHome() {
   }, [user]);
 
   return (
-    <div className="container mx-auto flex flex-col gap-8">
+    <div className="container mx-auto items-center flex flex-col gap-8">
       <h3 className="mt-5 text-5xl font-bold text-secondary self-center">
         My Posts
       </h3>
