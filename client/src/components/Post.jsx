@@ -4,6 +4,7 @@ import PetsIcon from "@mui/icons-material/Pets";
 import { toast } from "react-toastify";
 import UpdatePostButton from "./modals/UpdatePostButton";
 import DeletePostButton from "./modals/DeletePostButton";
+import { Link } from "react-router-dom";
 
 export default function Post({ post }) {
   const { user, fetchPet } = useAuth();
@@ -28,7 +29,7 @@ export default function Post({ post }) {
 
   return (
     <div className="card max-w-3xl glass shadow-md">
-      <div className="flex gap-3 p-2">
+      <Link className="flex gap-3 p-2" to={`/pet?petId=${post?.ownerId._id}`}>
         <div className="avatar">
           <div className="w-16 mask mask-squircle">
             <img src={owner?.avatar ? owner?.avatar : "assets/images/catAvatar.png"} />
@@ -40,7 +41,7 @@ export default function Post({ post }) {
             Last updated: {moment(post.updatedAt).format("MMMM DD, YYYY - h:mm a")}
           </span>
         </div>
-      </div>
+      </Link>
       <figure>
         {post.mediaUrl && (
           <img className=" max-h-fit object-fill" src={post.mediaUrl} alt="selected image" />

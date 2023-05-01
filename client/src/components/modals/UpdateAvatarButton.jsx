@@ -1,10 +1,9 @@
 import { useRef } from "react";
-import { Box } from "@mui/material";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "../../utils/authProvider";
 import uploadAvatar from "../../utils/uploadAvatar";
 import toBase64 from "../../utils/toBase64";
-import { useAuth } from "../../utils/authProvider";
-import { Link } from "react-router-dom";
 
 export default function UpdateAvatarButton() {
   const { fetchPet } = useAuth();
@@ -29,16 +28,16 @@ export default function UpdateAvatarButton() {
   };
 
   return (
-    <Box component="form" noValidate>
+    <>
       <Link onClick={() => imgInput.current.click()}>Update Avatar</Link>
       <input
-        hidden
+        className="hidden"
         accept="image/*"
         type="file"
         ref={imgInput}
         name="avatar"
         onChange={handleUploadAvatar}
       />
-    </Box>
+    </>
   );
 }

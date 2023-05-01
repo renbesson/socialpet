@@ -103,7 +103,7 @@ router.get("/followers", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get all posts of a user
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/pet", checkToken, async (req, res) => {
+router.get("/pet", checkToken, async (req, res) => {
   const petId = req.query.petId;
 
   try {

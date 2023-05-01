@@ -1,6 +1,4 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
-import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import { useAuth } from "../../utils/authProvider";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,9 +27,5 @@ export default function SignOutButton() {
     }
   };
 
-  return (
-    <Box component="form" noValidate>
-      <Link onClick={handleSignOut}>Sign Out</Link>
-    </Box>
-  );
+  return <Link onClick={handleSignOut}>Sign Out</Link>;
 }
