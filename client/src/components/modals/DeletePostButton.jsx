@@ -1,12 +1,9 @@
-import Button from "@mui/material/Button";
-import Cookies from "universal-cookie";
 import { toast } from "react-toastify";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useAuth } from "../../utils/authProvider";
+import { ReactComponent as DeleteIcon } from "../../icons/DeleteIcon.svg";
 
 export default function DeletePostButton({ postId }) {
   const { fetchPet } = useAuth();
-  const cookies = new Cookies();
 
   ////////////////////////////////////////////////////////////////////////////////
   //  Deletes the post
@@ -17,10 +14,6 @@ export default function DeletePostButton({ postId }) {
     try {
       const res = await fetch(`/api/post/?postId=${postId}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token: cookies.get("token"),
-        }),
       });
 
       const { message } = await res.json();
@@ -29,21 +22,15 @@ export default function DeletePostButton({ postId }) {
       if (res.status === 200) {
         toast(message);
 
-        fetchPet();
+        await fetchPet();
       }
     } catch (err) {
       toast(err.message);
     }
   };
-
   return (
-    <Button
-      variant="outlined"
-      startIcon={<DeleteForeverIcon />}
-      onClick={handleDeletePost}
-      color="error"
-    >
-      Delete Post
-    </Button>
+    <label className="btn btn-square btn-secondary btn-outline flex-col" onClick={handleDeletePost}>
+      <DeleteIcon />
+    </label>
   );
 }

@@ -1,41 +1,18 @@
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import EditIcon from "@mui/icons-material/Edit";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState } from "react";
-import { useAuth } from "../../utils/authProvider";
-import Cookies from "universal-cookie";
 import { toast } from "react-toastify";
-import { Avatar, Box } from "@mui/material";
-import { CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
+import { useAuth } from "../../utils/authProvider";
 import toBase64 from "../../utils/toBase64";
+import { ReactComponent as EditIcon } from "../../icons/EditIcon.svg";
 
 export default function UpdatePostButton({ postId }) {
-  const { user, fetchPet } = useAuth();
-  const [open, setOpen] = useState(false);
-  const cookies = new Cookies();
+  const { fetchPet } = useAuth();
 
   const [image, setImage] = useState(null);
   const [content, setContent] = useState("");
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const stopPropagationForTab = (event) => {
-    if (event.key === "Tab") {
-      event.stopPropagation();
-    }
-  };
-
   ////////////////////////////////////////////////////////////////////////////////
   // Stores the uploaded image as state
   ////////////////////////////////////////////////////////////////////////////////
-
   const addImage = async (event) => {
     setImage(event.target.files[0]);
   };
@@ -56,7 +33,6 @@ export default function UpdatePostButton({ postId }) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          token: cookies.get("token"),
           content,
           fileAsString,
         }),
@@ -68,7 +44,7 @@ export default function UpdatePostButton({ postId }) {
       if (res.status === 200) {
         toast(message);
 
-        fetchPet();
+        await fetchPet();
       }
     } catch (err) {
       toast(err.message);
@@ -77,75 +53,55 @@ export default function UpdatePostButton({ postId }) {
 
   return (
     <>
-      <Dialog
-        onKeyDown={stopPropagationForTab}
-        open={open}
-        onClose={handleClose}
-        fullWidth
-      >
-        <DialogTitle>Update Post</DialogTitle>
-        <DialogContent>
-          <CardHeader
-            avatar={
-              <Avatar
-                sx={{ width: 64, height: 64 }}
-                aria-label="avatar"
-                src={user?.avatar ? user.avatar : "assets/images/catAvatar.png"}
-              ></Avatar>
-            }
-            title={
-              <Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>
-            }
-          />
-          <CardMedia
-            component="img"
-            sx={{ objectFit: "fill", maxHeight: 400 }}
-            image={image ? URL.createObjectURL(image) : ""}
-          />
-          <CardContent>
-            <Box component="form" noValidate sx={{ mt: 1 }}>
-              <Button
-                variant="contained"
-                component="label"
-                endIcon={<CloudUploadIcon />}
-              >
-                Upload Image
-                <input
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  name="image"
-                  onChange={addImage}
-                />
-              </Button>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                multiline
-                minRows={5}
-                name="content"
-                label="Say something..."
-                id="content"
-                onChange={(event) => setContent(event.target.value)}
+      <input type="checkbox" id="updatepost-modal" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box p-0 max-w-3xl fixed">
+          <h2 className="card-title font-semibold text-2xl text-gray-800 m-5">Update Post</h2>
+          <figure>
+            {image && (
+              <img
+                className="max-h-fit object-fill"
+                src={URL.createObjectURL(image)}
+                alt="selected image"
               />
-            </Box>
-          </CardContent>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdatePost}>Update</Button>
-          <Button onClick={handleClose}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
-      <Button
-        variant="outlined"
-        startIcon={<EditIcon />}
-        onClick={() => {
-          setOpen(true);
-        }}
+            )}
+          </figure>
+          <div className="card-body">
+            <form className="form-control w-full gap-2" onSubmit={handleUpdatePost}>
+              <input
+                accept="image/*"
+                type="file"
+                name="image"
+                onChange={addImage}
+                className="file-input file-input-bordered file-input-secondary w-full max-w-xs"
+              />
+              <textarea
+                className="textarea textarea-secondary textarea-bordered"
+                placeholder="Say something..."
+                rows={4}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+              />
+              <div className="flex justify-between mt-3">
+                <button type="submit">
+                  <label htmlFor="updatepost-modal" className="btn btn-primary">
+                    Update
+                  </label>
+                </button>
+                <label htmlFor="updatepost-modal" className="btn btn-outline">
+                  Cancel
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <label
+        className="btn btn-square btn-secondary btn-outline flex-col"
+        htmlFor="updatepost-modal"
       >
-        Update Post
-      </Button>
+        <EditIcon />
+      </label>
     </>
   );
 }

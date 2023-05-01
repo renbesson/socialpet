@@ -192,7 +192,7 @@ router.put("/", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Toggle like/unlike a post
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/like", checkToken, async (req, res) => {
+router.put("/like", checkToken, async (req, res) => {
   const postId = req.query.postId;
 
   try {
@@ -200,10 +200,10 @@ router.post("/like", checkToken, async (req, res) => {
     const isLiking = post.likedBy.includes(req.user._id);
 
     if (!isLiking) {
-      await post.updateOne({ $push: { likedBy: req.user._id } });
+      await post.updateOne({ $push: { likedBy: req.user._id } }, { timestamps: false });
       res.status(201).json({ message: "Post has been liked." });
     } else {
-      await post.updateOne({ $pull: { likedBy: req.user._id } });
+      await post.updateOne({ $pull: { likedBy: req.user._id } }, { timestamps: false });
       res.status(200).json({ message: "Post has been unliked." });
     }
   } catch (err) {
