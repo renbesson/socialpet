@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography } from "@mui/material";
 import { toast } from "react-toastify";
-import { RequireAuth, useAuth } from "../utils/authProvider";
-import Rightbar from "../components/Rightbar";
-import Sidebar from "../components/Sidebar";
 import Post from "../components/Post";
-import Share from "../components/Share";
+import { useAuth } from "../utils/authProvider";
 
-export default function Feed() {
+export default function SignedHome() {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
 
@@ -26,30 +22,13 @@ export default function Feed() {
   }, [user]);
 
   return (
-    <>
-      <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
-        <Typography variant="h3" color="primary">
-          My Posts
-        </Typography>
-      </Stack>
-      <Grid container spacing={1} justifyContent="center">
-        <Sidebar />
-
-        <Grid item md>
-          <Grid sx={{ mt: 5 }} container spacing={5} justifyContent="center">
-            <Grid item xs={10}>
-              <Share />
-            </Grid>
-            {posts?.map((post) => (
-              <Grid key={post._id} item xs={10}>
-                <Post post={post} />
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-
-        {user && <Rightbar user={user} />}
-      </Grid>
-    </>
+    <div className="container mx-auto flex flex-col gap-8">
+      <h3 className="mt-5 text-5xl font-bold text-secondary self-center">
+        My Posts
+      </h3>
+      {posts?.map((post) => (
+        <Post key={post._id} post={post} />
+      ))}
+    </div>
   );
 }

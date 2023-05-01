@@ -54,7 +54,7 @@ export default function UpdatePostButton({ postId }) {
   return (
     <>
       <input type="checkbox" id="updatepost-modal" className="modal-toggle" />
-      <div className="modal">
+      <div className="modal modal-bottom sm:modal-middle">
         <div className="modal-box p-0 max-w-3xl fixed">
           <h2 className="card-title font-semibold text-2xl text-gray-800 m-5">Update Post</h2>
           <figure>

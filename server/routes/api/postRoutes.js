@@ -55,7 +55,7 @@ router.get("/myPosts", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get following posts
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/following", checkToken, async (req, res) => {
+router.get("/following", checkToken, async (req, res) => {
   const pet = await Pet.findById(req.user._id);
 
   try {
@@ -79,7 +79,7 @@ router.post("/following", checkToken, async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 //  Get followers posts
 ////////////////////////////////////////////////////////////////////////////////
-router.post("/followers", checkToken, async (req, res) => {
+router.get("/followers", checkToken, async (req, res) => {
   const pet = await Pet.findById(req.user._id);
 
   try {

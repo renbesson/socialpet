@@ -76,10 +76,8 @@ export default function AppSideBar({ children }) {
           </div>
         </div>
         {/* <!-- Page content --> */}
-        <div className="bg-base-100">
-          {children}
-          <UpdateProfileButton />
-        </div>
+        {children}
+        <UpdateProfileButton />
       </div>
       {user && (
         <div className="drawer-side">
@@ -94,12 +92,12 @@ export default function AppSideBar({ children }) {
               </Link>
             </li>
             <li>
-              <Link to="/myPosts" className="text-primary">
+              <Link to="/following" className="text-primary">
                 Following
               </Link>
             </li>
             <li>
-              <Link to="/myPosts" className="text-primary">
+              <Link to="/followers" className="text-primary">
                 Followers
               </Link>
             </li>

@@ -43,7 +43,7 @@ export default function UpdateProfileButton() {
   return (
     <>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
-      <div className="modal">
+      <div className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <h2 className="card-title font-semibold text-2xl text-gray-800">Update Profile</h2>
           <form className="form-control w-full gap-2" onSubmit={handleUpdateProfile}>
