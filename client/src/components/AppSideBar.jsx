@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import UpdateProfileButton from "./modals/UpdateProfileModal";
 import UpdateAvatarButton from "./modals/UpdateAvatarButton";
 import SignOutButton from "./modals/SignoutButton";
+import Share from "../components/Share";
 import { ReactComponent as MenuIcon } from "../icons/MenuIcon.svg";
 import { ReactComponent as SignalIcon } from "../icons/SignalIcon.svg";
 import { ReactComponent as FollowingIcon } from "../icons/FollowingIcon.svg";
@@ -47,7 +48,7 @@ export default function AppSideBar({ children }) {
             <div className="flex-none lg:hidden">
               {user && (
                 <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost">
-                  <MenuIcon width={32}/>
+                  <MenuIcon width={32} />
                 </label>
               )}
             </div>
@@ -83,6 +84,7 @@ export default function AppSideBar({ children }) {
         {/* <!-- Page content --> */}
         {children}
         <UpdateProfileButton />
+        <Share />
       </div>
       {user && (
         <div className="drawer-side">
@@ -91,6 +93,12 @@ export default function AppSideBar({ children }) {
           <ul className="menu p-4 w-56 bg-base-100 border-r border-secondary">
             <div className="navbar bg-secondary absolute left-0 top-0 h-16"></div>
             <li className="mt-16">
+              <label className="text-secondary mb-1 border-2" htmlFor="share-modal">
+                <SignalIcon width={24} />
+                Create Post
+              </label>
+            </li>
+            <li>
               <Link to="/myPosts" className="text-primary mb-1">
                 <SignalIcon width={24} />
                 My Posts
