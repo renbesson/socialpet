@@ -64,7 +64,7 @@ export default function SignIn() {
         <div className="flex justify-center self-center">
           <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
-              <h2 className="card-title font-semibold text-2xl text-gray-800">Sign Up</h2>
+              <h2 className="card-title font-semibold text-2xl">Sign Up</h2>
               <form className="form-control w-full max-w-xs gap-2" onSubmit={handleSignin}>
                 <div>
                   <label className="label">

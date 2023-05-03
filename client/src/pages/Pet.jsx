@@ -46,9 +46,11 @@ export default function Feed() {
   return (
     <div className="container mx-auto items-center flex flex-col gap-8">
       <h3 className="mt-5 text-5xl font-bold text-secondary self-center">{pet?.name}'s Profile</h3>
-      <button className="btn btn-primary w-32" onClick={toggleFollowPet}>
-        {!isFollowing ? "Follow" : "Unfollow"}
-      </button>
+      {user._id !== pet._id && (
+        <button className="btn btn-primary w-32" onClick={toggleFollowPet}>
+          {!isFollowing ? "Follow" : "Unfollow"}
+        </button>
+      )}
       {posts?.map((post) => (
         <Post key={post._id} post={post} />
       ))}

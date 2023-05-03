@@ -73,7 +73,7 @@ export default function AppSideBar({ children }) {
               </label>
               <ul
                 tabIndex={0}
-                className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-40"
+                className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-secondary rounded-box w-40"
               >
                 <MenuOptions />
               </ul>
