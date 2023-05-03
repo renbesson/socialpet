@@ -55,16 +55,16 @@ export default function SignIn() {
       }}
     >
       <div className="h-[calc(100vh-64px)] sm:flex sm:flex-row mx-0 justify-center">
-        <div className="flex-col flex  self-center p-10 sm:max-w-5xl xl:max-w-2xl  z-10">
+        <div className="flex-col flex  self-center p-10 sm:max-w-5xl xl:max-w-2xl">
           <div className="self-start hidden lg:flex flex-col  text-white">
             <img src="" className="mb-3" />
             <h1 className="mb-3 font-bold text-5xl">Welcome!</h1>
           </div>
         </div>
-        <div className="flex justify-center self-center  z-10">
+        <div className="flex justify-center self-center">
           <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
-              <h2 className="card-title font-semibold text-2xl text-gray-800">Sign Up</h2>
+              <h2 className="card-title font-semibold text-2xl">Sign Up</h2>
               <form className="form-control w-full max-w-xs gap-2" onSubmit={handleSignin}>
                 <div>
                   <label className="label">

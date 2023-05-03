@@ -28,7 +28,7 @@ export default function Post({ post }) {
   };
 
   return (
-    <div className="card max-w-3xl glass shadow-md">
+    <div className="card w-full max-w-3xl glass shadow-md rounded-none sm:rounded-lg">
       <Link className="flex gap-3 p-2" to={`/pet?petId=${post?.ownerId._id}`}>
         <div className="avatar">
           <div className="w-16 mask mask-squircle">
@@ -48,13 +48,13 @@ export default function Post({ post }) {
         )}
       </figure>
       <div className="card-body">
-        <p>{post?.content}</p>
+        <p className="m-5">{post?.content}</p>
         <div className="card-actions gap-5 items-center">
           <button
             className="btn btn-circle btn-primary flex-col"
-            onClick={() => likePost(post._id)}
+            onClick={() => likePost(post?._id)}
           >
-            <PetsIcon />
+            <PetsIcon fontSize="20" />
             {!!post?.likes && post?.likes}
           </button>
 
